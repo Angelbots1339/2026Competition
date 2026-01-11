@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -26,10 +27,12 @@ public class RobotContainer {
 	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true) * RobotConstants.maxSpeed;
 	private Supplier<Double> leftX = () -> DriverConstants.joystickDeadband(-driver.getLeftX(), true) * RobotConstants.maxSpeed;
 	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true) * RobotConstants.maxRot;
-	
+
 	private Swerve swerve = TunerConstants.swerve;
 	
 	private Trigger resetGyro = new Trigger(() -> driver.getBButton());
+
+	private Trigger pidtoPose = new Trigger(() -> driver.getAButton());
 
 	public RobotContainer() {
 		configureBindings();
@@ -37,8 +40,9 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
-		
+
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
+		pidtoPose.whileTrue(swerve.pidtoPose(() -> Pose2d.kZero));
 	}
 
 	public Command getAutonomousCommand() {
