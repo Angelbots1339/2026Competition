@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -33,6 +34,7 @@ public class RobotContainer {
 	private Trigger resetGyro = new Trigger(() -> driver.getBButton());
 
 	private Trigger pidtoPose = new Trigger(() -> driver.getAButton());
+	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
 
 	public RobotContainer() {
 		configureBindings();
@@ -43,6 +45,7 @@ public class RobotContainer {
 
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(swerve.pidtoPose(() -> Pose2d.kZero));
+		pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () -> new Pose2d(8, 4, Rotation2d.kZero), () -> true));
 	}
 
 	public Command getAutonomousCommand() {

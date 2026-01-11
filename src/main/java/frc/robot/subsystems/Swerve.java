@@ -73,6 +73,27 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		});
 	}
 
+	public Command pointDrive(Supplier<Double> x, Supplier<Double> y, Supplier<Pose2d> pose,
+			Supplier<Boolean> fieldCentric) {
+		return run(() -> {
+			double xdiff = getPose().getX() - pose.get().getX();
+			double ydiff = getPose().getY() - pose.get().getY();
+			Rotation2d angle = Rotation2d.fromRadians(Math.atan(ydiff / xdiff));
+
+			// hack to get around atan's limited domain
+			if (!FieldUtil.isRedAlliance() && xdiff > 0) {
+				angularDriveRequest(x, y, () -> angle.plus(Rotation2d.k180deg));
+				return;
+			}
+			if (FieldUtil.isRedAlliance() && xdiff < 0) {
+				angularDriveRequest(x, y, () -> angle.plus(Rotation2d.k180deg));
+				return;
+			}
+
+			angularDriveRequest(x, y, () -> angle);
+		});
+	}
+
 	public Command pidtoPose(Supplier<Pose2d> target) {
 		return run(() -> {
 			double x = MathUtil.clamp(
@@ -85,7 +106,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 							target.get().getY())
 							+ Math.signum(pidToPoseYController.getError()) * Math.abs(RobotConstants.pidToPoseKS),
 					-RobotConstants.maxSpeed, RobotConstants.maxSpeed);
-
+			
 			// convert from blue origin coordinates to field oriented (alliance origin) coordinates
 			if (FieldUtil.isRedAlliance()) {
 				angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : -x,
