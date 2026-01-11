@@ -9,12 +9,11 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.util.FieldUtil;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
@@ -44,8 +43,8 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
-		pidtoPose.whileTrue(swerve.pidtoPose(() -> Pose2d.kZero));
-		pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () -> new Pose2d(8, 4, Rotation2d.kZero), () -> true));
+		pidtoPose.whileTrue(swerve.pidtoPose(() -> FieldUtil.getTowerCenter()));
+		pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
 	}
 
 	public Command getAutonomousCommand() {
