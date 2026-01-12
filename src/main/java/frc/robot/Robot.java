@@ -50,6 +50,7 @@ public class Robot extends TimedRobot {
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 		SmartDashboard.putBoolean("Hub Active", FieldUtil.isHubActive());
+		SmartDashboard.putNumber("Hub Shift Time Left", FieldUtil.getShiftTimeLeft());
 	}
 
 	@Override

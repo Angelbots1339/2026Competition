@@ -53,6 +53,7 @@ public class RobotContainer {
 	}
 
 	public void configureControllerAlerts() {
+		// 10/20sec endgame alert
 		new Trigger(() -> {
 			return DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0.0
 					&& ((DriverStation.getMatchTime() <= Math.round(20)
@@ -65,6 +66,16 @@ public class RobotContainer {
 					driver.setRumble(RumbleType.kBothRumble, 0.0);
 				}).withTimeout(1.0)));
 
+		// 5 sec before hub switch alert
+		new Trigger(() -> {
+			return DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0.0
+					&& FieldUtil.getShiftTimeLeft() <= Math.round(5);
+		})
+				.onTrue(Commands.run(() -> {
+					driver.setRumble(RumbleType.kBothRumble, 1.0);
+				}).withTimeout(1.5).andThen(Commands.run(() -> {
+					driver.setRumble(RumbleType.kBothRumble, 0.0);
+				}).withTimeout(1.0)));
 	}
 
 	public Command getAutonomousCommand() {

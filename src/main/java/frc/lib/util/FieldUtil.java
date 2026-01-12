@@ -118,7 +118,7 @@ public class FieldUtil {
 	 * 30sec: EndGame: both enabled
 	 */
 	public static boolean isHubActive() {
-		double matchTime = DriverStation.getMatchTime();
+		double matchTime = (int) DriverStation.getMatchTime();
 
 		if (DriverStation.isAutonomous())
 			return true;
@@ -145,5 +145,21 @@ public class FieldUtil {
 			return true;
 
 		return false;
+	}
+
+	public static int getShiftTimeLeft() {
+		int matchTime = (int) DriverStation.getMatchTime();
+		// excludes auto as well
+		if (matchTime <= HubShiftTime.ENDGAME_START.time) {
+			return -1;
+		}
+
+		if (matchTime >= HubShiftTime.TRANSITION_SHIFT_END.time) {
+			return (int) (matchTime - HubShiftTime.TRANSITION_SHIFT_END.time);
+		}
+
+		matchTime -= HubShiftTime.ENDGAME_START.time;
+
+		return matchTime % 25;
 	}
 }
