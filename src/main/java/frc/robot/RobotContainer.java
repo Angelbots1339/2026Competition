@@ -6,9 +6,10 @@ package frc.robot;
 
 import java.util.function.Supplier;
 
-
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -24,12 +25,15 @@ public class RobotContainer {
 	@NotLogged
 	private XboxController driver = new XboxController(DriverConstants.DriverPort);
 
-	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true) * RobotConstants.maxSpeed;
-	private Supplier<Double> leftX = () -> DriverConstants.joystickDeadband(-driver.getLeftX(), true) * RobotConstants.maxSpeed;
-	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true) * RobotConstants.maxRot;
+	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
+			* RobotConstants.maxSpeed;
+	private Supplier<Double> leftX = () -> DriverConstants.joystickDeadband(-driver.getLeftX(), true)
+			* RobotConstants.maxSpeed;
+	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
+			* RobotConstants.maxRot;
 
 	private Swerve swerve = TunerConstants.swerve;
-	
+
 	private Trigger resetGyro = new Trigger(() -> driver.getBButton());
 
 	private Trigger pidtoPose = new Trigger(() -> driver.getAButton());
@@ -37,6 +41,7 @@ public class RobotContainer {
 
 	public RobotContainer() {
 		configureBindings();
+		configureControllerAlerts();
 	}
 
 	private void configureBindings() {
@@ -45,6 +50,21 @@ public class RobotContainer {
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(swerve.pidtoPose(() -> FieldUtil.getTowerCenter()));
 		pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
+	}
+
+	public void configureControllerAlerts() {
+		new Trigger(() -> {
+			return DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0.0
+					&& ((DriverStation.getMatchTime() <= Math.round(20)
+							&& DriverStation.getMatchTime() > Math.round(13))
+							|| DriverStation.getMatchTime() <= Math.round(10));
+		})
+				.onTrue(Commands.run(() -> {
+					driver.setRumble(RumbleType.kBothRumble, 1.0);
+				}).withTimeout(1.5).andThen(Commands.run(() -> {
+					driver.setRumble(RumbleType.kBothRumble, 0.0);
+				}).withTimeout(1.0)));
+
 	}
 
 	public Command getAutonomousCommand() {
