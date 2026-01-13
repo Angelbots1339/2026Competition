@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.NotLogged;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
@@ -52,7 +51,8 @@ public class RobotContainer {
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(swerve.pidtoPose(() -> FieldUtil.getTowerCenter()));
 		pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
-		bumpDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> Rotation2d.fromDegrees(-45)), swerve));
+		bumpDrive.whileTrue(
+				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest45()), swerve));
 	}
 
 	public void configureControllerAlerts() {

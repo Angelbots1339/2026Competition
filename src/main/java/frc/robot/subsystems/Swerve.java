@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
@@ -106,11 +107,13 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 							target.get().getY())
 							+ Math.signum(pidToPoseYController.getError()) * Math.abs(RobotConstants.pidToPoseKS),
 					-RobotConstants.maxSpeed, RobotConstants.maxSpeed);
-			
-			// convert from blue origin coordinates to field oriented (alliance origin) coordinates
+
+			// convert from blue origin coordinates to field oriented (alliance origin)
+			// coordinates
 			if (FieldUtil.isRedAlliance()) {
 				angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : -x,
-						() -> pidToPoseYController.atSetpoint() ? 0 : -y, () -> target.get().getRotation().rotateBy(Rotation2d.k180deg));
+						() -> pidToPoseYController.atSetpoint() ? 0 : -y,
+						() -> target.get().getRotation().rotateBy(Rotation2d.k180deg));
 			} else {
 				angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : x,
 						() -> pidToPoseYController.atSetpoint() ? 0 : y, () -> target.get().getRotation());
@@ -150,6 +153,18 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	public Pose2d getPose() {
 		return this.getState().Pose;
+	}
+
+	public Rotation2d getClosest45() {
+		Rotation2d closest = Rotation2d.fromDegrees(45);
+		for (var angle : Arrays.asList(45, 135, 225, 315)) {
+			if (Math.abs(Rotation2d.fromDegrees(angle).minus(getRelativeYaw()).getDegrees()) < Math
+					.abs(closest.minus(getRelativeYaw()).getDegrees())) {
+				closest = Rotation2d.fromDegrees(angle);
+			}
+		}
+
+		return closest;
 	}
 
 	public Rotation2d getYaw() {
