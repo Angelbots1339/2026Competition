@@ -1,5 +1,10 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -53,10 +58,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
-		angularDrivePID.setTolerance(RobotConstants.angularDriveTolerance);
+		angularDrivePID.setTolerance(RobotConstants.angularDriveTolerance.in(Degrees));
 		angularDrivePID.enableContinuousInput(0, 360);
-		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance);
-		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance);
+		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
+		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 
 		SmartDashboard.putData("Field", m_field);
 
@@ -112,12 +117,12 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 					pidToPoseXController.calculate(getPose().getX(),
 							target.get().getX())
 							+ Math.signum(pidToPoseXController.getError()) * Math.abs(RobotConstants.pidToPoseKS),
-					-RobotConstants.maxSpeed, RobotConstants.maxSpeed);
+					-RobotConstants.maxSpeed.in(MetersPerSecond), RobotConstants.maxSpeed.in(MetersPerSecond));
 			double y = MathUtil.clamp(
 					pidToPoseYController.calculate(getPose().getY(),
 							target.get().getY())
 							+ Math.signum(pidToPoseYController.getError()) * Math.abs(RobotConstants.pidToPoseKS),
-					-RobotConstants.maxSpeed, RobotConstants.maxSpeed);
+					-RobotConstants.maxSpeed.in(MetersPerSecond), RobotConstants.maxSpeed.in(MetersPerSecond));
 
 			// convert from blue origin coordinates to field oriented (alliance origin)
 			// coordinates
@@ -157,7 +162,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		ChassisSpeeds speeds = new ChassisSpeeds(translationX.get(), translationY.get(),
 				MathUtil.clamp(
 						angularDrivePID.atSetpoint() ? 0 : pid + (RobotConstants.angularDriveKS * Math.signum(pid)),
-						-RobotConstants.maxRot, RobotConstants.maxRot));
+						-RobotConstants.maxRot.in(RadiansPerSecond), RobotConstants.maxRot.in(RadiansPerSecond)));
 
 		return speeds;
 	}

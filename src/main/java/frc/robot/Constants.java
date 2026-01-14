@@ -1,10 +1,17 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
 
 public class Constants {
 	public class DriverConstants {
@@ -19,8 +26,8 @@ public class Constants {
 	}
 
 	public class RobotConstants {
-		public static final double maxSpeed = 1;
-		public static final double maxRot = Math.PI * 2;
+		public static final LinearVelocity maxSpeed = MetersPerSecond.of(1);
+		public static final AngularVelocity maxRot = RadiansPerSecond.of(Math.PI * 2);
 		public static final Distance length = Inches.of(32.25);
 		public static final Distance width = Inches.of(32.25);
 
@@ -30,13 +37,13 @@ public class Constants {
 		public static final double angularDriveKI = 0;
 		public static final double angularDriveKD = 0.005;
 		public static final double angularDriveKS = 0.4; // radians per sec
-		public static final double angularDriveTolerance = 1.5; // Degrees
+		public static final Angle angularDriveTolerance = Degrees.of(1.5); // Degrees
 
 		public static final double pidToPoseKP = 2.5;
 		public static final double pidToPoseKD = 0;
 		public static final double pidToPoseKS = 0.15;
-		public static final double pidToPoseTolerance = 0.03; // Meters
-		public static final double pidToPoseMaxSpeed = 1; // Meters per second
+		public static final Distance pidToPoseTolerance = Meters.of(0.03); // Meters
+		public static final LinearVelocity pidToPoseMaxSpeed = MetersPerSecond.of(1); // Meters per second
 	}
 
 	public class VisionConstants {

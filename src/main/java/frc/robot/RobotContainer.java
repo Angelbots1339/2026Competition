@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -27,11 +30,11 @@ public class RobotContainer {
 	private XboxController driver = new XboxController(DriverConstants.DriverPort);
 
 	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
-			* RobotConstants.maxSpeed;
+			* RobotConstants.maxSpeed.in(MetersPerSecond);
 	private Supplier<Double> leftX = () -> DriverConstants.joystickDeadband(-driver.getLeftX(), true)
-			* RobotConstants.maxSpeed;
+			* RobotConstants.maxSpeed.in(MetersPerSecond);
 	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
-			* RobotConstants.maxRot;
+			* RobotConstants.maxRot.in(RadiansPerSecond);
 
 	private Swerve swerve = TunerConstants.swerve;
 
