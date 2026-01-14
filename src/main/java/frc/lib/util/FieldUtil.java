@@ -15,8 +15,7 @@ public class FieldUtil {
 	public static Distance FieldWidth = Inches.of(651.22);
 	public static Distance FieldHeight = Inches.of(317.69);
 
-	public static Pose2d BlueHubCenter = new Pose2d(Meter.convertFrom(182.11, Inches),
-			Meter.convertFrom(158.84, Inches), Rotation2d.kZero);
+	public static Pose2d BlueHubCenter = new Pose2d(Inches.of(182.11), Inches.of(158.84), Rotation2d.kZero);
 	public static Pose2d RedHubCenter = new Pose2d(Meter.convertFrom(651.22 - 182.11, Inches),
 			Meter.convertFrom(158.84, Inches), Rotation2d.k180deg);
 
