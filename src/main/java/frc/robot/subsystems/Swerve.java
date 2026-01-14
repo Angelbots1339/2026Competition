@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
@@ -16,6 +17,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,6 +26,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.util.FieldUtil;
@@ -42,6 +46,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private PIDController pidToPoseYController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
 
+	private final Field2d m_field = new Field2d();
+
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
@@ -49,6 +55,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		angularDrivePID.enableContinuousInput(0, 360);
 		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance);
 		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance);
+
+		SmartDashboard.putData("Field", m_field);
 
 		configPathPlanner();
 
@@ -196,6 +204,26 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
 	}
 
+	@SuppressWarnings("resource")
+	public Consumer<SwerveSample> followChoreoPath() {
+		final PIDController xController = new PIDController(10.0, 0.0, 0.0);
+		final PIDController yController = new PIDController(10.0, 0.0, 0.0);
+		final PIDController headingController = new PIDController(7.5, 0.0, 0.0);
+		headingController.enableContinuousInput(-Math.PI, Math.PI);
+		return (sample) -> {
+			Pose2d pose = getPose();
+
+			// Generate the next speeds for the robot
+			ChassisSpeeds speeds = new ChassisSpeeds(
+					sample.vx + xController.calculate(pose.getX(), sample.x),
+					sample.vy + yController.calculate(pose.getY(), sample.y),
+					sample.omega + headingController.calculate(pose.getRotation().getRadians(), sample.heading));
+
+			// Apply the generated speeds
+			driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw()));
+		};
+	}
+
 	public void configPathPlanner() {
 		RobotConfig config = null;
 		try {
@@ -237,6 +265,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	@Override
 	public void periodic() {
+		m_field.setRobotPose(this.getPose());
 	}
 
 	public void startSimThread() {

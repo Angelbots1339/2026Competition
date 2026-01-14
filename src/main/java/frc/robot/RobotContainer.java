@@ -42,11 +42,14 @@ public class RobotContainer {
 
 	private final SendableChooser<Command> autoChooser;
 
+	private Autos autos = new Autos(swerve);
+
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
 
 		autoChooser = AutoBuilder.buildAutoChooser();
+		autoChooser.addOption("choreo test", autos.autoPath());
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
