@@ -11,9 +11,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,20 +24,19 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.util.FieldUtil;
 import frc.robot.Constants.RobotConstants;
 
-@Logged
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
-	@NotLogged
 	private static final double kSimLoopPeriod = 0.004; // 4 ms
-	@NotLogged
 	private Notifier m_simNotifier = null;
-	@NotLogged
 	private double m_lastSimTime;
 
+	@Logged
 	private PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
 			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD);
 
+	@Logged
 	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
+	@Logged
 	private PIDController pidToPoseYController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
 
@@ -151,6 +148,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return speeds;
 	}
 
+	@Logged
 	public Pose2d getPose() {
 		return this.getState().Pose;
 	}

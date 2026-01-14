@@ -7,7 +7,6 @@ package frc.robot;
 import java.util.function.Supplier;
 
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
@@ -22,7 +21,6 @@ import frc.robot.subsystems.Swerve;
 
 @Logged
 public class RobotContainer {
-	@NotLogged
 	private XboxController driver = new XboxController(DriverConstants.DriverPort);
 
 	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
