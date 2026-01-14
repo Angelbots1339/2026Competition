@@ -16,7 +16,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -35,14 +34,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private Notifier m_simNotifier = null;
 	private double m_lastSimTime;
 
-	@Logged
 	private PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
 			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD);
 
-	@Logged
 	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
-	@Logged
 	private PIDController pidToPoseYController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
 
@@ -156,7 +152,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return speeds;
 	}
 
-	@Logged
 	public Pose2d getPose() {
 		return this.getState().Pose;
 	}
@@ -193,11 +188,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return FieldUtil.isRedAlliance() ? getYaw().rotateBy(Rotation2d.k180deg) : getYaw();
 	}
 
-	ChassisSpeeds getRobotRelativeSpeeds() {
+	public ChassisSpeeds getRobotRelativeSpeeds() {
 		return this.getState().Speeds;
 	}
 
-	void driveRobotRelative(ChassisSpeeds speeds) {
+	public void driveRobotRelative(ChassisSpeeds speeds) {
 		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
 	}
 

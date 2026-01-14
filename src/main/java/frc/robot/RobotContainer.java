@@ -8,8 +8,6 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
@@ -24,7 +22,6 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Swerve;
 
-@Logged
 public class RobotContainer {
 	private XboxController driver = new XboxController(DriverConstants.DriverPort);
 
@@ -43,7 +40,6 @@ public class RobotContainer {
 	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
 
-	@NotLogged
 	private final SendableChooser<Command> autoChooser;
 
 	public RobotContainer() {
