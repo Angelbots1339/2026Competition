@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Test 5m Forward"
+            "pathName": "5M Right"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Odometry Tests",
   "choreoAuto": false
 }

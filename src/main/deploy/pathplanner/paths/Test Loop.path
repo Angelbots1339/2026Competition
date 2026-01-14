@@ -1,0 +1,102 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.5,
+        "y": 7.598214285714285
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.5,
+        "y": 7.598214285714285
+      },
+      "isLocked": false,
+      "linkedName": "TestStart"
+    },
+    {
+      "anchor": {
+        "x": 6.8933035714285715,
+        "y": 6.901767857142858
+      },
+      "prevControl": {
+        "x": 4.794809612070585,
+        "y": 7.671215642240785
+      },
+      "nextControl": {
+        "x": 7.8650892857142845,
+        "y": 6.54544642857143
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.342624999999999,
+        "y": 0.9090892857142854
+      },
+      "prevControl": {
+        "x": 6.9482344881292075,
+        "y": 1.0199755300196334
+      },
+      "nextControl": {
+        "x": 5.192678571428571,
+        "y": 0.6985357142857138
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.2449285714285714,
+        "y": 1.200625
+      },
+      "prevControl": {
+        "x": 3.275535055645168,
+        "y": 0.5267669141660708
+      },
+      "nextControl": {
+        "x": 1.4027142857142865,
+        "y": 1.7513035714285718
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.5,
+        "y": 7.598214285714285
+      },
+      "prevControl": {
+        "x": 0.7062678571428571,
+        "y": 4.990589285714286
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "TestStart"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Odometry Tests",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
