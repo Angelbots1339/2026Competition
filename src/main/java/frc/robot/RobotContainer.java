@@ -49,7 +49,8 @@ public class RobotContainer {
 		configureControllerAlerts();
 
 		autoChooser = AutoBuilder.buildAutoChooser();
-		autoChooser.addOption("choreo test", autos.autoPath());
+		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
+		autoChooser.addOption("Left Pass", autos.leftPassAuto());
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 

@@ -20,9 +20,16 @@ public class Autos {
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 	}
 
-	public Command autoPath() {
-		final var routine = factory.newRoutine("Auto Path");
-		final var traj = routine.trajectory("Test");
+	public Command hubDepotTowerAuto() {
+		final var routine = factory.newRoutine("Hub Depot Tower");
+		final var traj = routine.trajectory("HubDepotTower");
+		routine.active().whileTrue(Commands.sequence(traj.resetOdometry(), traj.cmd()));
+		return routine.cmd();
+	}
+
+	public Command leftPassAuto() {
+		final var routine = factory.newRoutine("Left Pass");
+		final var traj = routine.trajectory("PassLeft");
 		routine.active().whileTrue(Commands.sequence(traj.resetOdometry(), traj.cmd()));
 		return routine.cmd();
 	}
