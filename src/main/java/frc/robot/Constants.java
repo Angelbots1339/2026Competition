@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 
 public class Constants {
 	public class DriverConstants {
@@ -17,6 +18,8 @@ public class Constants {
 	public class RobotConstants {
 		public static final double maxSpeed = 1;
 		public static final double maxRot = Math.PI * 2;
+		public static final double length = Units.inchesToMeters(32.25);
+		public static final double width = Units.inchesToMeters(32.25);
 
 		public static final double angularDriveKP = 0.075;
 		public static final double angularDriveKI = 0;

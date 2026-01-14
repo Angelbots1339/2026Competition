@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
@@ -58,7 +59,7 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
-		pidtoPose.whileTrue(swerve.pidtoPose(() -> FieldUtil.getTowerCenter()));
+		pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
 		pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest45()), swerve));

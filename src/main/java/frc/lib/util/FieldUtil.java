@@ -25,6 +25,8 @@ public class FieldUtil {
 	public static Pose2d RedTowerCenter = new Pose2d(Meter.convertFrom(651.22 - 156.06 + 114.26, Inches),
 			Meter.convertFrom(87.46 + 82.32, Inches), Rotation2d.k180deg);
 
+	public static Distance towerWidth = Inches.of(47.00);
+
 	public static enum HubShiftTime {
 		TRANSITION_SHIFT_START(140),
 		TRANSITION_SHIFT_END(130),
