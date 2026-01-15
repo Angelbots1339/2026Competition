@@ -15,7 +15,7 @@ public class Constants {
 	}
 
 	public class RobotConstants {
-		public static final double maxSpeed = 5;
+		public static final double maxSpeed = 1;
 		public static final double maxRot = Math.PI * 2;
 
 		public static final double angularDriveKP = 0.075;
