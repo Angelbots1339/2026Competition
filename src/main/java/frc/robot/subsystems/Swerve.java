@@ -19,6 +19,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -31,7 +32,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.util.FieldUtil;
+import frc.lib.util.LimelightHelpers;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.VisionConstants;
 
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
 	private static final double kSimLoopPeriod = 0.004; // 4 ms
@@ -263,8 +266,29 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		);
 	}
 
+	public void updateVision() {
+		LimelightHelpers.SetRobotOrientation(VisionConstants.LimelightName, getYaw().getDegrees(),
+				this.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0.0, 0.0, 0.0,
+				0.0);
+		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+
+		if (mt2 == null) {
+			System.err.println("limelight is not able to get data");
+			return;
+		}
+
+		if (mt2.tagCount < 1) {
+			return;
+		}
+
+		// todo find good values for std
+		// setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+		addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+	}
+
 	@Override
 	public void periodic() {
+		updateVision();
 		m_field.setRobotPose(this.getPose());
 	}
 
