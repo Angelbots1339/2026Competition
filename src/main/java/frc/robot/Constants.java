@@ -31,7 +31,7 @@ public class Constants {
 		public static final Distance length = Inches.of(32.25);
 		public static final Distance width = Inches.of(32.25);
 
-		public static final Translation2d climberOffset = new Translation2d(length.div(4), width.div(4));
+		public static final Translation2d climberOffset = new Translation2d(length.div(4), Meters.zero());
 
 		public static final double angularDriveKP = 0.075;
 		public static final double angularDriveKI = 0;

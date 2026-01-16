@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.Swerve;
 
 public class AlignUtil {
@@ -19,10 +20,11 @@ public class AlignUtil {
 	 * rotation = 0 = facing the pose directly with the front of the robot (the face
 	 * of the pose will face the robot directly)
 	 */
-	public static final Transform2d rightTowerOffset = new Transform2d(Meters.zero(), FieldUtil.towerWidth.div(2),
+	public static final Transform2d rightTowerOffset = new Transform2d(Meters.zero(),
+			FieldUtil.towerWidth.div(2).plus(RobotConstants.climberOffset.getMeasureX()),
 			Rotation2d.kCW_90deg);
 	public static final Transform2d leftTowerOffset = new Transform2d(Meters.zero(),
-			FieldUtil.towerWidth.div(2).unaryMinus(),
+			FieldUtil.towerWidth.div(2).unaryMinus().minus(RobotConstants.climberOffset.getMeasureX()),
 			Rotation2d.kCCW_90deg);
 
 	/* offsets a pose target with a robot relative offset */
