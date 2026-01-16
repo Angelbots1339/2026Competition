@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
+import frc.lib.util.Testing;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
@@ -47,6 +48,9 @@ public class RobotContainer {
 	private final SendableChooser<Command> autoChooser;
 
 	private Autos autos = new Autos(swerve);
+
+	@SuppressWarnings("unused")
+	private Testing testing = new Testing(swerve);
 
 	public RobotContainer() {
 		configureBindings();

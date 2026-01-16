@@ -16,6 +16,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 public class Constants {
 	public class DriverConstants {
 		public static final int DriverPort = 0;
+		public static final int TesterPort = 2;
 
 		public static final double joystickDeadband = 0.1;
 
