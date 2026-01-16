@@ -1,5 +1,7 @@
 package frc.lib.util;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import java.util.Arrays;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -7,7 +9,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.Swerve;
 
 public class AlignUtil {
@@ -15,16 +16,14 @@ public class AlignUtil {
 	 * right/left = prospective of driver
 	 * transformation relative to robot and direction of pose = rotation of robot
 	 * positive = left, forward of robot from front
-	 * rotation = 0 = facing the pose directly with the front of the robot
+	 * rotation = 0 = facing the pose directly with the front of the robot (the face
+	 * of the pose will face the robot directly)
 	 */
-	public static final Transform2d rightTowerOffset = new Transform2d(
-			RobotConstants.climberOffset.getMeasureX().unaryMinus(),
-			FieldUtil.towerWidth.div(2).unaryMinus().plus(RobotConstants.climberOffset.getMeasureY()),
-			Rotation2d.kZero);
-	public static final Transform2d leftTowerOffset = new Transform2d(
-			RobotConstants.climberOffset.getMeasureX().unaryMinus(),
-			FieldUtil.towerWidth.div(2).unaryMinus().plus(RobotConstants.climberOffset.getMeasureY()).unaryMinus(),
-			Rotation2d.k180deg);
+	public static final Transform2d rightTowerOffset = new Transform2d(Meters.zero(), FieldUtil.towerWidth.div(2),
+			Rotation2d.kCW_90deg);
+	public static final Transform2d leftTowerOffset = new Transform2d(Meters.zero(),
+			FieldUtil.towerWidth.div(2).unaryMinus(),
+			Rotation2d.kCCW_90deg);
 
 	/* offsets a pose target with a robot relative offset */
 	public static Pose2d offsetPose(Pose2d target, Transform2d offset) {
