@@ -3,12 +3,15 @@ package frc.robot;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.util.FieldUtil;
 import frc.robot.subsystems.Swerve;
 
 public class Autos {
 	private AutoFactory factory;
+	private Swerve swerve;
 
 	public Autos(Swerve swerve) {
+		this.swerve = swerve;
 		factory = new AutoFactory(
 				swerve::getPose, // A function that returns the current field-relative Pose2d of the robot
 				swerve::resetPose, // A function that receives a field-relative Pose2d to reset the robot's
@@ -21,9 +24,14 @@ public class Autos {
 	}
 
 	public Command hubDepotTowerAuto() {
-		final var routine = factory.newRoutine("Hub Depot Tower");
-		final var traj = routine.trajectory("HubDepotTower");
-		routine.active().whileTrue(Commands.sequence(traj.resetOdometry(), traj.cmd()));
+		final var routine = factory.newRoutine("Hub Depot");
+		final var depotShoot = routine.trajectory("HubDepotTower", 0);
+		final var shootToTower = routine.trajectory("HubDepotTower", 1);
+		routine.active().whileTrue(Commands.sequence(depotShoot.resetOdometry(), depotShoot.cmd()));
+		depotShoot.done()
+				.onTrue(swerve.pointDrive(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)
+						.withDeadline(Commands.waitSeconds(2))
+						.andThen(shootToTower.cmd()));
 		return routine.cmd();
 	}
 
