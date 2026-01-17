@@ -34,11 +34,11 @@ public class Constants {
 
 		public static final Translation2d climberOffset = new Translation2d(length.div(4), Meters.zero());
 
-		public static final double angularDriveKP = 0.075;
+		public static final double angularDriveKP = 0.05;
 		public static final double angularDriveKI = 0;
 		public static final double angularDriveKD = 0.005;
 		public static final double angularDriveKS = 0.4; // radians per sec
-		public static final Angle angularDriveTolerance = Degrees.of(1.5); // Degrees
+		public static final Angle angularDriveTolerance = Degrees.of(0.25); // Degrees
 
 		public static final double pidToPoseKP = 2.5;
 		public static final double pidToPoseKD = 0;
