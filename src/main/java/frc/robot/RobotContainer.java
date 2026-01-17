@@ -49,13 +49,13 @@ public class RobotContainer {
 
 	private Autos autos = new Autos(swerve);
 
-	private TestingUtil testing = new TestingUtil(swerve);
+	// private TestingUtil testing = new TestingUtil(swerve);
 
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
 
-		testing.bindTriggers();
+		// testing.bindTriggers();
 
 		autoChooser = AutoBuilder.buildAutoChooser();
 		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());

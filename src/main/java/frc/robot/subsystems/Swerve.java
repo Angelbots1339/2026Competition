@@ -26,9 +26,12 @@ import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -54,7 +57,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 			RobotConstants.pidToPoseKD);
 	private PIDController pidToPoseYController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
-
 	private final Field2d m_field = new Field2d();
 
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
@@ -66,6 +68,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 
 		SmartDashboard.putData("Field", m_field);
+
+		register();
 
 		configPathPlanner();
 
@@ -267,25 +271,15 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void updateVision() {
-		if (!Robot.isReal())
-			return;
-		LimelightHelpers.SetRobotOrientation(VisionConstants.LimelightName, getYaw().getDegrees(),
-				this.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0.0, 0.0, 0.0,
-				0.0);
+		LimelightHelpers.SetRobotOrientation("limelight",
+				getYaw().getDegrees(), 0, 0, 0, 0, 0);
 		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-
-		if (mt2 == null) {
-			System.err.println("limelight is not able to get data");
+		if (mt2 == null)
 			return;
-		}
-
-		if (mt2.tagCount < 1) {
+		if (mt2.tagCount < 1)
 			return;
-		}
 
-		// todo find good values for std
-		setVisionMeasurementStdDevs(VecBuilder.fill(0, 0, 0));
-		addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+		addVisionMeasurement(mt2.pose, Utils.fpgaToCurrentTime(mt2.timestampSeconds));
 	}
 
 	@Override
