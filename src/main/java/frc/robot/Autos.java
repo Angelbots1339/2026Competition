@@ -25,13 +25,29 @@ public class Autos {
 
 	public Command hubDepotTowerAuto() {
 		final var routine = factory.newRoutine("Hub Depot");
-		final var depotShoot = routine.trajectory("HubDepotTower", 0);
-		final var shootToTower = routine.trajectory("HubDepotTower", 1);
-		routine.active().whileTrue(Commands.sequence(depotShoot.resetOdometry(), depotShoot.cmd()));
-		depotShoot.done()
+		final var hubToDepot = routine.trajectory("HubDepotTower", 0);
+		final var intakeDepot = routine.trajectory("HubDepotTower", 1);
+		final var shootToTower = routine.trajectory("HubDepotTower", 2);
+		routine.active().whileTrue(Commands.sequence(hubToDepot.resetOdometry(), hubToDepot.cmd(), intakeDepot.cmd()));
+		intakeDepot.done()
 				.onTrue(swerve.pointDrive(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)
 						.withDeadline(Commands.waitSeconds(2))
 						.andThen(shootToTower.cmd()));
+		return routine.cmd();
+	}
+
+	public Command hubDepotTower1() {
+		final var routine = factory.newRoutine("Hub Depot Tower 1");
+		final var hubToDepot = routine.trajectory("HubDepotTower", 0);
+		routine.active().whileTrue(Commands.sequence(hubToDepot.resetOdometry(), hubToDepot.cmd()));
+		return routine.cmd();
+	}
+
+	public Command hubDepotTower12() {
+		final var routine = factory.newRoutine("Hub Depot Tower 1");
+		final var hubToDepot = routine.trajectory("HubDepotTower", 0);
+		final var intakeDepot = routine.trajectory("HubDepotTower", 1);
+		routine.active().whileTrue(Commands.sequence(hubToDepot.resetOdometry(), hubToDepot.cmd(), intakeDepot.cmd()));
 		return routine.cmd();
 	}
 

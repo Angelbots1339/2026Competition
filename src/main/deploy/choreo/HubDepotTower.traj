@@ -6,7 +6,7 @@
     {"x":3.580472469329834, "y":4.034536, "heading":0.0, "intervals":10, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":3.281916618347168, "y":4.131297588348389, "heading":0.0, "intervals":22, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
     {"x":1.6363598108291626, "y":4.831320762634277, "heading":0.0, "intervals":19, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
-    {"x":0.5, "y":5.002081871032715, "heading":0.0, "intervals":15, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":0.5, "y":5.002081871032715, "heading":0.0, "intervals":15, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":0.5, "y":6.191559314727783, "heading":0.0, "intervals":14, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":0.5, "y":7.226709842681885, "heading":0.0, "intervals":30, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":2.6148219108581543, "y":5.339716911315918, "heading":-0.5880032220363305, "intervals":25, "split":true, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
@@ -28,7 +28,7 @@
     {"x":{"exp":"3.580472469329834 m", "val":3.580472469329834}, "y":{"exp":"158.84 in", "val":4.034536}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":10, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"3.281916618347168 m", "val":3.281916618347168}, "y":{"exp":"4.131297588348389 m", "val":4.131297588348389}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":22, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"1.6363598108291626 m", "val":1.6363598108291626}, "y":{"exp":"4.831320762634277 m", "val":4.831320762634277}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":19, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
-    {"x":{"exp":"0.5 m", "val":0.5}, "y":{"exp":"5.002081871032715 m", "val":5.002081871032715}, "heading":{"exp":"-0 mrad", "val":0.0}, "intervals":15, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"0.5 m", "val":0.5}, "y":{"exp":"5.002081871032715 m", "val":5.002081871032715}, "heading":{"exp":"-0 mrad", "val":0.0}, "intervals":15, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"0.5 m", "val":0.5}, "y":{"exp":"6.191559314727783 m", "val":6.191559314727783}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":14, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"0.5 m", "val":0.5}, "y":{"exp":"7.226709842681885 m", "val":7.226709842681885}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":30, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"2.6148219108581543 m", "val":2.6148219108581543}, "y":{"exp":"5.339716911315918 m", "val":5.339716911315918}, "heading":{"exp":"-0.5880032220363305 rad", "val":-0.5880032220363305}, "intervals":25, "split":true, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
@@ -211,7 +211,7 @@
     {"t":4.081, "x":1.08949, "y":4.92139, "heading":-1.56135, "vx":-0.5859, "vy":-0.16058, "omega":-0.18597, "ax":8.65382, "ay":2.37352, "alpha":2.74644, "fx":[145.15762,141.7033,150.51339,151.42184], "fy":[49.48209,58.56786,29.17255,24.2691]},
     {"t":4.11484, "x":1.07461, "y":4.91732, "heading":-1.56765, "vx":-0.29298, "vy":-0.08024, "omega":-0.09301, "ax":8.65562, "ay":2.37061, "alpha":2.74787, "fx":[145.21933,141.71681,150.52394,151.45828], "fy":[49.34832,58.58367,29.22011,24.14147]},
     {"t":4.14869, "x":1.06966, "y":4.91596, "heading":-1.5708, "vx":0.0, "vy":0.0, "omega":0.0, "ax":0.0, "ay":0.0, "alpha":0.0, "fx":[0.0,0.0,0.0,0.0], "fy":[0.0,0.0,0.0,0.0]}],
-  "splits":[0,110]
+  "splits":[0,51,110]
  },
  "events":[
    {"name":"DepotStart", "from":{"target":3, "targetTimestamp":1.21215, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"parallel", "data":{"commands":[
