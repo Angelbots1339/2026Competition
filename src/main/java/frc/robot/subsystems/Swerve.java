@@ -26,25 +26,21 @@ import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.LimelightHelpers;
 import frc.robot.Robot;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.generated.TunerConstants;
 
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
 	private static final double kSimLoopPeriod = 0.004; // 4 ms
@@ -311,52 +307,5 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 			this.updateSimState(deltaTime, RobotController.getBatteryVoltage());
 		});
 		m_simNotifier.startPeriodic(kSimLoopPeriod);
-	}
-
-	/* yoinked from mechanical advantage */
-	public Command characterizeWheelRadius() {
-		SlewRateLimiter limiter = new SlewRateLimiter(Math.PI / 4);
-		WheelRadiusCharacterizationState state = new WheelRadiusCharacterizationState();
-		double driveBaseRadius = Math.hypot(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY);
-		return Commands.parallel(
-				Commands.sequence(
-						Commands.runOnce(() -> limiter.reset(0)),
-						Commands.run(() -> {
-							// double speed = limiter.calculate(Math.PI / 16);
-							driveRobotRelative(new ChassisSpeeds(0, 0, Math.PI / 4));
-						})),
-				Commands.sequence(
-						// wait for module reorient
-						Commands.waitSeconds(1.0),
-						Commands.runOnce(() -> {
-							for (int i = 0; i < getModules().length; i++) {
-								state.positions[i] = getModule(i).getPosition(true).distanceMeters;
-							}
-							state.lastAngle = getYaw();
-							state.gyroDelta = 0;
-						}),
-						Commands.run(() -> {
-							var rotation = getYaw();
-							state.gyroDelta += Math.abs(rotation.minus(state.lastAngle).getRadians());
-							state.lastAngle = rotation;
-						}).finallyDo(() -> {
-							double[] positions = new double[4];
-							for (int i = 0; i < getModules().length; i++) {
-								positions[i] = getModule(i).getPosition(true).distanceMeters;
-							}
-							double wheelDelta = 0.0;
-							for (int i = 0; i < 4; i++) {
-								wheelDelta += Math.abs(positions[i] - state.positions[i]) / 4.0;
-							}
-							double wheelRadius = (state.gyroDelta * driveBaseRadius) / wheelDelta
-									* Units.metersToInches(TunerConstants.FrontLeft.WheelRadius);
-							SmartDashboard.putNumber("wheel radius", wheelRadius);
-						})));
-	}
-
-	private static class WheelRadiusCharacterizationState {
-		double[] positions = new double[4];
-		Rotation2d lastAngle = Rotation2d.kZero;
-		double gyroDelta = 0.0;
 	}
 }
