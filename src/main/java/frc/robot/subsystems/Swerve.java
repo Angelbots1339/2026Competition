@@ -24,6 +24,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import choreo.trajectory.SwerveSample;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -40,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.LimelightHelpers;
+import frc.robot.Robot;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.generated.TunerConstants;
@@ -97,22 +99,16 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public Command pointDrive(Supplier<Double> x, Supplier<Double> y, Supplier<Pose2d> pose,
 			Supplier<Boolean> fieldCentric) {
 		return run(() -> {
-			double xdiff = getPose().getX() - pose.get().getX();
-			double ydiff = getPose().getY() - pose.get().getY();
-			Rotation2d angle = Rotation2d.fromRadians(Math.atan(ydiff / xdiff));
+			double xdiff = pose.get().getX() - getPose().getX();
+			double ydiff = pose.get().getY() - getPose().getY();
+			Rotation2d angle = Rotation2d.fromRadians(Math.atan2(ydiff, xdiff));
 
-			// hack to get around atan's limited domain
-			if (!FieldUtil.isRedAlliance() && xdiff > 0) {
-				angularDriveRequest(x, y, () -> angle.plus(Rotation2d.k180deg));
-				return;
-			}
-			if (FieldUtil.isRedAlliance() && xdiff < 0) {
-				angularDriveRequest(x, y, () -> angle.plus(Rotation2d.k180deg));
-				return;
-			}
-
-			angularDriveRequest(x, y, () -> angle);
+			angularDriveRequest(x, y, () -> fieldtoRobotRotation(angle));
 		});
+	}
+
+	public Rotation2d fieldtoRobotRotation(Rotation2d rot) {
+		return FieldUtil.isRedAlliance() ? rot.plus(Rotation2d.k180deg) : rot;
 	}
 
 	public Command pidtoPose(Supplier<Pose2d> target) {
@@ -275,6 +271,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void updateVision() {
+		if (!Robot.isReal())
+			return;
 		LimelightHelpers.SetRobotOrientation(VisionConstants.LimelightName, getYaw().getDegrees(),
 				this.getPigeon2().getAngularVelocityZWorld().getValueAsDouble(), 0.0, 0.0, 0.0,
 				0.0);
@@ -290,13 +288,13 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		}
 
 		// todo find good values for std
-		// setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+		setVisionMeasurementStdDevs(VecBuilder.fill(0, 0, 0));
 		addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
 	}
 
 	@Override
 	public void periodic() {
-		// updateVision();
+		updateVision();
 		m_field.setRobotPose(this.getPose());
 	}
 
