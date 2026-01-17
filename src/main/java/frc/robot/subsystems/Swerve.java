@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.LimelightHelpers;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.VisionConstants;
 
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
 	private static final double kSimLoopPeriod = 0.004; // 4 ms
@@ -268,13 +269,20 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public void updateVision() {
 		LimelightHelpers.SetRobotOrientation("limelight",
 				getYaw().getDegrees(), 0, 0, 0, 0, 0);
+		LimelightHelpers.SetFiducialIDFiltersOverride(null, null);
 		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 		if (mt2 == null)
 			return;
 		if (mt2.tagCount < 1)
 			return;
 
-		setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+		if (mt2.avgTagDist > 7) {
+			return;
+		}
+
+		double xyStdDev2 = VisionConstants.calcStdDev(mt2.avgTagDist);
+
+		setVisionMeasurementStdDevs(VecBuilder.fill(xyStdDev2, xyStdDev2, 9999999));
 		addVisionMeasurement(mt2.pose, Utils.fpgaToCurrentTime(mt2.timestampSeconds));
 	}
 
