@@ -61,6 +61,7 @@ public class RobotContainer {
 
 		autoChooser = AutoBuilder.buildAutoChooser();
 		autoChooser.addOption("Hub Depot Outpost Tower", autos.hubDepotOutpostTowerAuto());
+		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 

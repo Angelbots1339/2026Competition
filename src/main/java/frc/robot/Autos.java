@@ -18,6 +18,27 @@ public class Autos {
 				true, // If this is true, when on the red alliance, the path will be mirrored to the
 						// opposite side, while keeping the same coordinate system origin.
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
+
+		/* TODO: replace with actual intake commands */
+		Command leftIntakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
+		Command leftIntakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
+
+		factory.bind("LeftIntakeStart", leftIntakeOpen);
+		factory.bind("LeftIntakeEnd", leftIntakeClose);
+	}
+
+	public Command hubDepotTowerAuto() {
+		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
+		final var hubToDepotShoot = routine.trajectory("HubtoDepotShoot");
+		final var depotShoottoTower = routine.trajectory("DepotShoottoTower");
+
+		routine.active().onTrue(
+				Commands.sequence(
+						hubToDepotShoot.resetOdometry(),
+						hubToDepotShoot.cmd(),
+						depotShoottoTower.cmd()));
+
+		return routine.cmd();
 	}
 
 	public Command hubDepotOutpostTowerAuto() {
@@ -26,11 +47,6 @@ public class Autos {
 		final var depotShoottoOutpost = routine.trajectory("DepotShoottoOutpost");
 		final var outpostToShoot = routine.trajectory("OutposttoShoot");
 		final var outpostShoottoTower = routine.trajectory("OutpostShoottoTower");
-
-		Command leftIntakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
-		Command leftIntakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
-		factory.bind("LeftIntakeStart", leftIntakeOpen);
-		factory.bind("LeftIntakeEnd", leftIntakeClose);
 
 		routine.active().onTrue(
 				Commands.sequence(
