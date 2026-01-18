@@ -19,12 +19,29 @@ public class Autos {
 						// opposite side, while keeping the same coordinate system origin.
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 
-		/* TODO: replace with actual intake commands */
+		/* TODO: replace with actual commands */
 		Command leftIntakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
 		Command leftIntakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
 
+		Command passStart = Commands.print("pass start");
+		Command passEnd = Commands.print("pass end");
+
 		factory.bind("LeftIntakeStart", leftIntakeOpen);
 		factory.bind("LeftIntakeEnd", leftIntakeClose);
+		factory.bind("PassStart", passStart);
+		factory.bind("PassEnd", passEnd);
+	}
+
+	public Command leftPassAuto() {
+		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
+		final var leftPass = routine.trajectory("LeftPass");
+
+		routine.active().onTrue(
+				Commands.sequence(
+						leftPass.resetOdometry(),
+						leftPass.cmd()));
+
+		return routine.cmd();
 	}
 
 	public Command hubDepotTowerAuto() {

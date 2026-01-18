@@ -33,6 +33,20 @@
      "val":0.0
     }
    },
+   "LeftStart":{
+    "x":{
+     "exp":"LeftStart.x",
+     "val":3.6470389366149902
+    },
+    "y":{
+     "exp":"LeftStart.y",
+     "val":6.064808368682861
+    },
+    "heading":{
+     "exp":"LeftStart.heading",
+     "val":0.0
+    }
+   },
    "Outpost":{
     "x":{
      "exp":"2 m",
