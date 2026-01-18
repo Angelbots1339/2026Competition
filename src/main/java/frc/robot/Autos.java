@@ -3,15 +3,12 @@ package frc.robot;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.lib.util.FieldUtil;
 import frc.robot.subsystems.Swerve;
 
 public class Autos {
 	private AutoFactory factory;
-	private Swerve swerve;
 
 	public Autos(Swerve swerve) {
-		this.swerve = swerve;
 		factory = new AutoFactory(
 				swerve::getPose, // A function that returns the current field-relative Pose2d of the robot
 				swerve::resetPose, // A function that receives a field-relative Pose2d to reset the robot's
@@ -23,38 +20,26 @@ public class Autos {
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 	}
 
-	public Command hubDepotTowerAuto() {
-		final var routine = factory.newRoutine("Hub Depot");
-		final var hubToDepot = routine.trajectory("HubDepotTower", 0);
-		final var intakeDepot = routine.trajectory("HubDepotTower", 1);
-		final var shootToTower = routine.trajectory("HubDepotTower", 2);
-		routine.active().whileTrue(Commands.sequence(hubToDepot.resetOdometry(), hubToDepot.cmd(), intakeDepot.cmd()));
-		intakeDepot.done()
-				.onTrue(swerve.pointDrive(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)
-						.withDeadline(Commands.waitSeconds(2))
-						.andThen(shootToTower.cmd()));
-		return routine.cmd();
-	}
+	public Command hubDepotOutpostTowerAuto() {
+		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
+		final var hubToDepotShoot = routine.trajectory("HubtoDepotShoot");
+		final var depotShoottoOutpost = routine.trajectory("DepotShoottoOutpost");
+		final var outpostToShoot = routine.trajectory("OutposttoShoot");
+		final var outpostShoottoTower = routine.trajectory("OutpostShoottoTower");
 
-	public Command hubDepotTower1() {
-		final var routine = factory.newRoutine("Hub Depot Tower 1");
-		final var hubToDepot = routine.trajectory("HubDepotTower", 0);
-		routine.active().whileTrue(Commands.sequence(hubToDepot.resetOdometry(), hubToDepot.cmd()));
-		return routine.cmd();
-	}
+		Command leftIntakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
+		Command leftIntakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
+		factory.bind("LeftIntakeStart", leftIntakeOpen);
+		factory.bind("LeftIntakeEnd", leftIntakeClose);
 
-	public Command hubDepotTower12() {
-		final var routine = factory.newRoutine("Hub Depot Tower 1");
-		final var hubToDepot = routine.trajectory("HubDepotTower", 0);
-		final var intakeDepot = routine.trajectory("HubDepotTower", 1);
-		routine.active().whileTrue(Commands.sequence(hubToDepot.resetOdometry(), hubToDepot.cmd(), intakeDepot.cmd()));
-		return routine.cmd();
-	}
+		routine.active().onTrue(
+				Commands.sequence(
+						hubToDepotShoot.resetOdometry(),
+						hubToDepotShoot.cmd(),
+						depotShoottoOutpost.cmd(),
+						outpostToShoot.cmd(),
+						outpostShoottoTower.cmd()));
 
-	public Command leftPassAuto() {
-		final var routine = factory.newRoutine("Left Pass");
-		final var traj = routine.trajectory("PassLeft");
-		routine.active().whileTrue(Commands.sequence(traj.resetOdometry(), traj.cmd()));
 		return routine.cmd();
 	}
 }
