@@ -60,13 +60,13 @@ public class FieldUtil {
 	}
 
 	public static boolean isRedAlliance() {
-		Alliance alliance = getAlliance();
+		boolean isAllianceRED = false;
 
-		if (alliance == Alliance.Red) {
-			return true;
+		if (DriverStation.getAlliance().isPresent()) {
+			isAllianceRED = DriverStation.getAlliance().get() == Alliance.Red;
 		}
 
-		return false;
+		return isAllianceRED;
 	}
 
 	public static Pose2d getHubCenter() {

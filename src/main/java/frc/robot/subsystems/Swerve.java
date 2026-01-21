@@ -31,6 +31,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -46,6 +47,12 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private static final double kSimLoopPeriod = 0.004; // 4 ms
 	private Notifier m_simNotifier = null;
 	private double m_lastSimTime;
+	/* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
+	private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
+	/* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
+	private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
+	/* Keep track if we've ever applied the operator perspective before or not */
+	private boolean m_hasAppliedOperatorPerspective = false;
 
 	public PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
 			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD);
@@ -60,15 +67,15 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
 		angularDrivePID.setTolerance(RobotConstants.angularDriveTolerance.in(Degrees));
-		angularDrivePID.enableContinuousInput(0, 360);
+		angularDrivePID.enableContinuousInput(-180, 180);
 		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 
 		SendableRegistry.setName(angularDrivePID, "rotation PID");
 
 		SmartDashboard.putData("Field", m_field);
-
-		register();
+		resetPose(Pose2d.kZero);
+		resetGyro();
 
 		configPathPlanner();
 
@@ -301,6 +308,16 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		m_field.setRobotPose(this.getPose());
 		SmartDashboard.putNumber("target", angularDrivePID.getSetpoint());
 		SmartDashboard.putNumber("cur", getRelativeYaw().getDegrees());
+
+		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
+			DriverStation.getAlliance().ifPresent(allianceColor -> {
+				setOperatorPerspectiveForward(
+						allianceColor == Alliance.Red
+								? kRedAlliancePerspectiveRotation
+								: kBlueAlliancePerspectiveRotation);
+				m_hasAppliedOperatorPerspective = true;
+			});
+		}
 	}
 
 	public void startSimThread() {
