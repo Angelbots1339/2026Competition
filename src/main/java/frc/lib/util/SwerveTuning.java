@@ -45,7 +45,7 @@ public class SwerveTuning {
 		characterizeSwerveRadius.whileTrue(characterizeWheelRadius());
 
 		testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() -> 0.0, () -> 0.0,
-				() -> Rotation2d.fromDegrees(
+				() -> Rotation2d.fromRadians(
 						SmartDashboard.getNumber(TuningConstants.Swerve.angularPIDNTName + "/setpoint", 0))),
 				swerve));
 

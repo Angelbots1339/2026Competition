@@ -35,6 +35,7 @@ public class Constants {
 
 		public static final Translation2d climberOffset = new Translation2d(length.div(4), Meters.zero());
 
+		// tucker pid values: p = 4.6 0 for other
 		public static final double angularDriveKP = 6.87549;
 		public static final double angularDriveKI = 0;
 		public static final double angularDriveKD = 0.687549;
