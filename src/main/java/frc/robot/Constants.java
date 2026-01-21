@@ -35,10 +35,11 @@ public class Constants {
 
 		public static final Translation2d climberOffset = new Translation2d(length.div(4), Meters.zero());
 
-		// tucker pid values: p = 4.6 0 for other
-		public static final double angularDriveKP = 6.87549;
+		// has least amount of error, overshooting seems to be result of wheel slip on
+		// concrete
+		public static final double angularDriveKP = 6.87;
 		public static final double angularDriveKI = 0;
-		public static final double angularDriveKD = 0.687549;
+		public static final double angularDriveKD = 0;
 		public static final double angularDriveKS = 0;
 		public static final double angularDriveKV = 0;
 		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(angularDriveKS,
