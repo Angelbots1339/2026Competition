@@ -11,6 +11,8 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
@@ -27,6 +29,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Swerve;
 
+@Logged
 public class RobotContainer {
 	private XboxController driver = new XboxController(DriverConstants.DriverPort);
 
@@ -37,6 +40,7 @@ public class RobotContainer {
 	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
 			* RobotConstants.maxRot.in(RadiansPerSecond);
 
+	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
 
 	private Trigger resetGyro = new Trigger(() -> driver.getBButton());

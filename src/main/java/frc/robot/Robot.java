@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.epilogue.Epilogue;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -13,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.util.FieldUtil;
 
+@Logged(importance = Importance.CRITICAL)
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand = Commands.none();
 
@@ -23,6 +27,11 @@ public class Robot extends TimedRobot {
 
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog());
+		Epilogue.configure(config -> {
+			config.minimumImportance = Importance.CRITICAL;
+			// config.minimumImportance = Importance.DEBUG;
+		});
+		Epilogue.bind(this);
 	}
 
 	@Override

@@ -23,6 +23,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import choreo.trajectory.SwerveSample;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
@@ -33,7 +35,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -43,6 +44,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.TuningConstants;
 import frc.robot.Constants.VisionConstants;
 
+@Logged
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
 	private static final double kSimLoopPeriod = 0.004; // 4 ms
 	private Notifier m_simNotifier = null;
@@ -61,7 +63,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 			RobotConstants.pidToPoseKD);
 	private PIDController pidToPoseYController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
-	private final Field2d m_field = new Field2d();
 
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
@@ -71,7 +72,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 
-		SmartDashboard.putData("Field", m_field);
 		resetPose(Pose2d.kZero);
 		resetGyro();
 
@@ -175,6 +175,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return speeds;
 	}
 
+	@Logged(importance = Importance.CRITICAL)
 	public Pose2d getPose() {
 		return this.getState().Pose;
 	}
@@ -305,8 +306,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	@Override
 	public void periodic() {
 		updateVision();
-		m_field.setRobotPose(this.getPose());
-		SmartDashboard.putNumber("cur", getRelativeYaw().getDegrees());
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {
