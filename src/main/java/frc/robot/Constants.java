@@ -35,9 +35,9 @@ public class Constants {
 
 		public static final Translation2d climberOffset = new Translation2d(length.div(4), Meters.zero());
 
-		public static final double angularDriveKP = 0.12;
+		public static final double angularDriveKP = 6.87549;
 		public static final double angularDriveKI = 0;
-		public static final double angularDriveKD = 0.012;
+		public static final double angularDriveKD = 0.687549;
 		public static final double angularDriveKS = 0;
 		public static final double angularDriveKV = 0;
 		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(angularDriveKS,

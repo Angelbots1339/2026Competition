@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import java.util.Arrays;
@@ -67,8 +68,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
-		angularDrivePID.setTolerance(RobotConstants.angularDriveTolerance.in(Degrees));
-		angularDrivePID.enableContinuousInput(0, 360);
+		angularDrivePID.setTolerance(RobotConstants.angularDriveTolerance.in(Radians));
+		angularDrivePID.enableContinuousInput(0, 2 * Math.PI);
 		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 
@@ -165,7 +166,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	private ChassisSpeeds angularPIDCalc(Supplier<Double> translationX, Supplier<Double> translationY,
 			Supplier<Rotation2d> desiredRotation) {
-		double pid = angularDrivePID.calculate(getRelativeYaw().getDegrees(), desiredRotation.get().getDegrees());
+		double pid = angularDrivePID.calculate(getRelativeYaw().getRadians(), desiredRotation.get().getRadians());
 
 		ChassisSpeeds speeds = new ChassisSpeeds(translationX.get(), translationY.get(),
 				MathUtil.clamp(
