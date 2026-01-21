@@ -20,6 +20,7 @@ public class TestingUtil {
 
 	private Trigger baseTrigger = new Trigger(() -> DriverStation.isTestEnabled());
 	private Trigger characterizeSwerveRadius = baseTrigger.and(() -> tester.getAButton());
+	private Trigger testRotation = baseTrigger.and(() -> tester.getBButton());
 
 	private Swerve swerve;
 
@@ -29,6 +30,8 @@ public class TestingUtil {
 
 	public void bindTriggers() {
 		characterizeSwerveRadius.whileTrue(characterizeWheelRadius());
+		testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() -> 0.0, () -> 0.0,
+				() -> Rotation2d.fromDegrees(swerve.angularDrivePID.getSetpoint())), swerve));
 	}
 
 	/* yoinked from mechanical advantage */

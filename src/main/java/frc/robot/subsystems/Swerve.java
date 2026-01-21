@@ -29,6 +29,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -46,7 +47,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private Notifier m_simNotifier = null;
 	private double m_lastSimTime;
 
-	private PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
+	public PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
 			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD);
 
 	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
@@ -62,6 +63,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		angularDrivePID.enableContinuousInput(0, 360);
 		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
+
+		SendableRegistry.setName(angularDrivePID, "rotation PID");
 
 		SmartDashboard.putData("Field", m_field);
 
@@ -196,7 +199,12 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public Rotation2d getRelativeYaw() {
-		return FieldUtil.isRedAlliance() ? getYaw().rotateBy(Rotation2d.k180deg) : getYaw();
+		double rawYaw = getPigeon2().getYaw().getValue().in(Degrees) + (FieldUtil.isRedAlliance() ? 180 : 0);
+		double yawWithRollover = rawYaw > 0 ? rawYaw % 360 : 360 - Math.abs(rawYaw % 360);
+
+		return Rotation2d.fromDegrees(yawWithRollover);
+		// return FieldUtil.isRedAlliance() ? getYaw().rotateBy(Rotation2d.k180deg) :
+		// getYaw();
 	}
 
 	public ChassisSpeeds getRobotRelativeSpeeds() {
@@ -272,6 +280,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 		if (mt2 == null)
 			return;
+		SmartDashboard.putNumber("limelight rot", LimelightHelpers.getTX("limelight"));
 		if (mt2.tagCount < 1)
 			return;
 
@@ -290,6 +299,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public void periodic() {
 		updateVision();
 		m_field.setRobotPose(this.getPose());
+		SmartDashboard.putNumber("target", angularDrivePID.getSetpoint());
+		SmartDashboard.putNumber("cur", getRelativeYaw().getDegrees());
 	}
 
 	public void startSimThread() {
