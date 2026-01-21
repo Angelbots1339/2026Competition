@@ -54,4 +54,12 @@ public class Constants {
 			return 0.08 * Math.pow(metersFromTarget, 2);
 		}
 	}
+
+	public class TuningConstants {
+		public static final String tuningNTPrefix = "Tuning/";
+
+		public class Swerve {
+			public static final String angularPIDNTName = tuningNTPrefix + "angular PID";
+		}
+	}
 }

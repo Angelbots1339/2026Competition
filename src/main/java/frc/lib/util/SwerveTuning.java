@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.TuningConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Swerve;
 
@@ -26,11 +27,15 @@ public class SwerveTuning {
 
 	public static void init(Swerve swerve) {
 		SwerveTuning.swerve = swerve;
-		characterizeSwerveRadius.whileTrue(characterizeWheelRadius());
-		testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() -> 0.0, () -> 0.0,
-				() -> Rotation2d.fromDegrees(swerve.angularDrivePID.getSetpoint())), swerve));
+		swerve.logTuning();
 
-		SmartDashboard.putData("angular drive pid", swerve.angularDrivePID);
+		characterizeSwerveRadius.whileTrue(characterizeWheelRadius());
+
+		testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() -> 0.0, () -> 0.0,
+				() -> Rotation2d.fromDegrees(
+						SmartDashboard.getNumber(TuningConstants.Swerve.angularPIDNTName + "/setpoint", 0))),
+				swerve));
+
 	}
 
 	/* yoinked from mechanical advantage */

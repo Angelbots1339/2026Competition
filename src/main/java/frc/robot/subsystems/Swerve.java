@@ -40,6 +40,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.LimelightHelpers;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.TuningConstants;
 import frc.robot.Constants.VisionConstants;
 
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
@@ -53,7 +54,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	/* Keep track if we've ever applied the operator perspective before or not */
 	private boolean m_hasAppliedOperatorPerspective = false;
 
-	public PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
+	private PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
 			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD);
 
 	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
@@ -79,6 +80,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		if (Utils.isSimulation()) {
 			startSimThread();
 		}
+	}
+
+	public void logTuning() {
+		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
 	}
 
 	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> rot, Supplier<Boolean> fieldCentric) {
@@ -301,9 +306,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public void periodic() {
 		updateVision();
 		m_field.setRobotPose(this.getPose());
-		SmartDashboard.putNumber("target", angularDrivePID.getSetpoint());
 		SmartDashboard.putNumber("cur", getRelativeYaw().getDegrees());
-		SmartDashboard.putNumber("err", angularDrivePID.getError());
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {
