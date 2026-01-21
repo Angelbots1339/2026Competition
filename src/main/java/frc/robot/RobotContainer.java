@@ -108,4 +108,9 @@ public class RobotContainer {
 	public void testingInit() {
 		SwerveTuning.init(swerve);
 	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isHubActive() {
+		return FieldUtil.isHubActive();
+	}
 }
