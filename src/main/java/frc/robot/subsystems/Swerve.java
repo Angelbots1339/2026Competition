@@ -29,7 +29,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -67,11 +66,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
 		angularDrivePID.setTolerance(RobotConstants.angularDriveTolerance.in(Degrees));
-		angularDrivePID.enableContinuousInput(-180, 180);
+		angularDrivePID.enableContinuousInput(0, 360);
 		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
-
-		SendableRegistry.setName(angularDrivePID, "rotation PID");
 
 		SmartDashboard.putData("Field", m_field);
 		resetPose(Pose2d.kZero);
@@ -210,8 +207,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		double yawWithRollover = rawYaw > 0 ? rawYaw % 360 : 360 - Math.abs(rawYaw % 360);
 
 		return Rotation2d.fromDegrees(yawWithRollover);
-		// return FieldUtil.isRedAlliance() ? getYaw().rotateBy(Rotation2d.k180deg) :
-		// getYaw();
 	}
 
 	public ChassisSpeeds getRobotRelativeSpeeds() {

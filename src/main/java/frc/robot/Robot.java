@@ -19,7 +19,6 @@ public class Robot extends TimedRobot {
 	private final RobotContainer m_robotContainer;
 
 	public Robot() {
-		enableLiveWindowInTest(true);
 		m_robotContainer = new RobotContainer();
 
 		DataLogManager.start();
@@ -81,6 +80,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testInit() {
 		CommandScheduler.getInstance().cancelAll();
+		m_robotContainer.testingInit();
 	}
 
 	@Override

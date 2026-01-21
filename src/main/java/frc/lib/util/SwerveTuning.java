@@ -14,28 +14,27 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Swerve;
 
-public class TestingUtil {
+public class SwerveTuning {
 
-	private XboxController tester = new XboxController(DriverConstants.TesterPort);
+	private static XboxController tester = new XboxController(DriverConstants.TesterPort);
 
-	private Trigger baseTrigger = new Trigger(() -> DriverStation.isTestEnabled());
-	private Trigger characterizeSwerveRadius = baseTrigger.and(() -> tester.getAButton());
-	private Trigger testRotation = baseTrigger.and(() -> tester.getBButton());
+	private static Trigger baseTrigger = new Trigger(() -> DriverStation.isTestEnabled());
+	private static Trigger characterizeSwerveRadius = baseTrigger.and(() -> tester.getAButton());
+	private static Trigger testRotation = baseTrigger.and(() -> tester.getBButton());
 
-	private Swerve swerve;
+	private static Swerve swerve;
 
-	public TestingUtil(Swerve swerve) {
-		this.swerve = swerve;
-	}
-
-	public void bindTriggers() {
+	public static void init(Swerve swerve) {
+		SwerveTuning.swerve = swerve;
 		characterizeSwerveRadius.whileTrue(characterizeWheelRadius());
 		testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() -> 0.0, () -> 0.0,
 				() -> Rotation2d.fromDegrees(swerve.angularDrivePID.getSetpoint())), swerve));
+
+		SmartDashboard.putData("angular drive pid", swerve.angularDrivePID);
 	}
 
 	/* yoinked from mechanical advantage */
-	public Command characterizeWheelRadius() {
+	public static Command characterizeWheelRadius() {
 		SlewRateLimiter limiter = new SlewRateLimiter(Math.PI / 4);
 		WheelRadiusCharacterizationState state = new WheelRadiusCharacterizationState();
 		double driveBaseRadius = Math.hypot(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY);
