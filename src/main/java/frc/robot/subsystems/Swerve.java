@@ -308,6 +308,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		m_field.setRobotPose(this.getPose());
 		SmartDashboard.putNumber("target", angularDrivePID.getSetpoint());
 		SmartDashboard.putNumber("cur", getRelativeYaw().getDegrees());
+		SmartDashboard.putNumber("err", angularDrivePID.getError());
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {
