@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -36,8 +37,11 @@ public class Constants {
 
 		public static final double angularDriveKP = 0.12;
 		public static final double angularDriveKI = 0;
-		public static final double angularDriveKD = 0;
-		public static final double angularDriveKS = 0.012; // radians per sec
+		public static final double angularDriveKD = 0.012;
+		public static final double angularDriveKS = 0;
+		public static final double angularDriveKV = 0;
+		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(angularDriveKS,
+				angularDriveKV);
 		public static final Angle angularDriveTolerance = Degrees.of(0.25); // Degrees
 
 		public static final double pidToPoseKP = 2.5;
