@@ -23,10 +23,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
-import frc.lib.util.SwerveTuning;
+import frc.lib.util.ShooterTuning;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 @Logged
@@ -40,8 +41,10 @@ public class RobotContainer {
 	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
 			* RobotConstants.maxRot.in(RadiansPerSecond);
 
-	@Logged(importance = Importance.CRITICAL)
-	private Swerve swerve = TunerConstants.swerve;
+	// @Logged(importance = Importance.CRITICAL)
+	// private Swerve swerve = TunerConstants.swerve;
+
+	private Shooter shooter = new Shooter();
 
 	private Trigger resetGyro = new Trigger(() -> driver.getBButton());
 
@@ -49,30 +52,32 @@ public class RobotContainer {
 	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
 
-	private final SendableChooser<Command> autoChooser;
+	// private final SendableChooser<Command> autoChooser;
 
-	private Autos autos = new Autos(swerve);
+	// private Autos autos = new Autos(swerve);
 
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
 
-		autoChooser = AutoBuilder.buildAutoChooser();
-		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
-		autoChooser.addOption("Hub Depot Tower 1", autos.hubDepotTower1());
-		autoChooser.addOption("Hub Depot Tower 12", autos.hubDepotTower12());
-		autoChooser.addOption("Left Pass", autos.leftPassAuto());
-		SmartDashboard.putData("Auto Chooser", autoChooser);
+		// autoChooser = AutoBuilder.buildAutoChooser();
+		// autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
+		// autoChooser.addOption("Hub Depot Tower 1", autos.hubDepotTower1());
+		// autoChooser.addOption("Hub Depot Tower 12", autos.hubDepotTower12());
+		// autoChooser.addOption("Left Pass", autos.leftPassAuto());
+		// SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
 	private void configureBindings() {
-		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
+		// swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
 
-		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
-		pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
-		pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
-		bumpDrive.whileTrue(
-				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest45()), swerve));
+		// resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
+		// pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
+		// pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () ->
+		// FieldUtil.getHubCenter(), () -> true));
+		// bumpDrive.whileTrue(
+		// Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () ->
+		// swerve.getClosest45()), swerve));
 	}
 
 	public void configureControllerAlerts() {
@@ -102,11 +107,13 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return autoChooser.getSelected();
+		return Commands.none();
+		// return autoChooser.getSelected();
 	}
 
 	public void testingInit() {
-		SwerveTuning.init(swerve);
+		ShooterTuning.init(shooter);
+		// SwerveTuning.init(swerve);
 	}
 
 	@Logged(importance = Importance.CRITICAL)

@@ -6,12 +6,20 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 
@@ -71,5 +79,21 @@ public class Constants {
 		public class Swerve {
 			public static final String angularPIDNTName = tuningNTPrefix + "angular PID";
 		}
+
+		public class Shooter {
+			public static final String voltageNTName = "voltage";
+		}
+	}
+
+	public class ShooterConstants {
+		public static final int LeaderPort = 1;
+		public static final int FollowerPort = 0;
+		public static final int Follower2Port = 2;
+		public static TalonFXConfiguration config = new TalonFXConfiguration()
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(true))
+				.withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
+				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(0.5));
 	}
 }
