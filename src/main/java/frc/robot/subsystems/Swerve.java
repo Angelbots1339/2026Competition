@@ -29,6 +29,7 @@ import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -57,8 +58,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	/* Keep track if we've ever applied the operator perspective before or not */
 	private boolean m_hasAppliedOperatorPerspective = false;
 
-	private PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
-			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD);
+	private ProfiledPIDController angularDrivePID = new ProfiledPIDController(RobotConstants.angularDriveKP,
+			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD, RobotConstants.angularDriveConstraints);
 
 	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
@@ -170,7 +171,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 		ChassisSpeeds speeds = new ChassisSpeeds(translationX.get(), translationY.get(),
 				MathUtil.clamp(
-						angularDrivePID.atSetpoint() ? 0 : pid + (RobotConstants.angularDriveKS * Math.signum(pid)),
+						angularDrivePID.atSetpoint() ? 0
+								: pid + (RobotConstants.angularDriveKS
+										* Math.signum(angularDrivePID.getSetpoint().velocity)),
 						-RobotConstants.maxRot.in(RadiansPerSecond), RobotConstants.maxRot.in(RadiansPerSecond)));
 
 		return speeds;
@@ -199,6 +202,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	public void setYaw(Rotation2d yaw) {
 		this.getPigeon2().setYaw(yaw.getDegrees());
+		resetRotation(yaw);
 	}
 
 	public void resetGyro() {
