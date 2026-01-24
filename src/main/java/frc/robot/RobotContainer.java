@@ -32,25 +32,29 @@ import frc.robot.subsystems.Swerve;
 
 @Logged
 public class RobotContainer {
-	private XboxController driver = new XboxController(DriverConstants.DriverPort);
+	// private XboxController driver = new
+	// XboxController(DriverConstants.DriverPort);
 
-	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
-			* RobotConstants.maxSpeed.in(MetersPerSecond);
-	private Supplier<Double> leftX = () -> DriverConstants.joystickDeadband(-driver.getLeftX(), true)
-			* RobotConstants.maxSpeed.in(MetersPerSecond);
-	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
-			* RobotConstants.maxRot.in(RadiansPerSecond);
+	// private Supplier<Double> leftY = () ->
+	// DriverConstants.joystickDeadband(-driver.getLeftY(), true)
+	// * RobotConstants.maxSpeed.in(MetersPerSecond);
+	// private Supplier<Double> leftX = () ->
+	// DriverConstants.joystickDeadband(-driver.getLeftX(), true)
+	// * RobotConstants.maxSpeed.in(MetersPerSecond);
+	// private Supplier<Double> rightX = () ->
+	// DriverConstants.joystickDeadband(-driver.getRightX(), true)
+	// * RobotConstants.maxRot.in(RadiansPerSecond);
 
 	// @Logged(importance = Importance.CRITICAL)
 	// private Swerve swerve = TunerConstants.swerve;
 
 	private Shooter shooter = new Shooter();
 
-	private Trigger resetGyro = new Trigger(() -> driver.getBButton());
+	// private Trigger resetGyro = new Trigger(() -> driver.getBButton());
 
-	private Trigger pidtoPose = new Trigger(() -> driver.getAButton());
-	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
-	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
+	// private Trigger pidtoPose = new Trigger(() -> driver.getAButton());
+	// private Trigger pointDrive = new Trigger(() -> driver.getXButton());
+	// private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
 
 	// private final SendableChooser<Command> autoChooser;
 
@@ -82,28 +86,28 @@ public class RobotContainer {
 
 	public void configureControllerAlerts() {
 		// 10/20sec endgame alert
-		new Trigger(() -> {
-			return DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0.0
-					&& ((DriverStation.getMatchTime() <= Math.round(20)
-							&& DriverStation.getMatchTime() > Math.round(13))
-							|| DriverStation.getMatchTime() <= Math.round(10));
-		})
-				.onTrue(Commands.run(() -> {
-					driver.setRumble(RumbleType.kBothRumble, 1.0);
-				}).withTimeout(1.5).andThen(Commands.run(() -> {
-					driver.setRumble(RumbleType.kBothRumble, 0.0);
-				}).withTimeout(1.0)));
+		// new Trigger(() -> {
+		// return DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0.0
+		// && ((DriverStation.getMatchTime() <= Math.round(20)
+		// && DriverStation.getMatchTime() > Math.round(13))
+		// || DriverStation.getMatchTime() <= Math.round(10));
+		// })
+		// .onTrue(Commands.run(() -> {
+		// driver.setRumble(RumbleType.kBothRumble, 1.0);
+		// }).withTimeout(1.5).andThen(Commands.run(() -> {
+		// driver.setRumble(RumbleType.kBothRumble, 0.0);
+		// }).withTimeout(1.0)));
 
-		// 5 sec before hub switch alert
-		new Trigger(() -> {
-			return DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0.0
-					&& FieldUtil.getShiftTimeLeft() <= Math.round(5);
-		})
-				.onTrue(Commands.run(() -> {
-					driver.setRumble(RumbleType.kBothRumble, 1.0);
-				}).withTimeout(1.5).andThen(Commands.run(() -> {
-					driver.setRumble(RumbleType.kBothRumble, 0.0);
-				}).withTimeout(1.0)));
+		// // 5 sec before hub switch alert
+		// new Trigger(() -> {
+		// return DriverStation.isTeleopEnabled() && DriverStation.getMatchTime() > 0.0
+		// && FieldUtil.getShiftTimeLeft() <= Math.round(5);
+		// })
+		// .onTrue(Commands.run(() -> {
+		// driver.setRumble(RumbleType.kBothRumble, 1.0);
+		// }).withTimeout(1.5).andThen(Commands.run(() -> {
+		// driver.setRumble(RumbleType.kBothRumble, 0.0);
+		// }).withTimeout(1.0)));
 	}
 
 	public Command getAutonomousCommand() {

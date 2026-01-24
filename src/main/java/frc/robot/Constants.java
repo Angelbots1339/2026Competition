@@ -1,17 +1,18 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
-import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
@@ -20,7 +21,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 
@@ -96,15 +96,22 @@ public class Constants {
 		public static final int LeaderPort = 1;
 		public static final int FollowerPort = 0;
 		public static final int Follower2Port = 2;
+
+		public static final double shootRPS = 60;
 		public static TalonFXConfiguration config = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withSupplyCurrentLimit(Amps.of(70))
+						.withStatorCurrentLimit(Amps.of(120))
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
-				.withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
+				.withMotorOutput(new MotorOutputConfigs()
+						.withNeutralMode(NeutralModeValue.Coast)
+						.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(0.5))
 				.withSlot0(new Slot0Configs()
-						.withKP(0)
-						.withKV(0)
-						.withKS(0));
+						.withKP(0.6)
+						.withKI(2)
+						.withKV(0.06)
+						.withKS(0.25));
 	}
 }

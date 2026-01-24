@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -21,7 +22,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants;
-import frc.robot.generated.TunerConstants;
 
 @Logged
 public class Shooter extends SubsystemBase {
@@ -34,8 +34,12 @@ public class Shooter extends SubsystemBase {
 	public Shooter() {
 		leader.getConfigurator().apply(ShooterConstants.config);
 		follower.getConfigurator().apply(ShooterConstants.config);
+		follower2.getConfigurator().apply(ShooterConstants.config);
+
 		follower.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Opposed));
 		follower2.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Aligned));
+
+		leader.getVelocity().setUpdateFrequency(Hertz.of(100));
 	}
 
 	public void setVoltage(Voltage volts) {
@@ -51,8 +55,8 @@ public class Shooter extends SubsystemBase {
 		leader.setControl(new VelocityVoltage(targetVelocity));
 	}
 
-	public AngularVelocity getVelocity() {
-		return leader.getVelocity().getValue();
+	public double getVelocity() {
+		return leader.getVelocity().getValue().in(RotationsPerSecond);
 	}
 
 	public void logTuning() {
