@@ -79,6 +79,10 @@ public class RobotContainer {
 		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> {
 			ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
 					swerve.getRelativeYaw());
+			// prevent strange things when still
+			if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
+				return swerve.getRelativeYaw();
+			}
 			return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond, speeds.vxMetersPerSecond));
 		})));
 	}
