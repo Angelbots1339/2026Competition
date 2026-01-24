@@ -16,6 +16,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.google.errorprone.annotations.concurrent.LockMethod;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -50,12 +51,16 @@ import frc.robot.Constants.VisionConstants;
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
 	private static final double kSimLoopPeriod = 0.004; // 4 ms
 	private Notifier m_simNotifier = null;
+
+	@Logged(name = "Last Sim Time")
 	private double m_lastSimTime;
 	/* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
 	private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
 	/* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
 	private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
 	/* Keep track if we've ever applied the operator perspective before or not */
+
+	@Logged(name = "Has Applied Operator Perspective")
 	private boolean m_hasAppliedOperatorPerspective = false;
 
 	private ProfiledPIDController angularDrivePID = new ProfiledPIDController(RobotConstants.angularDriveKP,
@@ -179,11 +184,12 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return speeds;
 	}
 
-	@Logged(importance = Importance.CRITICAL)
+	@Logged(importance = Importance.CRITICAL, name = "Pose")
 	public Pose2d getPose() {
 		return this.getState().Pose;
 	}
 
+	@Logged(name = "Closest 45")
 	public Rotation2d getClosest45() {
 		Rotation2d closest = Rotation2d.fromDegrees(45);
 		for (var angle : Arrays.asList(45, 135, 225, 315)) {
@@ -196,6 +202,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return closest;
 	}
 
+	@Logged(name = "Yaw")
 	public Rotation2d getYaw() {
 		return this.getPigeon2().getRotation2d();
 	}
@@ -217,6 +224,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		}
 	}
 
+	@Logged(name = "Relative yaw")
 	public Rotation2d getRelativeYaw() {
 		double rawYaw = getPigeon2().getYaw().getValue().in(Degrees) + (FieldUtil.isRedAlliance() ? 180 : 0);
 		double yawWithRollover = rawYaw > 0 ? rawYaw % 360 : 360 - Math.abs(rawYaw % 360);
