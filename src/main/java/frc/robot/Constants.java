@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -81,7 +82,13 @@ public class Constants {
 		}
 
 		public class Shooter {
-			public static final String voltageNTName = "voltage";
+			public static final String voltageNTName = tuningNTPrefix + "voltage";
+			public static final String velocityNTName = tuningNTPrefix + "velocity";
+			public static final String PNTName = tuningNTPrefix + "P";
+			public static final String INTName = tuningNTPrefix + "I";
+			public static final String DNTName = tuningNTPrefix + "D";
+			public static final String SNTName = tuningNTPrefix + "S";
+			public static final String VNTName = tuningNTPrefix + "V";
 		}
 	}
 
@@ -94,6 +101,10 @@ public class Constants {
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast))
-				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(0.5));
+				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(0.5))
+				.withSlot0(new Slot0Configs()
+						.withKP(0)
+						.withKV(0)
+						.withKS(0));
 	}
 }
