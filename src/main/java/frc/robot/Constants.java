@@ -29,7 +29,7 @@ public class Constants {
 	}
 
 	public class RobotConstants {
-		public static final LinearVelocity maxSpeed = MetersPerSecond.of(1);
+		public static final LinearVelocity maxSpeed = MetersPerSecond.of(5);
 		public static final AngularVelocity maxRot = RadiansPerSecond.of(Math.PI * 2);
 		public static final Distance length = Inches.of(32.25);
 		public static final Distance width = Inches.of(32.25);
