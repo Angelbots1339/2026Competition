@@ -26,6 +26,7 @@ public class ShooterTuning {
 	private static Trigger baseTrigger = new Trigger(() -> DriverStation.isTestEnabled());
 	private static Trigger runVoltage = baseTrigger.and(() -> tester.getYButton());
 	private static Trigger pidtune = baseTrigger.and(() -> tester.getAButton());
+	private static Trigger pidtuneFOC = baseTrigger.and(() -> tester.getXButton());
 	private static Trigger characterizeVelocity = baseTrigger.and(() -> tester.getBButton());
 	private static SysIdRoutine velocitySysIDRoutine = null;
 
@@ -47,6 +48,9 @@ public class ShooterTuning {
 		}));
 		pidtune.whileTrue(Commands.run(() -> {
 			shooter.setVelocity(targetAngle);
+		}).handleInterrupt(() -> shooter.setVoltage(Volts.of(0))));
+		pidtuneFOC.whileTrue(Commands.run(() -> {
+			shooter.setVelocityFOC(targetAngle);
 		}).handleInterrupt(() -> shooter.setVoltage(Volts.of(0))));
 
 		characterizeVelocity.whileTrue(Commands.sequence(
