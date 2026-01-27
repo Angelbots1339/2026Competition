@@ -42,7 +42,7 @@ public class ShooterTuning {
 		runVoltage.whileTrue(Commands.run(() -> {
 			shooter.setVoltage();
 		}).handleInterrupt(() -> shooter.setVoltage(Volts.of(0))));
-		pidtune.onTrue(Commands.runOnce(() -> {
+		pidtune.or(pidtuneFOC).onTrue(Commands.runOnce(() -> {
 			shooter.leader.getConfigurator().apply(shooter.getPID());
 			targetAngle = RotationsPerSecond.of(SmartDashboard.getNumber(TuningConstants.Shooter.velocityNTName, 0));
 		}));
