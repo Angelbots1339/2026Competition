@@ -3,6 +3,7 @@ package frc.robot;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.util.FieldUtil;
 import frc.robot.subsystems.Swerve;
 
 public class Autos {
@@ -40,9 +41,8 @@ public class Autos {
 		routine.active().onTrue(
 				Commands.sequence(
 						bumptest.resetOdometry(),
-						bumptest.cmd()));
-		// swerve.pointDrive(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () ->
-		// true)));
+						bumptest.cmd(),
+						swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
 
 		return routine.cmd();
 	}
@@ -53,9 +53,8 @@ public class Autos {
 		routine.active().onTrue(
 				Commands.sequence(
 						bumptest.resetOdometry(),
-						bumptest.cmd()));
-		// swerve.pointDrive(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () ->
-		// true)));
+						bumptest.cmd(),
+						swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
 
 		return routine.cmd();
 	}
