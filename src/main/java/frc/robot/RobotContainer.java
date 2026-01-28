@@ -75,7 +75,7 @@ public class RobotContainer {
 		// pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
 		pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
 		bumpDrive.whileTrue(
-				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest45()), swerve));
+				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15()), swerve));
 
 		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> {
 			ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),

@@ -184,9 +184,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return this.getState().Pose;
 	}
 
-	public Rotation2d getClosest45() {
-		Rotation2d closest = Rotation2d.fromDegrees(45);
-		for (var angle : Arrays.asList(45, 135, 225, 315)) {
+	public Rotation2d getClosest15() {
+		Rotation2d closest = Rotation2d.fromDegrees(15);
+		for (var angle : Arrays.asList(15, 75, 105, 165, 195, 255, 285, 345)) {
 			if (Math.abs(Rotation2d.fromDegrees(angle).minus(getRelativeYaw()).getDegrees()) < Math
 					.abs(closest.minus(getRelativeYaw()).getDegrees())) {
 				closest = Rotation2d.fromDegrees(angle);
