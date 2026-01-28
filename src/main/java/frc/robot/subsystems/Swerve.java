@@ -59,6 +59,12 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private PIDController pidToPoseYController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
 
+	enum COORDINATE_SYSTEM {
+		ROBOT,
+		BORIGIN,
+		FIELD,
+	}
+
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
@@ -87,6 +93,19 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		ChassisSpeeds speeds = new ChassisSpeeds(x.get(), y.get(), rot.get());
 		if (isFieldRelative.get())
 			speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
+		driveRobotRelative(speeds);
+	}
+
+	// applies either robot relative or field relative translation with blue origin
+	// rotation target
+	public void angularDriveRequest(Supplier<Double> x, Supplier<Double> y, Supplier<Rotation2d> rot,
+			Supplier<Boolean> isFieldRelative) {
+		double rotation = angularDrivePID.calculate(getYaw().getRadians(), rot.get().getRadians());
+		ChassisSpeeds speeds = new ChassisSpeeds(x.get(), y.get(), rotation);
+
+		if (isFieldRelative.get())
+			speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
+
 		driveRobotRelative(speeds);
 	}
 
@@ -166,24 +185,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// .withRotationalRate(fieldRelativeSpeeds.omegaRadiansPerSecond);
 
 	// this.setControl(req);
-	// }
-
-	// private ChassisSpeeds angularPIDCalc(Supplier<Double> translationX,
-	// Supplier<Double> translationY,
-	// Supplier<Rotation2d> desiredRotation) {
-	// double pid = angularDrivePID.calculate(getRelativeYaw().getRadians(),
-	// desiredRotation.get().getRadians());
-
-	// ChassisSpeeds speeds = new ChassisSpeeds(translationX.get(),
-	// translationY.get(),
-	// MathUtil.clamp(
-	// angularDrivePID.atSetpoint() ? 0
-	// : pid + (RobotConstants.angularDriveKS
-	// * Math.signum(angularDrivePID.getSetpoint().velocity)),
-	// -RobotConstants.maxRot.in(RadiansPerSecond),
-	// RobotConstants.maxRot.in(RadiansPerSecond)));
-
-	// return speeds;
 	// }
 
 	// public Rotation2d getClosest15() {

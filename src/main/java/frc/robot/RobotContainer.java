@@ -13,6 +13,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
@@ -76,20 +78,20 @@ public class RobotContainer {
 		// FieldUtil.getHubCenter(), () -> true));
 		// bumpDrive.whileTrue(
 		// Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () ->
-		// swerve.getClosest15()), swerve));
+		// swerve.getClosest15(), () -> true),
+		// swerve));
 
-		// snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
-		// leftX, () -> {
-		// ChassisSpeeds speeds =
-		// ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
-		// swerve.getRelativeYaw());
-		// prevent strange things when still
-		// if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
-		// return swerve.getRelativeYaw();
-		// }
-		// return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
-		// speeds.vxMetersPerSecond));
-		// })));
+		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
+				leftX, () -> {
+					ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
+							swerve.getYaw());
+					// prevent turning when at very low speeds
+					if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
+						return swerve.getRelativeYaw();
+					}
+					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
+							speeds.vxMetersPerSecond));
+				}, () -> true)));
 	}
 
 	public void configureControllerAlerts() {
