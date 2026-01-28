@@ -248,7 +248,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 					sample.omega + headingController.calculate(pose.getRotation().getRadians(), sample.heading));
 
 			// Apply the generated speeds
-			driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw()));
+			this.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(speeds));
 		};
 	}
 
