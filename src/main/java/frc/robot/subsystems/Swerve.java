@@ -12,6 +12,11 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import choreo.trajectory.SwerveSample;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
@@ -62,18 +67,25 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 
-		// resetPose(Pose2d.kZero);
-		// resetGyro();
+		resetPose(Pose2d.kZero);
+		resetGyro();
 
-		// configPathPlanner();
+		configPathPlanner();
 
 		if (Utils.isSimulation()) {
 			startSimThread();
 		}
 	}
 
+	public void resetGyro() {
+		if (FieldUtil.isRedAlliance())
+			setYaw(Rotation2d.k180deg);
+		else
+			setYaw(Rotation2d.kZero);
+	}
+
 	public Rotation2d getYaw() {
-		return getPigeon2().getRotation2d();
+		return Rotation2d.fromDegrees(getPigeon2().getYaw().getValueAsDouble());
 	}
 
 	public Rotation2d getRelativeYaw() {
@@ -103,25 +115,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public void logTuning() {
 		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
 	}
-
-	// public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double>
-	// rot, Supplier<Boolean> fieldCentric) {
-	// return run(() -> {
-	// ChassisSpeeds speeds = new ChassisSpeeds(x.get(), y.get(), rot.get());
-	// SwerveRequest req;
-
-	// if (fieldCentric.get()) {
-	// speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
-	// }
-
-	// req = new SwerveRequest.RobotCentric()
-	// .withVelocityX(speeds.vxMetersPerSecond)
-	// .withVelocityY(speeds.vyMetersPerSecond)
-	// .withRotationalRate(speeds.omegaRadiansPerSecond);
-
-	// this.setControl(req);
-	// });
-	// }
 
 	// public Command pointDrive(Supplier<Double> x, Supplier<Double> y,
 	// Supplier<Pose2d> pose,
@@ -230,10 +223,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// return closest;
 	// }
 
-	// public Rotation2d getYaw() {
-	// return this.getPigeon2().getRotation2d();
-	// }
-
 	// public void setYaw(Rotation2d yaw) {
 	// if (!this.getPigeon2().setYaw(yaw.getDegrees()).isOK()) {
 	// System.err.println("pidgeon setYaw errored");
@@ -267,6 +256,18 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// public void driveRobotRelative(ChassisSpeeds speeds) {
 	// setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
 	// }
+	public void setYaw(Rotation2d yaw) {
+		getPigeon2().setYaw(yaw.getDegrees());
+	}
+
+	public void resetPose(Pose2d pose) {
+		super.resetPose(pose);
+		setYaw(pose.getRotation());
+	}
+
+	public ChassisSpeeds getRobotRelativeSpeeds() {
+		return getState().Speeds;
+	}
 
 	@SuppressWarnings("resource")
 	public Consumer<SwerveSample> followChoreoPath() {
@@ -288,50 +289,41 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		};
 	}
 
-	/*
-	 * public void configPathPlanner() {
-	 * RobotConfig config = null;
-	 * try {
-	 * config = RobotConfig.fromGUISettings();
-	 * } catch (Exception e) {
-	 * // Handle exception as needed
-	 * e.printStackTrace();
-	 * }
-	 *
-	 * // Configure AutoBuilder last
-	 * AutoBuilder.configure(
-	 * this::getPose, // Robot pose supplier
-	 * this::resetPose, // Method to reset odometry (will be called if your auto has
-	 * a starting pose)
-	 * this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT
-	 * RELATIVE
-	 * (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will
-	 * drive the robot given ROBOT
-	 * // RELATIVE ChassisSpeeds. Also optionally
-	 * // outputs individual module feedforwards
-	 * new PPHolonomicDriveController( // PPHolonomicController is the built in path
-	 * following controller for
-	 * // holonomic drive trains
-	 * new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-	 * new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-	 * ),
-	 * config, // The robot configuration
-	 * () -> {
-	 * // Boolean supplier that controls when the path will be mirrored for the red
-	 * // alliance
-	 * // This will flip the path being followed to the red side of the field.
-	 * // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-	 *
-	 * var alliance = DriverStation.getAlliance();
-	 * if (alliance.isPresent()) {
-	 * return alliance.get() == DriverStation.Alliance.Red;
-	 * }
-	 * return false;
-	 * },
-	 * this // Reference to this subsystem to set requirements
-	 * );
-	 * }
-	 */
+	public void configPathPlanner() {
+		RobotConfig config = null;
+		try {
+			config = RobotConfig.fromGUISettings();
+		} catch (Exception e) {
+			// Handle exception as needed
+			e.printStackTrace();
+		}
+
+		// Configure AutoBuilder last
+		AutoBuilder.configure(
+				this::getPose,
+				this::resetPose,
+				this::getRobotRelativeSpeeds,
+				(speeds, feedforwards) -> driveRobotRelative(speeds),
+				new PPHolonomicDriveController(
+						new PIDConstants(5.0, 0.0, 0.0),
+						new PIDConstants(5.0, 0.0, 0.0)),
+				config, // The robot configuration
+				() -> {
+					// Boolean supplier that controls when the path will be mirrored for the red
+					// alliance
+					// This will flip the path being followed to the red side of the field.
+					// THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+					var alliance = DriverStation.getAlliance();
+					if (alliance.isPresent()) {
+						return alliance.get() == DriverStation.Alliance.Red;
+					}
+					return false;
+				},
+				this // Reference to this subsystem to set requirements
+		);
+	}
+
 	public void updateVision() {
 		LimelightHelpers.SetRobotOrientation("limelight",
 				getYaw().getDegrees(), 0, 0, 0, 0, 0);

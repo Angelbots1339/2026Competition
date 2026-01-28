@@ -9,11 +9,15 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import java.util.function.Supplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -45,7 +49,7 @@ public class RobotContainer {
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
 
-	// private final SendableChooser<Command> autoChooser;
+	private final SendableChooser<Command> autoChooser;
 
 	private Autos autos = new Autos(swerve);
 
@@ -53,14 +57,14 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 
-		// autoChooser = AutoBuilder.buildAutoChooser();
-		// autoChooser.addOption("Hub Depot Outpost Tower",
-		// autos.hubDepotOutpostTowerAuto());
-		// autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
-		// autoChooser.addOption("Left Pass", autos.leftPassAuto());
-		// autoChooser.addOption("bump test", autos.bumpTest());
-		// autoChooser.addOption("bump test straight", autos.bumpTestStraight());
-		// SmartDashboard.putData("Auto Chooser", autoChooser);
+		autoChooser = AutoBuilder.buildAutoChooser();
+		autoChooser.addOption("Hub Depot Outpost Tower",
+				autos.hubDepotOutpostTowerAuto());
+		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
+		autoChooser.addOption("Left Pass", autos.leftPassAuto());
+		autoChooser.addOption("bump test", autos.bumpTest());
+		autoChooser.addOption("bump test straight", autos.bumpTestStraight());
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
 	private void configureBindings() {
@@ -115,8 +119,7 @@ public class RobotContainer {
 	}
 
 	public Command getAutonomousCommand() {
-		return Commands.none();
-		// return autoChooser.getSelected();
+		return autoChooser.getSelected();
 	}
 
 	public void testingInit() {
