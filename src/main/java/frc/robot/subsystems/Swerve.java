@@ -88,6 +88,19 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return run(() -> driveRequest(x, y, rot, isFieldRelative));
 	}
 
+	// drive either field centric or robot centric while facing a blue origin pose
+	public Command pointDriveCommand(Supplier<Double> x, Supplier<Double> y,
+			Supplier<Pose2d> pose,
+			Supplier<Boolean> fieldCentric) {
+		return run(() -> {
+			double xdiff = pose.get().getX() - getPose().getX();
+			double ydiff = pose.get().getY() - getPose().getY();
+			Rotation2d angle = Rotation2d.fromRadians(Math.atan2(ydiff, xdiff));
+
+			angularDriveRequest(x, y, () -> angle, fieldCentric);
+		});
+	}
+
 	public void driveRequest(Supplier<Double> x, Supplier<Double> y, Supplier<Double> rot,
 			Supplier<Boolean> isFieldRelative) {
 		ChassisSpeeds speeds = new ChassisSpeeds(x.get(), y.get(), rot.get());
@@ -116,22 +129,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public void logTuning() {
 		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
 	}
-
-	// public Command pointDrive(Supplier<Double> x, Supplier<Double> y,
-	// Supplier<Pose2d> pose,
-	// Supplier<Boolean> fieldCentric) {
-	// return run(() -> {
-	// double xdiff = pose.get().getX() - getPose().getX();
-	// double ydiff = pose.get().getY() - getPose().getY();
-	// Rotation2d angle = Rotation2d.fromRadians(Math.atan2(ydiff, xdiff));
-
-	// angularDriveRequest(x, y, () -> fieldtoRobotRotation(angle));
-	// });
-	// }
-
-	// public Rotation2d fieldtoRobotRotation(Rotation2d rot) {
-	// return FieldUtil.isRedAlliance() ? rot.plus(Rotation2d.k180deg) : rot;
-	// }
 
 	// public Command pidtoPose(Supplier<Pose2d> target) {
 	// return run(() -> {
@@ -164,29 +161,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// });
 	// }
 
-	// public void angularDriveRequest(Supplier<Double> translationX,
-	// Supplier<Double> translationY,
-	// Supplier<Rotation2d> desiredRotation) {
-
-	// ChassisSpeeds speeds = angularPIDCalc(translationX, translationY,
-	// desiredRotation);
-
-	// SwerveRequest req;
-
-	// ChassisSpeeds fieldRelativeSpeeds =
-	// ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
-
-	// req = new SwerveRequest.RobotCentric()
-	// .withDriveRequestType(DriveRequestType.Velocity)
-	// .withVelocityX(fieldRelativeSpeeds.vxMetersPerSecond) // Drive forward with
-	// negative Y (forward)
-	// .withVelocityY(fieldRelativeSpeeds.vyMetersPerSecond) // Drive left with
-	// negative X (left)
-	// .withRotationalRate(fieldRelativeSpeeds.omegaRadiansPerSecond);
-
-	// this.setControl(req);
-	// }
-
 	// public Rotation2d getClosest15() {
 	// Rotation2d closest = Rotation2d.fromDegrees(15);
 	// for (var angle : Arrays.asList(15, 75, 105, 165, 195, 255, 285, 345)) {
@@ -201,23 +175,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// return closest;
 	// }
 
-	// public void setYaw(Rotation2d yaw) {
-	// if (!this.getPigeon2().setYaw(yaw.getDegrees()).isOK()) {
-	// System.err.println("pidgeon setYaw errored");
-	// }
-
-	// resetRotation(yaw);
-	// resetPose(new Pose2d(getPose().getX(), getPose().getY(), getYaw()));
-	// }
-
-	// public void resetGyro() {
-	// if (FieldUtil.isRedAlliance()) {
-	// setYaw(Rotation2d.k180deg);
-	// } else {
-	// setYaw(Rotation2d.kZero);
-	// }
-	// }
-
 	// public Rotation2d getRelativeYaw() {
 	// double rawYaw = getPigeon2().getYaw().getValue().in(Degrees) +
 	// (FieldUtil.isRedAlliance() ? 180 : 0);
@@ -227,15 +184,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// return Rotation2d.fromDegrees(yawWithRollover);
 	// }
 
-	// public ChassisSpeeds getRobotRelativeSpeeds() {
-	// return this.getState().Speeds;
-	// }
-
-	// public void driveRobotRelative(ChassisSpeeds speeds) {
-	// setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
-	// }
 	public void setYaw(Rotation2d yaw) {
 		getPigeon2().setYaw(yaw.getDegrees());
+		resetRotation(yaw);
 	}
 
 	public void resetGyro() {

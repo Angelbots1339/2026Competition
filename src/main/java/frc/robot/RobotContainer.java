@@ -74,8 +74,7 @@ public class RobotContainer {
 
 		// resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		// pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
-		// pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () ->
-		// FieldUtil.getHubCenter(), () -> true));
+		pointDrive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
 		// bumpDrive.whileTrue(
 		// Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () ->
 		// swerve.getClosest15(), () -> true),
