@@ -3,12 +3,15 @@ package frc.robot;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.util.FieldUtil;
 import frc.robot.subsystems.Swerve;
 
 public class Autos {
 	private AutoFactory factory;
+	private Swerve swerve;
 
 	public Autos(Swerve swerve) {
+		this.swerve = swerve;
 		factory = new AutoFactory(
 				swerve::getPose, // A function that returns the current field-relative Pose2d of the robot
 				swerve::resetPose, // A function that receives a field-relative Pose2d to reset the robot's
@@ -38,7 +41,8 @@ public class Autos {
 		routine.active().onTrue(
 				Commands.sequence(
 						bumptest.resetOdometry(),
-						bumptest.cmd()));
+						bumptest.cmd(),
+						swerve.pointDrive(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
 
 		return routine.cmd();
 	}
@@ -49,7 +53,8 @@ public class Autos {
 		routine.active().onTrue(
 				Commands.sequence(
 						bumptest.resetOdometry(),
-						bumptest.cmd()));
+						bumptest.cmd(),
+						swerve.pointDrive(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
 
 		return routine.cmd();
 	}
