@@ -32,6 +32,28 @@ public class Autos {
 		factory.bind("PassEnd", passEnd);
 	}
 
+	public Command bumpTest() {
+		final var routine = factory.newRoutine("bump test");
+		final var bumptest = routine.trajectory("BumpTest");
+		routine.active().onTrue(
+				Commands.sequence(
+						bumptest.resetOdometry(),
+						bumptest.cmd()));
+
+		return routine.cmd();
+	}
+
+	public Command bumpTestStraight() {
+		final var routine = factory.newRoutine("bump test straight");
+		final var bumptest = routine.trajectory("BumpTestStraight");
+		routine.active().onTrue(
+				Commands.sequence(
+						bumptest.resetOdometry(),
+						bumptest.cmd()));
+
+		return routine.cmd();
+	}
+
 	public Command leftPassAuto() {
 		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
 		final var leftPass = routine.trajectory("LeftPass");
