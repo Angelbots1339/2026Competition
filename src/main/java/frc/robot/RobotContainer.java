@@ -76,10 +76,9 @@ public class RobotContainer {
 		// resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
 		pointDrive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
-		// bumpDrive.whileTrue(
-		// Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () ->
-		// swerve.getClosest15(), () -> true),
-		// swerve));
+		bumpDrive.whileTrue(
+				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(), () -> true),
+						swerve));
 
 		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
 				leftX, () -> {
@@ -91,7 +90,7 @@ public class RobotContainer {
 					}
 					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
 							speeds.vxMetersPerSecond));
-				}, () -> true)));
+				}, () -> true), swerve));
 	}
 
 	public void configureControllerAlerts() {

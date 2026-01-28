@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
+
+import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -148,28 +150,17 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
 	}
 
-	// public Rotation2d getClosest15() {
-	// Rotation2d closest = Rotation2d.fromDegrees(15);
-	// for (var angle : Arrays.asList(15, 75, 105, 165, 195, 255, 285, 345)) {
-	// if
-	// (Math.abs(Rotation2d.fromDegrees(angle).minus(getRelativeYaw()).getDegrees())
-	// < Math
-	// .abs(closest.minus(getRelativeYaw()).getDegrees())) {
-	// closest = Rotation2d.fromDegrees(angle);
-	// }
-	// }
+	public Rotation2d getClosest15() {
+		Rotation2d closest = Rotation2d.fromDegrees(15);
+		for (var angle : Arrays.asList(15, 75, 105, 165, 195, 255, 285, 345)) {
+			if (Math.abs(Rotation2d.fromDegrees(angle).minus(getRelativeYaw()).getDegrees()) < Math
+					.abs(closest.minus(getRelativeYaw()).getDegrees())) {
+				closest = Rotation2d.fromDegrees(angle);
+			}
+		}
 
-	// return closest;
-	// }
-
-	// public Rotation2d getRelativeYaw() {
-	// double rawYaw = getPigeon2().getYaw().getValue().in(Degrees) +
-	// (FieldUtil.isRedAlliance() ? 180 : 0);
-	// double yawWithRollover = rawYaw > 0 ? rawYaw % 360 : 360 - Math.abs(rawYaw %
-	// 360);
-
-	// return Rotation2d.fromDegrees(yawWithRollover);
-	// }
+		return closest;
+	}
 
 	public void setYaw(Rotation2d yaw) {
 		getPigeon2().setYaw(yaw.getDegrees());
@@ -188,6 +179,12 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public Rotation2d getRelativeYaw() {
+		// double rawYaw = getPigeon2().getYaw().getValue().in(Degrees) +
+		// (FieldUtil.isRedAlliance() ? 180 : 0);
+		// double yawWithRollover = rawYaw > 0 ? rawYaw % 360 : 360 - Math.abs(rawYaw %
+		// 360);
+
+		// return Rotation2d.fromDegrees(yawWithRollover);
 		if (FieldUtil.isRedAlliance())
 			return getYaw().plus(Rotation2d.k180deg);
 
