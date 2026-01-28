@@ -45,7 +45,7 @@ public class RobotContainer {
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
 
-	private Trigger resetGyro = new Trigger(() -> driver.getBButton());
+	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
 	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
 	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
@@ -73,7 +73,7 @@ public class RobotContainer {
 	private void configureBindings() {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 
-		// resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
+		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
 		pointDrive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
 		bumpDrive.whileTrue(

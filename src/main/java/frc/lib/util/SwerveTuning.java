@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.TuningConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Swerve;
 
@@ -43,12 +44,12 @@ public class SwerveTuning {
 
 		characterizeSwerveRadius.whileTrue(characterizeWheelRadius());
 
-		// testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() ->
-		// 0.0, () -> 0.0,
-		// () -> Rotation2d.fromRadians(
-		// SmartDashboard.getNumber(TuningConstants.Swerve.angularPIDNTName + "/goal",
-		// 0))),
-		// swerve));
+		testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() -> 0.0, () -> 0.0,
+				() -> Rotation2d.fromRadians(
+						SmartDashboard.getNumber(TuningConstants.Swerve.angularPIDNTName + "/goal",
+								0)),
+				() -> true),
+				swerve));
 
 		sysIdRotation.whileTrue(Commands.sequence(
 				Commands.runOnce(SignalLogger::start),
