@@ -13,6 +13,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -143,7 +144,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void driveRobotRelative(ChassisSpeeds speeds) {
-		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
+		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds)
+				.withDriveRequestType(DriveRequestType.Velocity));
 	}
 
 	public void logTuning() {
