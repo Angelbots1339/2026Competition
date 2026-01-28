@@ -77,24 +77,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		}
 	}
 
-	public void resetGyro() {
-		if (FieldUtil.isRedAlliance())
-			setYaw(Rotation2d.k180deg);
-		else
-			setYaw(Rotation2d.kZero);
-	}
-
-	public Rotation2d getYaw() {
-		return Rotation2d.fromDegrees(getPigeon2().getYaw().getValueAsDouble());
-	}
-
-	public Rotation2d getRelativeYaw() {
-		if (FieldUtil.isRedAlliance())
-			return getYaw().plus(Rotation2d.k180deg);
-
-		return getYaw();
-	}
-
 	public Command driveCommand(Supplier<Double> x, Supplier<Double> y, Supplier<Double> rot,
 			Supplier<Boolean> isFieldRelative) {
 		return run(() -> driveRequest(x, y, rot, isFieldRelative));
@@ -204,11 +186,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// return speeds;
 	// }
 
-	@Logged(importance = Importance.CRITICAL)
-	public Pose2d getPose() {
-		return this.getState().Pose;
-	}
-
 	// public Rotation2d getClosest15() {
 	// Rotation2d closest = Rotation2d.fromDegrees(15);
 	// for (var angle : Arrays.asList(15, 75, 105, 165, 195, 255, 285, 345)) {
@@ -258,6 +235,29 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// }
 	public void setYaw(Rotation2d yaw) {
 		getPigeon2().setYaw(yaw.getDegrees());
+	}
+
+	public void resetGyro() {
+		if (FieldUtil.isRedAlliance())
+			setYaw(Rotation2d.k180deg);
+		else
+			setYaw(Rotation2d.kZero);
+	}
+
+	public Rotation2d getYaw() {
+		return Rotation2d.fromDegrees(getPigeon2().getYaw().getValueAsDouble());
+	}
+
+	public Rotation2d getRelativeYaw() {
+		if (FieldUtil.isRedAlliance())
+			return getYaw().plus(Rotation2d.k180deg);
+
+		return getYaw();
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public Pose2d getPose() {
+		return this.getState().Pose;
 	}
 
 	public void resetPose(Pose2d pose) {
