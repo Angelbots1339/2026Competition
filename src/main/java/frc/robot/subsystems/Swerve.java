@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -20,6 +21,7 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import choreo.trajectory.SwerveSample;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -122,6 +124,22 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		driveRobotRelative(speeds);
 	}
 
+	public Command pidtoPose(Supplier<Pose2d> target) {
+		return run(() -> {
+			double x = pidToPoseXController.calculate(getPose().getX(), target.get().getX());
+			double y = pidToPoseYController.calculate(getPose().getY(), target.get().getY());
+			double rotation = angularDrivePID.calculate(getYaw().getRadians(), target.get().getRotation().getRadians());
+
+			x = MathUtil.clamp(x, -RobotConstants.maxSpeed.in(MetersPerSecond),
+					RobotConstants.maxSpeed.in(MetersPerSecond));
+			y = MathUtil.clamp(y, -RobotConstants.maxSpeed.in(MetersPerSecond),
+					RobotConstants.maxSpeed.in(MetersPerSecond));
+
+			ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rotation, getYaw());
+			driveRobotRelative(speeds);
+		});
+	}
+
 	public void driveRobotRelative(ChassisSpeeds speeds) {
 		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
 	}
@@ -129,37 +147,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public void logTuning() {
 		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
 	}
-
-	// public Command pidtoPose(Supplier<Pose2d> target) {
-	// return run(() -> {
-	// double x = MathUtil.clamp(
-	// pidToPoseXController.calculate(getPose().getX(),
-	// target.get().getX())
-	// + Math.signum(pidToPoseXController.getError()) *
-	// Math.abs(RobotConstants.pidToPoseKS),
-	// -RobotConstants.maxSpeed.in(MetersPerSecond),
-	// RobotConstants.maxSpeed.in(MetersPerSecond));
-	// double y = MathUtil.clamp(
-	// pidToPoseYController.calculate(getPose().getY(),
-	// target.get().getY())
-	// + Math.signum(pidToPoseYController.getError()) *
-	// Math.abs(RobotConstants.pidToPoseKS),
-	// -RobotConstants.maxSpeed.in(MetersPerSecond),
-	// RobotConstants.maxSpeed.in(MetersPerSecond));
-
-	// // convert from blue origin coordinates to field oriented (alliance origin)
-	// // coordinates
-	// if (FieldUtil.isRedAlliance()) {
-	// angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : -x,
-	// () -> pidToPoseYController.atSetpoint() ? 0 : -y,
-	// () -> target.get().getRotation().rotateBy(Rotation2d.k180deg));
-	// } else {
-	// angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : x,
-	// () -> pidToPoseYController.atSetpoint() ? 0 : y, () ->
-	// target.get().getRotation());
-	// }
-	// });
-	// }
 
 	// public Rotation2d getClosest15() {
 	// Rotation2d closest = Rotation2d.fromDegrees(15);

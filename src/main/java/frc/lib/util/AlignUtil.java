@@ -2,6 +2,8 @@ package frc.lib.util;
 
 import static edu.wpi.first.units.Units.Meters;
 
+import java.util.Arrays;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -39,11 +41,9 @@ public class AlignUtil {
 	}
 
 	public static Command driveToTowerSide(Swerve swerve) {
-		return Commands.none();
-		// return swerve.pidtoPose(
-		// () ->
-		// swerve.getPose().nearest(Arrays.asList(offsetPose(FieldUtil.getTowerCenter(),
-		// leftTowerOffset),
-		// offsetPose(FieldUtil.getTowerCenter(), rightTowerOffset))));
+		return swerve.pidtoPose(
+				() -> swerve.getPose().nearest(Arrays.asList(offsetPose(FieldUtil.getTowerCenter(),
+						leftTowerOffset),
+						offsetPose(FieldUtil.getTowerCenter(), rightTowerOffset))));
 	}
 }
