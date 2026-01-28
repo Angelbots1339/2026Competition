@@ -97,9 +97,9 @@ public class Constants {
 	}
 
 	public class ShooterConstants {
-		public static final int LeaderPort = 1;
+		public static final int LeaderPort = 2;
 		public static final int FollowerPort = 0;
-		public static final int Follower2Port = 2;
+		public static final int Follower2Port = 1;
 
 		public static final double shootRPS = 60;
 		public static TalonFXConfiguration config = new TalonFXConfiguration()
