@@ -70,11 +70,11 @@ public class Shooter extends SubsystemBase {
 		SmartDashboard.putNumber(TuningConstants.Shooter.voltageNTName, 0);
 		SmartDashboard.putNumber(TuningConstants.Shooter.velocityNTName, 0);
 
-		SmartDashboard.putNumber(TuningConstants.Shooter.PNTName, ShooterConstants.config.Slot0.kP);
-		SmartDashboard.putNumber(TuningConstants.Shooter.INTName, ShooterConstants.config.Slot0.kI);
-		SmartDashboard.putNumber(TuningConstants.Shooter.DNTName, ShooterConstants.config.Slot0.kD);
-		SmartDashboard.putNumber(TuningConstants.Shooter.SNTName, ShooterConstants.config.Slot0.kS);
-		SmartDashboard.putNumber(TuningConstants.Shooter.VNTName, ShooterConstants.config.Slot0.kV);
+		SmartDashboard.putNumber(TuningConstants.Shooter.PNTName, ShooterConstants.config.Slot1.kP);
+		SmartDashboard.putNumber(TuningConstants.Shooter.INTName, ShooterConstants.config.Slot1.kI);
+		SmartDashboard.putNumber(TuningConstants.Shooter.DNTName, ShooterConstants.config.Slot1.kD);
+		SmartDashboard.putNumber(TuningConstants.Shooter.SNTName, ShooterConstants.config.Slot1.kS);
+		SmartDashboard.putNumber(TuningConstants.Shooter.VNTName, ShooterConstants.config.Slot1.kV);
 
 	}
 

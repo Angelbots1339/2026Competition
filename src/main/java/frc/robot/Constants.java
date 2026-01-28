@@ -120,10 +120,10 @@ public class Constants {
 						.withKS(0.25))
 				.withSlot1(new Slot1Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(7)
+						.withKP(9)
 						.withKI(5)
 						.withKV(0)
-						.withKS(5));
+						.withKS(3));
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(1000));
 	}
