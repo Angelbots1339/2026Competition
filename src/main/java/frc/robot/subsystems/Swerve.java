@@ -262,7 +262,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 		if (mt2 == null)
 			return;
-		SmartDashboard.putNumber("limelight rot", LimelightHelpers.getTX("limelight"));
 		if (mt2.tagCount < 1)
 			return;
 
@@ -274,7 +273,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 		setVisionMeasurementStdDevs(VecBuilder.fill(xyStdDev2, xyStdDev2, 9999999));
 		addVisionMeasurement(mt2.pose, Utils.fpgaToCurrentTime(mt2.timestampSeconds));
-		SmartDashboard.putNumber("tag dist", mt2.avgTagDist);
 	}
 
 	@Override
