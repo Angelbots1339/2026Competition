@@ -86,7 +86,7 @@ public class RobotContainer {
 							swerve.getYaw());
 					// prevent turning when at very low speeds
 					if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
-						return swerve.getRelativeYaw();
+						return swerve.getYaw();
 					}
 					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
 							speeds.vxMetersPerSecond));
