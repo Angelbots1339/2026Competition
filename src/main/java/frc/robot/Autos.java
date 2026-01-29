@@ -42,7 +42,7 @@ public class Autos {
 				Commands.sequence(
 						bumptest.resetOdometry(),
 						bumptest.cmd(),
-						swerve.pointDrive(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
+						swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
 
 		return routine.cmd();
 	}
@@ -54,7 +54,7 @@ public class Autos {
 				Commands.sequence(
 						bumptest.resetOdometry(),
 						bumptest.cmd(),
-						swerve.pointDrive(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
+						swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
 
 		return routine.cmd();
 	}

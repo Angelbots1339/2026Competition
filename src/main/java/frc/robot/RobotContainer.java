@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
@@ -44,9 +45,9 @@ public class RobotContainer {
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
 
-	private Trigger resetGyro = new Trigger(() -> driver.getBButton());
+	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
-	// private Trigger pidtoPose = new Trigger(() -> driver.getAButton());
+	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
 	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
@@ -60,7 +61,8 @@ public class RobotContainer {
 		configureControllerAlerts();
 
 		autoChooser = AutoBuilder.buildAutoChooser();
-		autoChooser.addOption("Hub Depot Outpost Tower", autos.hubDepotOutpostTowerAuto());
+		autoChooser.addOption("Hub Depot Outpost Tower",
+				autos.hubDepotOutpostTowerAuto());
 		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
 		autoChooser.addOption("Left Pass", autos.leftPassAuto());
 		autoChooser.addOption("bump test", autos.bumpTest());
@@ -69,23 +71,26 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		swerve.setDefaultCommand(swerve.drive(leftY, leftX, rightX, () -> true));
+		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
-		// pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
-		pointDrive.whileTrue(swerve.pointDrive(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
+		pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
+		pointDrive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
 		bumpDrive.whileTrue(
-				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15()), swerve));
+				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(), () -> true),
+						swerve));
 
-		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> {
-			ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
-					swerve.getRelativeYaw());
-			// prevent strange things when still
-			if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
-				return swerve.getRelativeYaw();
-			}
-			return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond, speeds.vxMetersPerSecond));
-		})));
+		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
+				leftX, () -> {
+					ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
+							swerve.getYaw());
+					// prevent turning when at very low speeds
+					if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
+						return swerve.getYaw();
+					}
+					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
+							speeds.vxMetersPerSecond));
+				}, () -> true), swerve));
 	}
 
 	public void configureControllerAlerts() {
