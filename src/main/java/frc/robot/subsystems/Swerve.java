@@ -149,8 +149,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public Rotation2d getClosest15() {
 		Rotation2d closest = Rotation2d.fromDegrees(15);
 		for (var angle : Arrays.asList(15, 75, 105, 165, 195, 255, 285, 345)) {
-			if (Math.abs(Rotation2d.fromDegrees(angle).minus(getRelativeYaw()).getDegrees()) < Math
-					.abs(closest.minus(getRelativeYaw()).getDegrees())) {
+			if (Math.abs(Rotation2d.fromDegrees(angle).minus(getYaw()).getDegrees()) < Math
+					.abs(closest.minus(getYaw()).getDegrees())) {
 				closest = Rotation2d.fromDegrees(angle);
 			}
 		}
