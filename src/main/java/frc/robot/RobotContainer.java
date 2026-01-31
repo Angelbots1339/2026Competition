@@ -26,13 +26,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.SwerveTuning;
-import frc.lib.util.ShooterTuning;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 @Logged
@@ -47,13 +43,11 @@ public class RobotContainer {
 	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
 			* RobotConstants.maxRot.in(RadiansPerSecond);
 
-
-
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
-	private Intake intake = new Intake();
+	// private Intake intake = new Intake();
 
-	private Shooter shooter = new Shooter();
+	// private Shooter shooter = new Shooter();
 
 	@Logged(name = "Reset Gyro")
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
@@ -68,7 +62,8 @@ public class RobotContainer {
 	@Logged(name = "Snake Drive")
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
 
-	private Trigger deployIntake = new Trigger(() -> driver.getLeftBumperButton());
+	// private Trigger deployIntake = new Trigger(() ->
+	// driver.getLeftBumperButton());
 
 	@Logged(name = "Current Auto")
 	private final SendableChooser<Command> autoChooser;
@@ -110,14 +105,14 @@ public class RobotContainer {
 					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
-		deployIntake.onTrue(Commands.run(() -> {
-			intake.setWristAngle(IntakeConstants.deployedAngle); 
-			intake.setIntakeVelocity(IntakeConstants.intakeVelocity);			
-		}, intake))
-		.onFalse(Commands.run(() -> {
-			intake.setWristAngle(IntakeConstants.retractedAngle); 
-			intake.setIntakeVelocity(0);
-		}, intake));
+		// deployIntake.onTrue(Commands.run(() -> {
+		// intake.setWristAngle(IntakeConstants.deployedAngle);
+		// intake.setIntakeVelocity(IntakeConstants.intakeVelocity);
+		// }, intake))
+		// .onFalse(Commands.run(() -> {
+		// intake.setWristAngle(IntakeConstants.retractedAngle);
+		// intake.setIntakeVelocity(0);
+		// }, intake));
 	}
 
 	public void configureControllerAlerts() {

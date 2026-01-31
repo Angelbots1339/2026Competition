@@ -9,9 +9,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -29,17 +27,18 @@ import frc.robot.Constants.TuningConstants;
 public class Shooter extends SubsystemBase {
 	public TalonFX leader = new TalonFX(ShooterConstants.LeaderPort);
 	private TalonFX follower = new TalonFX(ShooterConstants.FollowerPort);
-	//private TalonFX follower2 = new TalonFX(ShooterConstants.Follower2Port);
+	// private TalonFX follower2 = new TalonFX(ShooterConstants.Follower2Port);
 	private AngularVelocity targetVelocity = RotationsPerSecond.of(0);
 
 	/** Creates a new Shooter. */
 	public Shooter() {
 		leader.getConfigurator().apply(ShooterConstants.config);
 		follower.getConfigurator().apply(ShooterConstants.config);
-		//follower2.getConfigurator().apply(ShooterConstants.config);
+		// follower2.getConfigurator().apply(ShooterConstants.config);
 
 		follower.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Opposed));
-		//follower2.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Aligned));
+		// follower2.setControl(new Follower(ShooterConstants.LeaderPort,
+		// MotorAlignmentValue.Aligned));
 
 		leader.getVelocity().setUpdateFrequency(Hertz.of(100));
 	}

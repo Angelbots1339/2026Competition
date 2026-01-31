@@ -4,7 +4,6 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -15,7 +14,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.google.errorprone.annotations.concurrent.LockMethod;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -35,7 +33,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -62,11 +59,18 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
 	/* Keep track if we've ever applied the operator perspective before or not */
 
-	private static DoubleSubscriber appliedAngularKP = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kP", RobotConstants.angularDriveKP);
-	private static DoubleSubscriber appliedAngularKI = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kI", RobotConstants.angularDriveKI);;
-	private static DoubleSubscriber appliedAngularKD = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kD", RobotConstants.angularDriveKD);;
-	// private static DoubleSubscriber appliedAngularKS = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "kS", RobotConstants.angularDriveKS);;
-	// private static DoubleSubscriber appliedAngularKV = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "kV", RobotConstants.angularDriveKV);;
+	private static DoubleSubscriber appliedAngularKP = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kP",
+			RobotConstants.angularDriveKP);
+	private static DoubleSubscriber appliedAngularKI = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kI",
+			RobotConstants.angularDriveKI);;
+	private static DoubleSubscriber appliedAngularKD = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kD",
+			RobotConstants.angularDriveKD);;
+	// private static DoubleSubscriber appliedAngularKS =
+	// DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "kS",
+	// RobotConstants.angularDriveKS);;
+	// private static DoubleSubscriber appliedAngularKV =
+	// DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "kV",
+	// RobotConstants.angularDriveKV);;
 
 	@Logged(name = "Has Applied Operator Perspective")
 	private boolean m_hasAppliedOperatorPerspective = false;
@@ -208,12 +212,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	@Logged(name = "Distance to hub")
 	public double getDistanceToHub() {
 		Pose2d currentAllianceHub;
-		if(FieldUtil.getAlliance() == Alliance.Red) 
-		{
+		if (FieldUtil.getAlliance() == Alliance.Red) {
 			currentAllianceHub = FieldUtil.RedHubCenter;
-		}
-		else 
-		{
+		} else {
 			currentAllianceHub = FieldUtil.BlueHubCenter;
 		}
 		return getPose().getTranslation().getDistance(currentAllianceHub.getTranslation());
@@ -297,7 +298,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		if (mt2.tagCount < 1)
 			return;
 
-		if (mt2.avgTagDist > 3.4) {
+		if (mt2.avgTagDist > VisionConstants.maxUsableRange) {
 			return;
 		}
 
@@ -311,6 +312,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public void periodic() {
 		updateVision();
 		updatePID();
+		SmartDashboard.putNumber("distance to Hub",
+				FieldUtil.getHubCenter().getTranslation().getDistance(getPose().getTranslation()));
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {
@@ -339,18 +342,15 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void updatePID() {
-		if (angularDrivePID.getP() != appliedAngularKP.get()) 
-		{
+		if (angularDrivePID.getP() != appliedAngularKP.get()) {
 			angularDrivePID.setP(appliedAngularKP.get());
 		}
 
-		if (angularDrivePID.getI() != appliedAngularKI.get()) 
-		{
+		if (angularDrivePID.getI() != appliedAngularKI.get()) {
 			angularDrivePID.setI(appliedAngularKI.get());
 		}
 
-		if (angularDrivePID.getD() != appliedAngularKD.get()) 
-		{
+		if (angularDrivePID.getD() != appliedAngularKD.get()) {
 			angularDrivePID.setD(appliedAngularKD.get());
 		}
 	}

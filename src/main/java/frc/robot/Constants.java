@@ -74,6 +74,7 @@ public class Constants {
 
 	public class VisionConstants {
 		public static final String LimelightName = "limelight";
+		public static final double maxUsableRange = 4.0;
 
 		public static double calcStdDev(double metersFromTarget) {
 			return 0.08 * Math.pow(metersFromTarget, 2);
