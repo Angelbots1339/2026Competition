@@ -180,7 +180,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	public void setYaw(Rotation2d yaw) {
 		getPigeon2().setYaw(yaw.getDegrees());
-		resetRotation(yaw);
 	}
 
 	public void resetGyro() {
@@ -222,7 +221,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	@Logged(importance = Importance.CRITICAL)
 	public Pose2d getPose() {
-		return this.getState().Pose;
+		return new Pose2d(getState().Pose.getX(), getState().Pose.getY(), getYaw());
 	}
 
 	public void resetPose(Pose2d pose) {
