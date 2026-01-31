@@ -33,13 +33,8 @@ public class Autos {
 		Command leftIntakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
 		Command leftIntakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
 
-		Command passStart = Commands.print("pass start");
-		Command passEnd = Commands.print("pass end");
-
 		factory.bind("LeftIntakeStart", leftIntakeOpen);
 		factory.bind("LeftIntakeEnd", leftIntakeClose);
-		factory.bind("PassStart", passStart);
-		factory.bind("PassEnd", passEnd);
 	}
 
 	public Command bumpTest() {
@@ -50,18 +45,6 @@ public class Autos {
 						bumptest.resetOdometry(),
 						bumptest.cmd(),
 						swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
-
-		return routine.cmd();
-	}
-
-	public Command leftPassAuto() {
-		final var routine = factory.newRoutine("left pass");
-		final var leftPass = routine.trajectory(ChoreoTraj.LeftPass.name());
-
-		routine.active().onTrue(
-				Commands.sequence(
-						leftPass.resetOdometry(),
-						leftPass.cmd()));
 
 		return routine.cmd();
 	}
@@ -106,6 +89,7 @@ public class Autos {
 				Commands.sequence(
 						leftNeutralToShoot.resetOdometry(),
 						leftNeutralToShoot.cmd()));
+
 		return routine.cmd();
 	}
 
@@ -118,6 +102,7 @@ public class Autos {
 				Commands.sequence(
 						rightNeutralToShoot.resetOdometry(),
 						rightNeutralToShoot.cmd()));
+
 		return routine.cmd();
 	}
 
@@ -134,7 +119,6 @@ public class Autos {
 							-sample.moduleForcesY()[3],
 							-sample.moduleForcesY()[2]
 					});
-
 		}
 
 		return new Trajectory<SwerveSample>(traj.name(), List.of(new_samples), traj.splits(), traj.events());

@@ -9,8 +9,6 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import java.util.function.Supplier;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -62,23 +60,21 @@ public class RobotContainer {
 	@Logged(name = "Snake Drive")
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
 
-	// private Trigger deployIntake = new Trigger(() ->
+	// priate Trigger deployIntake = new Trigger(() ->
 	// driver.getLeftBumperButton());
 
 	@Logged(name = "Current Auto")
-	private final SendableChooser<Command> autoChooser;
-
+	private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 	private Autos autos = new Autos(swerve);
 
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
 
-		autoChooser = AutoBuilder.buildAutoChooser();
+		// autoChooser = AutoBuilder.buildAutoChooser();
 		autoChooser.addOption("Hub Depot Outpost Tower",
 				autos.hubDepotOutpostTowerAuto());
 		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
-		autoChooser.addOption("Left Pass", autos.leftPassAuto());
 		autoChooser.addOption("bump test", autos.bumpTest());
 		autoChooser.addOption("left neutral", autos.leftNeutralAuto());
 		autoChooser.addOption("right neutral", autos.rightNeutralAuto());
