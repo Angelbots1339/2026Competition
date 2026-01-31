@@ -339,8 +339,19 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void updatePID() {
-		angularDrivePID.setP(appliedAngularKP.get());
-		angularDrivePID.setI(appliedAngularKI.get());
-		angularDrivePID.setD(appliedAngularKD.get());
+		if (angularDrivePID.getP() != appliedAngularKP.get()) 
+		{
+			angularDrivePID.setP(appliedAngularKP.get());
+		}
+
+		if (angularDrivePID.getI() != appliedAngularKI.get()) 
+		{
+			angularDrivePID.setI(appliedAngularKI.get());
+		}
+
+		if (angularDrivePID.getD() != appliedAngularKD.get()) 
+		{
+			angularDrivePID.setD(appliedAngularKD.get());
+		}
 	}
 }
