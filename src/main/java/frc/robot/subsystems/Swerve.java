@@ -32,6 +32,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -163,6 +164,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	public void logTuning() {
 		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
+	}
+
+	public Distance getHubDistance() {
+		return Meters.of(getPose().getTranslation().getDistance(FieldUtil.getHubCenter().getTranslation()));
 	}
 
 	@Logged(name = "Closest 15")

@@ -1,4 +1,4 @@
-package frc.lib.util;
+package frc.lib.util.tuning;
 
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.TuningConstants;
+import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Swerve;
 
@@ -27,7 +28,8 @@ public class SwerveTuning {
 
 	private static XboxController tester = new XboxController(DriverConstants.TesterPort);
 
-	private static Trigger baseTrigger = new Trigger(() -> DriverStation.isTestEnabled());
+	private static Trigger baseTrigger = new Trigger(
+			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Swerve);
 	private static Trigger characterizeSwerveRadius = baseTrigger.and(() -> tester.getAButton());
 	private static Trigger testRotation = baseTrigger.and(() -> tester.getBButton());
 	private static Trigger sysIdRotation = baseTrigger.and(() -> tester.getYButton());

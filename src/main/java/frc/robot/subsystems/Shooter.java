@@ -14,7 +14,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.util.ShooterTuning;
+import frc.lib.util.tuning.ShooterTuning;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants;
 

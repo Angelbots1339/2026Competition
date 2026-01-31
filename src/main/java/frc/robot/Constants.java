@@ -82,6 +82,12 @@ public class Constants {
 
 	public class TuningConstants {
 		public static final String tuningNTPrefix = "Tuning/";
+		public static final String tuningModeNTName = tuningNTPrefix + "Mode";
+
+		public static enum TuningMode {
+			Shooter,
+			Swerve,
+		};
 
 		public class Swerve {
 			public static final String angularPIDNTName = tuningNTPrefix + "angular PID";
@@ -136,7 +142,7 @@ public class Constants {
 						.withKS(0));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
-				.withUpdateFreqHz(Hertz.of(1000));
+				.withUpdateFreqHz(Hertz.of(1000)).withSlot(1);
 	}
 
 	public class IntakeConstants {
