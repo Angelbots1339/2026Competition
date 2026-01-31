@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -32,6 +33,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -193,6 +195,20 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 			return getYaw().plus(Rotation2d.k180deg);
 
 		return getYaw();
+	}
+
+	@Logged(name = "Dist to hub")
+	public double getDistanceToAllianceHub() {
+		Pose2d currentAllianceHub;
+		if(FieldUtil.getAlliance() == Alliance.Red) 
+		{
+			currentAllianceHub = FieldUtil.RedHubCenter;
+		}
+		else 
+		{
+			currentAllianceHub = FieldUtil.BlueHubCenter;
+		}
+		return getPose().getTranslation().getDistance(currentAllianceHub.getTranslation());
 	}
 
 	@Logged(importance = Importance.CRITICAL)
