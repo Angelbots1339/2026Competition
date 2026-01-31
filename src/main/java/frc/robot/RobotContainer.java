@@ -27,8 +27,10 @@ import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.SwerveTuning;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 @Logged
@@ -44,6 +46,7 @@ public class RobotContainer {
 
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
+	private Intake intake = new Intake();
 
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
@@ -51,6 +54,8 @@ public class RobotContainer {
 	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
+
+	private Trigger deployIntake = new Trigger(() -> driver.getLeftBumperButton());
 
 	private final SendableChooser<Command> autoChooser;
 
@@ -91,6 +96,14 @@ public class RobotContainer {
 					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
+		deployIntake.onTrue(Commands.run(() -> {
+			intake.setWristAngle(IntakeConstants.deployedAngle); 
+			intake.setIntakeVelocity(IntakeConstants.intakeVelocity);			
+		}, intake))
+		.onFalse(Commands.run(() -> {
+			intake.setWristAngle(IntakeConstants.retractedAngle); 
+			intake.setIntakeVelocity(0);
+		}, intake));
 	}
 
 	public void configureControllerAlerts() {
