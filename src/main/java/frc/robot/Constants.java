@@ -1,6 +1,8 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -10,12 +12,14 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -82,6 +86,48 @@ public class Constants {
 		public class Swerve {
 			public static final String angularPIDNTName = tuningNTPrefix + "angular PID";
 		}
+
+		public class Shooter {
+			public static final String voltageNTName = tuningNTPrefix + "voltage";
+			public static final String velocityNTName = tuningNTPrefix + "velocity";
+			public static final String PNTName = tuningNTPrefix + "P";
+			public static final String INTName = tuningNTPrefix + "I";
+			public static final String DNTName = tuningNTPrefix + "D";
+			public static final String SNTName = tuningNTPrefix + "S";
+			public static final String VNTName = tuningNTPrefix + "V";
+		}
+	}
+
+	public class ShooterConstants {
+		public static final int LeaderPort = 2;
+		public static final int FollowerPort = 0;
+		public static final int Follower2Port = 1;
+
+		public static final double shootRPS = 60;
+		public static TalonFXConfiguration config = new TalonFXConfiguration()
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withSupplyCurrentLimit(Amps.of(70))
+						.withStatorCurrentLimit(Amps.of(120))
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(true))
+				.withMotorOutput(new MotorOutputConfigs()
+						.withNeutralMode(NeutralModeValue.Coast)
+						.withInverted(InvertedValue.Clockwise_Positive))
+				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(0.5))
+				.withSlot0(new Slot0Configs()
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
+						.withKP(0.3)
+						.withKI(2)
+						.withKV(0.06)
+						.withKS(0.25))
+				.withSlot1(new Slot1Configs()
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
+						.withKP(9)
+						.withKI(5)
+						.withKV(0)
+						.withKS(3));
+		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
+				.withUpdateFreqHz(Hertz.of(1000));
 	}
 	public class IntakeConstants {
 		public static final int intakeMotorId = 8;

@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import edu.wpi.first.epilogue.Epilogue;
+import edu.wpi.first.epilogue.EpilogueConfiguration;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -27,6 +30,7 @@ public class Robot extends TimedRobot {
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog());
 		Epilogue.configure(config -> {
+			config.loggingPeriod = Seconds.of(0.01);
 			// config.minimumImportance = Importance.CRITICAL;
 			config.minimumImportance = Importance.DEBUG;
 		});
