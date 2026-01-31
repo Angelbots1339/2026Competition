@@ -21,40 +21,85 @@ public class Autos {
 				true, // If this is true, when on the red alliance, the path will be mirrored to the
 						// opposite side, while keeping the same coordinate system origin.
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
+
+		/* TODO: replace with actual commands */
+		Command leftIntakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
+		Command leftIntakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
+
+		Command passStart = Commands.print("pass start");
+		Command passEnd = Commands.print("pass end");
+
+		factory.bind("LeftIntakeStart", leftIntakeOpen);
+		factory.bind("LeftIntakeEnd", leftIntakeClose);
+		factory.bind("PassStart", passStart);
+		factory.bind("PassEnd", passEnd);
 	}
 
-	public Command hubDepotTowerAuto() {
-		final var routine = factory.newRoutine("Hub Depot");
-		final var hubToDepot = routine.trajectory("HubDepotTower", 0);
-		final var intakeDepot = routine.trajectory("HubDepotTower", 1);
-		final var shootToTower = routine.trajectory("HubDepotTower", 2);
-		routine.active().whileTrue(Commands.sequence(hubToDepot.resetOdometry(), hubToDepot.cmd(), intakeDepot.cmd()));
-		intakeDepot.done()
-				.onTrue(swerve.pointDrive(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)
-						.withDeadline(Commands.waitSeconds(2))
-						.andThen(shootToTower.cmd()));
+	public Command bumpTest() {
+		final var routine = factory.newRoutine("bump test");
+		final var bumptest = routine.trajectory("BumpTest");
+		routine.active().onTrue(
+				Commands.sequence(
+						bumptest.resetOdometry(),
+						bumptest.cmd(),
+						swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
+
 		return routine.cmd();
 	}
 
-	public Command hubDepotTower1() {
-		final var routine = factory.newRoutine("Hub Depot Tower 1");
-		final var hubToDepot = routine.trajectory("HubDepotTower", 0);
-		routine.active().whileTrue(Commands.sequence(hubToDepot.resetOdometry(), hubToDepot.cmd()));
-		return routine.cmd();
-	}
+	public Command bumpTestStraight() {
+		final var routine = factory.newRoutine("bump test straight");
+		final var bumptest = routine.trajectory("BumpTestStraight");
+		routine.active().onTrue(
+				Commands.sequence(
+						bumptest.resetOdometry(),
+						bumptest.cmd(),
+						swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
 
-	public Command hubDepotTower12() {
-		final var routine = factory.newRoutine("Hub Depot Tower 1");
-		final var hubToDepot = routine.trajectory("HubDepotTower", 0);
-		final var intakeDepot = routine.trajectory("HubDepotTower", 1);
-		routine.active().whileTrue(Commands.sequence(hubToDepot.resetOdometry(), hubToDepot.cmd(), intakeDepot.cmd()));
 		return routine.cmd();
 	}
 
 	public Command leftPassAuto() {
-		final var routine = factory.newRoutine("Left Pass");
-		final var traj = routine.trajectory("PassLeft");
-		routine.active().whileTrue(Commands.sequence(traj.resetOdometry(), traj.cmd()));
+		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
+		final var leftPass = routine.trajectory("LeftPass");
+
+		routine.active().onTrue(
+				Commands.sequence(
+						leftPass.resetOdometry(),
+						leftPass.cmd()));
+
+		return routine.cmd();
+	}
+
+	public Command hubDepotTowerAuto() {
+		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
+		final var hubToDepotShoot = routine.trajectory("HubtoDepotShoot");
+		final var depotShoottoTower = routine.trajectory("DepotShoottoTower");
+
+		routine.active().onTrue(
+				Commands.sequence(
+						hubToDepotShoot.resetOdometry(),
+						hubToDepotShoot.cmd(),
+						depotShoottoTower.cmd()));
+
+		return routine.cmd();
+	}
+
+	public Command hubDepotOutpostTowerAuto() {
+		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
+		final var hubToDepotShoot = routine.trajectory("HubtoDepotShoot");
+		final var depotShoottoOutpost = routine.trajectory("DepotShoottoOutpost");
+		final var outpostToShoot = routine.trajectory("OutposttoShoot");
+		final var outpostShoottoTower = routine.trajectory("OutpostShoottoTower");
+
+		routine.active().onTrue(
+				Commands.sequence(
+						hubToDepotShoot.resetOdometry(),
+						hubToDepotShoot.cmd(),
+						depotShoottoOutpost.cmd(),
+						outpostToShoot.cmd(),
+						outpostShoottoTower.cmd()));
+
 		return routine.cmd();
 	}
 }

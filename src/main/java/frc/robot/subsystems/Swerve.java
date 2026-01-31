@@ -1,10 +1,8 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -89,112 +87,76 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		}
 	}
 
-	public void logTuning() {
-		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
+	public Command driveCommand(Supplier<Double> x, Supplier<Double> y, Supplier<Double> rot,
+			Supplier<Boolean> isFieldRelative) {
+		return run(() -> driveRequest(x, y, rot, isFieldRelative));
 	}
 
-	public Command drive(Supplier<Double> x, Supplier<Double> y, Supplier<Double> rot, Supplier<Boolean> fieldCentric) {
-		return run(() -> {
-			ChassisSpeeds speeds = new ChassisSpeeds(x.get(), y.get(), rot.get());
-			SwerveRequest req;
-
-			if (fieldCentric.get()) {
-				speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
-			}
-
-			req = new SwerveRequest.RobotCentric()
-					.withVelocityX(speeds.vxMetersPerSecond)
-					.withVelocityY(speeds.vyMetersPerSecond)
-					.withRotationalRate(speeds.omegaRadiansPerSecond);
-
-			this.setControl(req);
-		});
-	}
-
-	public Command pointDrive(Supplier<Double> x, Supplier<Double> y, Supplier<Pose2d> pose,
+	// drive either field centric or robot centric while facing a blue origin pose
+	public Command pointDriveCommand(Supplier<Double> x, Supplier<Double> y,
+			Supplier<Pose2d> pose,
 			Supplier<Boolean> fieldCentric) {
 		return run(() -> {
 			double xdiff = pose.get().getX() - getPose().getX();
 			double ydiff = pose.get().getY() - getPose().getY();
 			Rotation2d angle = Rotation2d.fromRadians(Math.atan2(ydiff, xdiff));
 
-			angularDriveRequest(x, y, () -> fieldtoRobotRotation(angle));
+			angularDriveRequest(x, y, () -> angle, fieldCentric);
 		});
 	}
 
-	public Rotation2d fieldtoRobotRotation(Rotation2d rot) {
-		return FieldUtil.isRedAlliance() ? rot.plus(Rotation2d.k180deg) : rot;
+	public void driveRequest(Supplier<Double> x, Supplier<Double> y, Supplier<Double> rot,
+			Supplier<Boolean> isFieldRelative) {
+		ChassisSpeeds speeds = new ChassisSpeeds(x.get(), y.get(), rot.get());
+		if (isFieldRelative.get())
+			speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
+		driveRobotRelative(speeds);
+	}
+
+	// applies either robot relative or field relative translation with blue origin
+	// rotation target
+	public void angularDriveRequest(Supplier<Double> x, Supplier<Double> y, Supplier<Rotation2d> rot,
+			Supplier<Boolean> isFieldRelative) {
+		double rotation = angularDrivePID.calculate(getYaw().getRadians(), rot.get().getRadians());
+		ChassisSpeeds speeds = new ChassisSpeeds(x.get(), y.get(), rotation);
+
+		if (isFieldRelative.get())
+			speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
+
+		driveRobotRelative(speeds);
 	}
 
 	public Command pidtoPose(Supplier<Pose2d> target) {
 		return run(() -> {
-			double x = MathUtil.clamp(
-					pidToPoseXController.calculate(getPose().getX(),
-							target.get().getX())
-							+ Math.signum(pidToPoseXController.getError()) * Math.abs(RobotConstants.pidToPoseKS),
-					-RobotConstants.maxSpeed.in(MetersPerSecond), RobotConstants.maxSpeed.in(MetersPerSecond));
-			double y = MathUtil.clamp(
-					pidToPoseYController.calculate(getPose().getY(),
-							target.get().getY())
-							+ Math.signum(pidToPoseYController.getError()) * Math.abs(RobotConstants.pidToPoseKS),
-					-RobotConstants.maxSpeed.in(MetersPerSecond), RobotConstants.maxSpeed.in(MetersPerSecond));
+			double x = pidToPoseXController.calculate(getPose().getX(), target.get().getX());
+			double y = pidToPoseYController.calculate(getPose().getY(), target.get().getY());
+			double rotation = angularDrivePID.calculate(getYaw().getRadians(), target.get().getRotation().getRadians());
 
-			// convert from blue origin coordinates to field oriented (alliance origin)
-			// coordinates
-			if (FieldUtil.isRedAlliance()) {
-				angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : -x,
-						() -> pidToPoseYController.atSetpoint() ? 0 : -y,
-						() -> target.get().getRotation().rotateBy(Rotation2d.k180deg));
-			} else {
-				angularDriveRequest(() -> pidToPoseXController.atSetpoint() ? 0 : x,
-						() -> pidToPoseYController.atSetpoint() ? 0 : y, () -> target.get().getRotation());
-			}
+			x = MathUtil.clamp(x, -RobotConstants.maxSpeed.in(MetersPerSecond),
+					RobotConstants.maxSpeed.in(MetersPerSecond));
+			y = MathUtil.clamp(y, -RobotConstants.maxSpeed.in(MetersPerSecond),
+					RobotConstants.maxSpeed.in(MetersPerSecond));
+
+			ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rotation, getYaw());
+			driveRobotRelative(speeds);
 		});
 	}
 
-	public void angularDriveRequest(Supplier<Double> translationX, Supplier<Double> translationY,
-			Supplier<Rotation2d> desiredRotation) {
-
-		ChassisSpeeds speeds = angularPIDCalc(translationX, translationY, desiredRotation);
-
-		SwerveRequest req;
-
-		ChassisSpeeds fieldRelativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw());
-
-		req = new SwerveRequest.RobotCentric()
-				.withDriveRequestType(DriveRequestType.Velocity)
-				.withVelocityX(fieldRelativeSpeeds.vxMetersPerSecond) // Drive forward with negative Y (forward)
-				.withVelocityY(fieldRelativeSpeeds.vyMetersPerSecond) // Drive left with negative X (left)
-				.withRotationalRate(fieldRelativeSpeeds.omegaRadiansPerSecond);
-
-		this.setControl(req);
+	public void driveRobotRelative(ChassisSpeeds speeds) {
+		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds)
+				.withDriveRequestType(DriveRequestType.Velocity));
 	}
 
-	private ChassisSpeeds angularPIDCalc(Supplier<Double> translationX, Supplier<Double> translationY,
-			Supplier<Rotation2d> desiredRotation) {
-		double pid = angularDrivePID.calculate(getRelativeYaw().getRadians(), desiredRotation.get().getRadians());
-
-		ChassisSpeeds speeds = new ChassisSpeeds(translationX.get(), translationY.get(),
-				MathUtil.clamp(
-						angularDrivePID.atSetpoint() ? 0
-								: pid + (RobotConstants.angularDriveKS
-										* Math.signum(angularDrivePID.getSetpoint().velocity)),
-						-RobotConstants.maxRot.in(RadiansPerSecond), RobotConstants.maxRot.in(RadiansPerSecond)));
-
-		return speeds;
+	public void logTuning() {
+		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
 	}
 
-	@Logged(importance = Importance.CRITICAL, name = "Pose")
-	public Pose2d getPose() {
-		return this.getState().Pose;
-	}
-
-	@Logged(name = "Closest 45")
-	public Rotation2d getClosest45() {
-		Rotation2d closest = Rotation2d.fromDegrees(45);
-		for (var angle : Arrays.asList(45, 135, 225, 315)) {
-			if (Math.abs(Rotation2d.fromDegrees(angle).minus(getRelativeYaw()).getDegrees()) < Math
-					.abs(closest.minus(getRelativeYaw()).getDegrees())) {
+	@Logged(name = "Closest 15")
+	public Rotation2d getClosest15() {
+		Rotation2d closest = Rotation2d.fromDegrees(15);
+		for (var angle : Arrays.asList(15, 75, 105, 165, 195, 255, 285, 345)) {
+			if (Math.abs(Rotation2d.fromDegrees(angle).minus(getYaw()).getDegrees()) < Math
+					.abs(closest.minus(getYaw()).getDegrees())) {
 				closest = Rotation2d.fromDegrees(angle);
 			}
 		}
@@ -202,42 +164,49 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return closest;
 	}
 
-	@Logged(name = "Yaw")
-	public Rotation2d getYaw() {
-		return this.getPigeon2().getRotation2d();
-	}
-
 	public void setYaw(Rotation2d yaw) {
-		if (!this.getPigeon2().setYaw(yaw.getDegrees()).isOK()) {
-			System.err.println("pidgeon setYaw errored");
-		}
-
+		getPigeon2().setYaw(yaw.getDegrees());
 		resetRotation(yaw);
-		resetPose(new Pose2d(getPose().getX(), getPose().getY(), getYaw()));
 	}
 
 	public void resetGyro() {
-		if (FieldUtil.isRedAlliance()) {
+		if (FieldUtil.isRedAlliance())
 			setYaw(Rotation2d.k180deg);
-		} else {
+		else
 			setYaw(Rotation2d.kZero);
-		}
+	}
+
+	@Logged(name = "yaw")
+	public Rotation2d getYaw() {
+		return Rotation2d.fromDegrees(getPigeon2().getYaw().getValueAsDouble());
 	}
 
 	@Logged(name = "Relative yaw")
 	public Rotation2d getRelativeYaw() {
-		double rawYaw = getPigeon2().getYaw().getValue().in(Degrees) + (FieldUtil.isRedAlliance() ? 180 : 0);
-		double yawWithRollover = rawYaw > 0 ? rawYaw % 360 : 360 - Math.abs(rawYaw % 360);
+		// double rawYaw = getPigeon2().getYaw().getValue().in(Degrees) +
+		// (FieldUtil.isRedAlliance() ? 180 : 0);
+		// double yawWithRollover = rawYaw > 0 ? rawYaw % 360 : 360 - Math.abs(rawYaw %
+		// 360);
 
-		return Rotation2d.fromDegrees(yawWithRollover);
+		// return Rotation2d.fromDegrees(yawWithRollover);
+		if (FieldUtil.isRedAlliance())
+			return getYaw().plus(Rotation2d.k180deg);
+
+		return getYaw();
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public Pose2d getPose() {
+		return this.getState().Pose;
+	}
+
+	public void resetPose(Pose2d pose) {
+		super.resetPose(pose);
+		setYaw(pose.getRotation());
 	}
 
 	public ChassisSpeeds getRobotRelativeSpeeds() {
-		return this.getState().Speeds;
-	}
-
-	public void driveRobotRelative(ChassisSpeeds speeds) {
-		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
+		return getState().Speeds;
 	}
 
 	@SuppressWarnings("resource")
@@ -256,7 +225,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 					sample.omega + headingController.calculate(pose.getRotation().getRadians(), sample.heading));
 
 			// Apply the generated speeds
-			driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRelativeYaw()));
+			this.setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(speeds));
 		};
 	}
 
@@ -271,17 +240,13 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 		// Configure AutoBuilder last
 		AutoBuilder.configure(
-				this::getPose, // Robot pose supplier
-				this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-				this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-				(speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT
-																		// RELATIVE ChassisSpeeds. Also optionally
-																		// outputs individual module feedforwards
-				new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
-												// holonomic drive trains
-						new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-						new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-				),
+				this::getPose,
+				this::resetPose,
+				this::getRobotRelativeSpeeds,
+				(speeds, feedforwards) -> driveRobotRelative(speeds),
+				new PPHolonomicDriveController(
+						new PIDConstants(5.0, 0.0, 0.0),
+						new PIDConstants(5.0, 0.0, 0.0)),
 				config, // The robot configuration
 				() -> {
 					// Boolean supplier that controls when the path will be mirrored for the red
@@ -305,7 +270,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
 		if (mt2 == null)
 			return;
-		SmartDashboard.putNumber("limelight rot", LimelightHelpers.getTX("limelight"));
 		if (mt2.tagCount < 1)
 			return;
 
@@ -317,7 +281,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 		setVisionMeasurementStdDevs(VecBuilder.fill(xyStdDev2, xyStdDev2, 9999999));
 		addVisionMeasurement(mt2.pose, Utils.fpgaToCurrentTime(mt2.timestampSeconds));
-		SmartDashboard.putNumber("tag dist", mt2.avgTagDist);
 	}
 
 	@Override

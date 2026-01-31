@@ -46,7 +46,9 @@ public class SwerveTuning {
 
 		testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() -> 0.0, () -> 0.0,
 				() -> Rotation2d.fromRadians(
-						SmartDashboard.getNumber(TuningConstants.Swerve.angularPIDNTName + "/goal", 0))),
+						SmartDashboard.getNumber(TuningConstants.Swerve.angularPIDNTName + "/goal",
+								0)),
+				() -> true),
 				swerve));
 
 		sysIdRotation.whileTrue(Commands.sequence(
