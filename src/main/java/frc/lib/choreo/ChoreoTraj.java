@@ -34,7 +34,7 @@ public record ChoreoTraj(
 	public static final ChoreoTraj DepotShoottoOutpost = new ChoreoTraj(
 	    "DepotShoottoOutpost",
 	    OptionalInt.empty(),
-	    1.49699,
+	    1.81762,
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588)),
 	    new Pose2d(2, 0.721, Rotation2d.fromRadians(3.142))
 	);
@@ -69,7 +69,7 @@ public record ChoreoTraj(
 	public static final ChoreoTraj OutposttoShoot = new ChoreoTraj(
 	    "OutposttoShoot",
 	    OptionalInt.empty(),
-	    1.90057,
+	    2.14593,
 	    new Pose2d(2, 0.721, Rotation2d.fromRadians(3.142)),
 	    new Pose2d(2.529, 2.131, Rotation2d.fromRadians(0.664))
 	);
