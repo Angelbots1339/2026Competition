@@ -24,6 +24,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import choreo.trajectory.SwerveSample;
+import dev.doglog.DogLog;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.math.MathUtil;
@@ -33,6 +34,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -60,11 +62,17 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
 	/* Keep track if we've ever applied the operator perspective before or not */
 
+	private static DoubleSubscriber appliedAngularKP = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kP", RobotConstants.angularDriveKP);
+	private static DoubleSubscriber appliedAngularKI = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kI", RobotConstants.angularDriveKI);;
+	private static DoubleSubscriber appliedAngularKD = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kD", RobotConstants.angularDriveKD);;
+	// private static DoubleSubscriber appliedAngularKS = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "kS", RobotConstants.angularDriveKS);;
+	// private static DoubleSubscriber appliedAngularKV = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "kV", RobotConstants.angularDriveKV);;
+
 	@Logged(name = "Has Applied Operator Perspective")
 	private boolean m_hasAppliedOperatorPerspective = false;
 
-	private ProfiledPIDController angularDrivePID = new ProfiledPIDController(RobotConstants.angularDriveKP,
-			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD, RobotConstants.angularDriveConstraints);
+	private ProfiledPIDController angularDrivePID = new ProfiledPIDController(appliedAngularKP.get(),
+			appliedAngularKI.get(), appliedAngularKD.get(), RobotConstants.angularDriveConstraints);
 
 	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
@@ -197,8 +205,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return getYaw();
 	}
 
-	@Logged(name = "Dist to hub")
-	public double getDistanceToAllianceHub() {
+	@Logged(name = "Distance to hub")
+	public double getDistanceToHub() {
 		Pose2d currentAllianceHub;
 		if(FieldUtil.getAlliance() == Alliance.Red) 
 		{
@@ -302,6 +310,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	@Override
 	public void periodic() {
 		updateVision();
+		updatePID();
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {
@@ -327,5 +336,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 			this.updateSimState(deltaTime, RobotController.getBatteryVoltage());
 		});
 		m_simNotifier.startPeriodic(kSimLoopPeriod);
+	}
+
+	public void updatePID() {
+		angularDrivePID.setP(appliedAngularKP.get());
+		angularDrivePID.setI(appliedAngularKI.get());
+		angularDrivePID.setD(appliedAngularKD.get());
 	}
 }
