@@ -30,11 +30,11 @@ public class Autos {
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 
 		/* TODO: replace with actual commands */
-		Command leftIntakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
-		Command leftIntakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
+		Command intakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
+		Command intakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
 
-		factory.bind("LeftIntakeStart", leftIntakeOpen);
-		factory.bind("LeftIntakeEnd", leftIntakeClose);
+		factory.bind("IntakeStart", intakeOpen);
+		factory.bind("IntakeStop", intakeClose);
 	}
 
 	public Command bumpTest() {

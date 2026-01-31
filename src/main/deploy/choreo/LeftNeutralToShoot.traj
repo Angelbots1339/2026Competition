@@ -263,5 +263,7 @@
     {"t":4.79722, "x":2.92944, "y":5.77534, "heading":-0.83152, "vx":0.0, "vy":0.0, "omega":0.0, "ax":0.0, "ay":0.0, "alpha":0.0, "fx":[0.0,0.0,0.0,0.0], "fy":[0.0,0.0,0.0,0.0]}],
   "splits":[0]
  },
- "events":[]
+ "events":[
+   {"name":"IntakeStart", "from":{"target":2, "targetTimestamp":1.7904, "offset":{"exp":"-0.5 s", "val":-0.5}}, "event":{"type":"sequential", "data":{"commands":[]}}},
+   {"name":"IntakeStop", "from":{"target":3, "targetTimestamp":2.78393, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"sequential", "data":{"commands":[]}}}]
 }

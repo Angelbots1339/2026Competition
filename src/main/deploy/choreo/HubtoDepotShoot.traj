@@ -196,7 +196,7 @@
   "splits":[0]
  },
  "events":[
-   {"name":"LeftIntakeStart", "from":{"target":2, "targetTimestamp":1.46103, "offset":{"exp":"-0.5 s", "val":-0.5}}, "event":{"type":"parallel", "data":{"commands":[]}}},
-   {"name":"LeftIntakeStop", "from":{"target":3, "targetTimestamp":2.46396, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"parallel", "data":{"commands":[]}}},
+   {"name":"IntakeStart", "from":{"target":2, "targetTimestamp":1.46103, "offset":{"exp":"-0.5 s", "val":-0.5}}, "event":{"type":"parallel", "data":{"commands":[]}}},
+   {"name":"IntakeStop", "from":{"target":3, "targetTimestamp":2.46396, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"parallel", "data":{"commands":[]}}},
    {"name":"Shoot", "from":{"target":4, "targetTimestamp":3.89116, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"named", "data":{"name":"Shoot"}}}]
 }
