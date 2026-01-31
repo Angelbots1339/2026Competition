@@ -3,6 +3,7 @@ package frc.robot;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.choreo.ChoreoTraj;
 import frc.lib.util.FieldUtil;
 import frc.robot.subsystems.Swerve;
 
@@ -37,19 +38,7 @@ public class Autos {
 
 	public Command bumpTest() {
 		final var routine = factory.newRoutine("bump test");
-		final var bumptest = routine.trajectory("BumpTest");
-		routine.active().onTrue(
-				Commands.sequence(
-						bumptest.resetOdometry(),
-						bumptest.cmd(),
-						swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
-
-		return routine.cmd();
-	}
-
-	public Command bumpTestStraight() {
-		final var routine = factory.newRoutine("bump test straight");
-		final var bumptest = routine.trajectory("BumpTestStraight");
+		final var bumptest = routine.trajectory(ChoreoTraj.BumpTest.name());
 		routine.active().onTrue(
 				Commands.sequence(
 						bumptest.resetOdometry(),
@@ -60,8 +49,8 @@ public class Autos {
 	}
 
 	public Command leftPassAuto() {
-		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
-		final var leftPass = routine.trajectory("LeftPass");
+		final var routine = factory.newRoutine("left pass");
+		final var leftPass = routine.trajectory(ChoreoTraj.LeftPass.name());
 
 		routine.active().onTrue(
 				Commands.sequence(
@@ -72,9 +61,9 @@ public class Autos {
 	}
 
 	public Command hubDepotTowerAuto() {
-		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
-		final var hubToDepotShoot = routine.trajectory("HubtoDepotShoot");
-		final var depotShoottoTower = routine.trajectory("DepotShoottoTower");
+		final var routine = factory.newRoutine("Hub Depot Tower");
+		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
+		final var depotShoottoTower = routine.trajectory(ChoreoTraj.DepotShoottoTower.name());
 
 		routine.active().onTrue(
 				Commands.sequence(
@@ -87,10 +76,10 @@ public class Autos {
 
 	public Command hubDepotOutpostTowerAuto() {
 		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
-		final var hubToDepotShoot = routine.trajectory("HubtoDepotShoot");
-		final var depotShoottoOutpost = routine.trajectory("DepotShoottoOutpost");
-		final var outpostToShoot = routine.trajectory("OutposttoShoot");
-		final var outpostShoottoTower = routine.trajectory("OutpostShoottoTower");
+		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
+		final var depotShoottoOutpost = routine.trajectory(ChoreoTraj.DepotShoottoOutpost.name());
+		final var outpostToShoot = routine.trajectory(ChoreoTraj.OutposttoShoot.name());
+		final var outpostShoottoTower = routine.trajectory(ChoreoTraj.OutpostShoottoTower.name());
 
 		routine.active().onTrue(
 				Commands.sequence(

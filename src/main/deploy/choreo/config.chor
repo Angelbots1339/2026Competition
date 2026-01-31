@@ -161,7 +161,7 @@
  },
  "generationFeatures":[],
  "codegen":{
-  "root":null,
+  "root":"..\\..\\java\\frc\\lib\\choreo",
   "genVars":true,
   "genTrajData":true,
   "useChoreoLib":true

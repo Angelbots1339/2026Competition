@@ -80,7 +80,6 @@ public class RobotContainer {
 		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
 		autoChooser.addOption("Left Pass", autos.leftPassAuto());
 		autoChooser.addOption("bump test", autos.bumpTest());
-		autoChooser.addOption("bump test straight", autos.bumpTestStraight());
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
