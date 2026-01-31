@@ -6,6 +6,17 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -71,5 +82,47 @@ public class Constants {
 		public class Swerve {
 			public static final String angularPIDNTName = tuningNTPrefix + "angular PID";
 		}
+	}
+	public class IntakeConstants {
+		public static final int intakeMotorId = 8;
+		public static final int deployMotorId = 9; 
+
+		public static final double deployIntakeGearRatio = 1 * 1;
+
+		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
+		.withKP(0)
+      .withKI(0)
+      .withKD(0)
+      .withKV(0)
+      .withKA(0)
+      .withKS(0)
+      .withKG(0)
+      .withGravityType(GravityTypeValue.Arm_Cosine)
+      .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+
+	  public static final TalonFXConfiguration intakeConfigs = new TalonFXConfiguration()
+	  .withMotorOutput(
+		new MotorOutputConfigs()
+		.withNeutralMode(NeutralModeValue.Brake)
+		.withInverted(InvertedValue.Clockwise_Positive)
+		//make sure to change inverted when tuning!
+	  )
+	  .withFeedback(
+		new FeedbackConfigs()
+		.withSensorToMechanismRatio(deployIntakeGearRatio)
+	  )
+	  .withCurrentLimits(
+		new CurrentLimitsConfigs()
+		.withStatorCurrentLimit(50)
+	  )
+	  .withSoftwareLimitSwitch(
+		new SoftwareLimitSwitchConfigs()
+		.withForwardSoftLimitEnable(true)
+		.withReverseSoftLimitEnable(true)
+		.withForwardSoftLimitThreshold(1)
+		//this may need to change as well
+		.withReverseSoftLimitThreshold(0)
+	  )
+	  .withSlot0(intakeSlot0);
 	}
 }
