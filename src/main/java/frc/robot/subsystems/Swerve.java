@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -14,6 +15,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.google.errorprone.annotations.concurrent.LockMethod;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -22,6 +24,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import choreo.trajectory.SwerveSample;
+import dev.doglog.DogLog;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.math.MathUtil;
@@ -31,6 +34,8 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -48,16 +53,26 @@ import frc.robot.Constants.VisionConstants;
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
 	private static final double kSimLoopPeriod = 0.004; // 4 ms
 	private Notifier m_simNotifier = null;
+
+	@Logged(name = "Last Sim Time")
 	private double m_lastSimTime;
 	/* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
 	private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
 	/* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
 	private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
 	/* Keep track if we've ever applied the operator perspective before or not */
+
+	private static DoubleSubscriber appliedAngularKP = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kP", RobotConstants.angularDriveKP);
+	private static DoubleSubscriber appliedAngularKI = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kI", RobotConstants.angularDriveKI);;
+	private static DoubleSubscriber appliedAngularKD = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kD", RobotConstants.angularDriveKD);;
+	// private static DoubleSubscriber appliedAngularKS = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "kS", RobotConstants.angularDriveKS);;
+	// private static DoubleSubscriber appliedAngularKV = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "kV", RobotConstants.angularDriveKV);;
+
+	@Logged(name = "Has Applied Operator Perspective")
 	private boolean m_hasAppliedOperatorPerspective = false;
 
-	private ProfiledPIDController angularDrivePID = new ProfiledPIDController(RobotConstants.angularDriveKP,
-			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD, RobotConstants.angularDriveConstraints);
+	private ProfiledPIDController angularDrivePID = new ProfiledPIDController(appliedAngularKP.get(),
+			appliedAngularKI.get(), appliedAngularKD.get(), RobotConstants.angularDriveConstraints);
 
 	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
@@ -146,6 +161,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
 	}
 
+	@Logged(name = "Closest 15")
 	public Rotation2d getClosest15() {
 		Rotation2d closest = Rotation2d.fromDegrees(15);
 		for (var angle : Arrays.asList(15, 75, 105, 165, 195, 255, 285, 345)) {
@@ -170,10 +186,12 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 			setYaw(Rotation2d.kZero);
 	}
 
+	@Logged(name = "yaw")
 	public Rotation2d getYaw() {
 		return Rotation2d.fromDegrees(getPigeon2().getYaw().getValueAsDouble());
 	}
 
+	@Logged(name = "Relative yaw")
 	public Rotation2d getRelativeYaw() {
 		// double rawYaw = getPigeon2().getYaw().getValue().in(Degrees) +
 		// (FieldUtil.isRedAlliance() ? 180 : 0);
@@ -185,6 +203,20 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 			return getYaw().plus(Rotation2d.k180deg);
 
 		return getYaw();
+	}
+
+	@Logged(name = "Distance to hub")
+	public double getDistanceToHub() {
+		Pose2d currentAllianceHub;
+		if(FieldUtil.getAlliance() == Alliance.Red) 
+		{
+			currentAllianceHub = FieldUtil.RedHubCenter;
+		}
+		else 
+		{
+			currentAllianceHub = FieldUtil.BlueHubCenter;
+		}
+		return getPose().getTranslation().getDistance(currentAllianceHub.getTranslation());
 	}
 
 	@Logged(importance = Importance.CRITICAL)
@@ -278,6 +310,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	@Override
 	public void periodic() {
 		updateVision();
+		updatePID();
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {
@@ -303,5 +336,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 			this.updateSimState(deltaTime, RobotController.getBatteryVoltage());
 		});
 		m_simNotifier.startPeriodic(kSimLoopPeriod);
+	}
+
+	public void updatePID() {
+		angularDrivePID.setP(appliedAngularKP.get());
+		angularDrivePID.setI(appliedAngularKI.get());
+		angularDrivePID.setD(appliedAngularKD.get());
 	}
 }

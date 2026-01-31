@@ -37,6 +37,7 @@ import frc.robot.subsystems.Swerve;
 
 @Logged
 public class RobotContainer {
+	@Logged(name = "Driver Controller")
 	private XboxController driver = new XboxController(DriverConstants.DriverPort);
 
 	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
@@ -54,15 +55,22 @@ public class RobotContainer {
 
 	private Shooter shooter = new Shooter();
 
+	@Logged(name = "Reset Gyro")
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
 	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
+	@Logged(name = "Point Drive")
 	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
+
+	@Logged(name = "Bump Drive")
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
+
+	@Logged(name = "Snake Drive")
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
 
 	private Trigger deployIntake = new Trigger(() -> driver.getLeftBumperButton());
 
+	@Logged(name = "Current Auto")
 	private final SendableChooser<Command> autoChooser;
 
 	private Autos autos = new Autos(swerve);
@@ -138,6 +146,7 @@ public class RobotContainer {
 				}).withTimeout(1.0)));
 	}
 
+	@Logged(name = "Current auto")
 	public Command getAutonomousCommand() {
 		return autoChooser.getSelected();
 	}
@@ -146,7 +155,7 @@ public class RobotContainer {
 		SwerveTuning.init(swerve);
 	}
 
-	@Logged(importance = Importance.CRITICAL)
+	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
 	public boolean isHubActive() {
 		return FieldUtil.isHubActive();
 	}
