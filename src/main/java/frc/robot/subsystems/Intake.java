@@ -18,7 +18,7 @@ public class Intake extends SubsystemBase {
 
   public Intake() {
     deployMotor.getConfigurator().apply(IntakeConstants.deployConfigs);
-    intakeMotor.getConfigurator().apply(IntakeConstants.intakeConfigs)
+    intakeMotor.getConfigurator().apply(IntakeConstants.intakeConfigs);
   }
 
   @Override
