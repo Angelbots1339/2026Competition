@@ -101,6 +101,13 @@
   ],
   "robotJoysticks": [
     {
+<<<<<<< HEAD
+=======
+      "guid": "Keyboard0"
+    },
+    {},
+    {
+>>>>>>> 8705912 (add shooter regression tuning mode and tuningmanager)
       "guid": "78696e70757401000000000000000000",
       "useGamepad": true
     }

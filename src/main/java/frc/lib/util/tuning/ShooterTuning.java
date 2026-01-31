@@ -1,4 +1,4 @@
-package frc.lib.util;
+package frc.lib.util.tuning;
 
 import static edu.wpi.first.units.Units.Volts;
 
@@ -9,13 +9,15 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.TuningConstants;
+import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterTuning {
 
 	private static XboxController tester = new XboxController(DriverConstants.TesterPort);
 
-	private static Trigger baseTrigger = new Trigger(() -> DriverStation.isTestEnabled());
+	private static Trigger baseTrigger = new Trigger(
+			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Shooter);
 	private static Trigger runVoltage = baseTrigger.and(() -> tester.getYButton());
 	private static Trigger pidtune = baseTrigger.and(() -> tester.getAButton());
 	private static Trigger pidtuneFOC = baseTrigger.and(() -> tester.getXButton());

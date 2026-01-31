@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.util.FieldUtil;
+import frc.lib.util.tuning.TuningManager;
 
 @Logged(importance = Importance.CRITICAL)
 public class Robot extends TimedRobot {
@@ -94,6 +95,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testPeriodic() {
+		TuningManager.changeMode();
 	}
 
 	@Override
