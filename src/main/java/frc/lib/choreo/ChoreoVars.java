@@ -17,8 +17,10 @@ public final class ChoreoVars {
         public static final Pose2d DepotShoot = new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588));
         public static final Pose2d HubStart = new Pose2d(3.58, 4.035, Rotation2d.kZero);
         public static final Pose2d LeftStart = new Pose2d(3.647, 6.065, Rotation2d.kZero);
-        public static final Pose2d Outpost = new Pose2d(2, 0.721, Rotation2d.fromRadians(1.571));
+        public static final Pose2d Outpost = new Pose2d(2, 0.721, Rotation2d.fromRadians(3.142));
         public static final Pose2d OutpostShoot = new Pose2d(2.529, 2.131, Rotation2d.fromRadians(0.664));
+        public static final Pose2d RightTowerAlign = new Pose2d(1.079, 2.593, Rotation2d.fromRadians(1.571));
+        public static final Pose2d LeftTowerAlign = new Pose2d(1.07, 4.916, Rotation2d.fromRadians(-1.571));
 
         private Poses() {}
     }

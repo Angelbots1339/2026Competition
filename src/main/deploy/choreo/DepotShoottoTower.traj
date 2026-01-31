@@ -15,7 +15,7 @@
  "params":{
   "waypoints":[
     {"x":{"exp":"DepotShoot.x", "val":2.6148219108581543}, "y":{"exp":"DepotShoot.y", "val":5.339716911315918}, "heading":{"exp":"DepotShoot.heading", "val":-0.5880032220363305}, "intervals":31, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"1.0696555376052856 m", "val":1.0696555376052856}, "y":{"exp":"4.915959358215332 m", "val":4.915959358215332}, "heading":{"exp":"-90 deg", "val":-1.5707963267948966}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
+    {"x":{"exp":"LeftTowerAlign.x", "val":1.0696555376052856}, "y":{"exp":"LeftTowerAlign.y", "val":4.915959358215332}, "heading":{"exp":"LeftTowerAlign.heading", "val":-1.5707963267948966}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},
     {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"3.1694089770317078 m", "val":3.169408977031708}, "w":{"exp":"4.044035927337646 m", "val":4.044035927337646}, "h":{"exp":"4.8999170229682925 m", "val":4.8999170229682925}}}, "enabled":false},
