@@ -221,6 +221,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	@Logged(importance = Importance.CRITICAL)
 	public Pose2d getPose() {
+		// we are using the gyro rotation instead of the pose rotation because ctre does
+		// some funky stuff and setRotation or setting the gyro itself really messes
+		// with the ctre pose
 		return new Pose2d(getState().Pose.getX(), getState().Pose.getY(), getYaw());
 	}
 
