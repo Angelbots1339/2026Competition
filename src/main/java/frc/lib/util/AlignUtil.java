@@ -21,11 +21,11 @@ public class AlignUtil {
 	 * of the pose will face the robot directly)
 	 */
 	public static final Transform2d rightTowerOffset = new Transform2d(Meters.zero(),
-			FieldUtil.towerWidth.div(2).plus(RobotConstants.climberOffset.getMeasureX()),
-			Rotation2d.kCW_90deg);
-	public static final Transform2d leftTowerOffset = new Transform2d(Meters.zero(),
-			FieldUtil.towerWidth.div(2).unaryMinus().minus(RobotConstants.climberOffset.getMeasureX()),
+			FieldUtil.towerWidth.div(2).minus(RobotConstants.climberOffset.getMeasureX()),
 			Rotation2d.kCCW_90deg);
+	public static final Transform2d leftTowerOffset = new Transform2d(Meters.zero(),
+			FieldUtil.towerWidth.div(2).unaryMinus().plus(RobotConstants.climberOffset.getMeasureX()),
+			Rotation2d.kCW_90deg);
 
 	/* offsets a pose target with a robot relative offset */
 	public static Pose2d offsetPose(Pose2d target, Transform2d offset) {

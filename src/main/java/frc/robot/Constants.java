@@ -49,7 +49,7 @@ public class Constants {
 		public static final Distance length = Inches.of(32.25);
 		public static final Distance width = Inches.of(32.25);
 
-		public static final Translation2d climberOffset = new Translation2d(length.div(4), Meters.zero());
+		public static final Translation2d climberOffset = new Translation2d(Inches.of(-12.046), Meters.zero());
 
 		// has least amount of error, overshooting seems to be result of wheel slip on
 		// concrete
