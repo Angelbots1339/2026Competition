@@ -1,6 +1,12 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+
+import java.util.List;
+
 import choreo.auto.AutoFactory;
+import choreo.trajectory.SwerveSample;
+import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.choreo.ChoreoTraj;
@@ -90,5 +96,47 @@ public class Autos {
 						outpostShoottoTower.cmd()));
 
 		return routine.cmd();
+	}
+
+	public Command leftNeutralAuto() {
+		final var routine = factory.newRoutine("Left Neutral");
+		final var leftNeutralToShoot = routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name());
+
+		routine.active().onTrue(
+				Commands.sequence(
+						leftNeutralToShoot.resetOdometry(),
+						leftNeutralToShoot.cmd()));
+		return routine.cmd();
+	}
+
+	public Command rightNeutralAuto() {
+		final var routine = factory.newRoutine("Right Neutral");
+		final var rightNeutralToShoot = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name()).getRawTrajectory()));
+
+		routine.active().onTrue(
+				Commands.sequence(
+						rightNeutralToShoot.resetOdometry(),
+						rightNeutralToShoot.cmd()));
+		return routine.cmd();
+	}
+
+	private Trajectory<SwerveSample> flipTrajectoryX(Trajectory<SwerveSample> traj) {
+		SwerveSample[] new_samples = new SwerveSample[traj.samples().size()];
+		int i = 0;
+		for (SwerveSample sample : traj.samples()) {
+			new_samples[i++] = new SwerveSample(sample.t, sample.x, FieldUtil.FieldHeight.in(Meters) - sample.y,
+					-sample.heading,
+					sample.vx, -sample.vy,
+					-sample.omega, sample.ax, -sample.ay, -sample.alpha, sample.moduleForcesX(), new double[] {
+							-sample.moduleForcesY()[1],
+							-sample.moduleForcesY()[0],
+							-sample.moduleForcesY()[3],
+							-sample.moduleForcesY()[2]
+					});
+
+		}
+
+		return new Trajectory<SwerveSample>(traj.name(), List.of(new_samples), traj.splits(), traj.events());
 	}
 }
