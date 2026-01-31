@@ -290,17 +290,28 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void updateVision() {
-		LimelightHelpers.SetRobotOrientation("limelight",
+		LimelightHelpers.SetRobotOrientation(VisionConstants.LimelightName,
 				getYaw().getDegrees(), 0, 0, 0, 0, 0);
-		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+		LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.LimelightName,
+				new int[0]);
+		LimelightHelpers.RawFiducial[] fiducals = LimelightHelpers.getRawFiducials(VisionConstants.LimelightName);
+		int fiducalLength = fiducals.length;
+		int[] ids = new int[fiducalLength];
+
+		int j = 0;
+		for (int i = 0; i < fiducals.length; i++) {
+			if (fiducals[i].distToCamera < VisionConstants.maxUsableRange)
+				ids[j++] = fiducals[i].id;
+		}
+
+		LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.LimelightName, ids);
+
+		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers
+				.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightName);
 		if (mt2 == null)
 			return;
 		if (mt2.tagCount < 1)
 			return;
-
-		if (mt2.avgTagDist > VisionConstants.maxUsableRange) {
-			return;
-		}
 
 		double xyStdDev2 = VisionConstants.calcStdDev(mt2.avgTagDist);
 
