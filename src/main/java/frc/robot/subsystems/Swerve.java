@@ -28,7 +28,6 @@ import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -75,8 +74,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	@Logged(name = "Has Applied Operator Perspective")
 	private boolean m_hasAppliedOperatorPerspective = false;
 
-	private ProfiledPIDController angularDrivePID = new ProfiledPIDController(appliedAngularKP.get(),
-			appliedAngularKI.get(), appliedAngularKD.get(), RobotConstants.angularDriveConstraints);
+	private PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
+			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD);
 
 	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
@@ -87,7 +86,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
 		angularDrivePID.setTolerance(RobotConstants.angularDriveTolerance.in(Radians));
-		angularDrivePID.enableContinuousInput(0, 2 * Math.PI);
+		angularDrivePID.enableContinuousInput(-Math.PI, Math.PI);
 		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
 
@@ -113,7 +112,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return run(() -> {
 			double xdiff = pose.get().getX() - getPose().getX();
 			double ydiff = pose.get().getY() - getPose().getY();
-			Rotation2d angle = Rotation2d.fromRadians(Math.atan2(ydiff, xdiff));
+			Rotation2d angle = Rotation2d.fromRadians(Math.atan2(ydiff, xdiff)).plus(Rotation2d.kZero);
 
 			angularDriveRequest(x, y, () -> angle, fieldCentric);
 		});
@@ -131,7 +130,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// rotation target
 	public void angularDriveRequest(Supplier<Double> x, Supplier<Double> y, Supplier<Rotation2d> rot,
 			Supplier<Boolean> isFieldRelative) {
-		double rotation = angularDrivePID.calculate(getYaw().getRadians(), rot.get().getRadians());
+		double rotation = angularDrivePID.calculate(MathUtil.angleModulus(getYaw().getRadians()),
+				MathUtil.angleModulus(rot.get().getRadians()));
 		ChassisSpeeds speeds = new ChassisSpeeds(x.get(), y.get(), rotation);
 
 		if (isFieldRelative.get())
@@ -192,7 +192,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	@Logged(name = "yaw")
 	public Rotation2d getYaw() {
-		return Rotation2d.fromDegrees(getPigeon2().getYaw().getValueAsDouble());
+		return getPigeon2().getRotation2d().plus(Rotation2d.kZero);
 	}
 
 	@Logged(name = "Relative yaw")
@@ -206,7 +206,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		if (FieldUtil.isRedAlliance())
 			return getYaw().plus(Rotation2d.k180deg);
 
-		return getYaw();
+		return getYaw().plus(Rotation2d.kZero);
 	}
 
 	@Logged(name = "Distance to hub")
