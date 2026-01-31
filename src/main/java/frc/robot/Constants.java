@@ -83,6 +83,12 @@ public class Constants {
 
 	public class TuningConstants {
 		public static final String tuningNTPrefix = "Tuning/";
+		public static final String tuningModeNTName = tuningNTPrefix + "Mode";
+
+		public static enum TuningMode {
+			Shooter,
+			Swerve,
+		};
 
 		public class Swerve {
 			public static final String angularPIDNTName = tuningNTPrefix + "angular PID";
