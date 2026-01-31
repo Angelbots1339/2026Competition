@@ -48,7 +48,7 @@ public record ChoreoTraj(
 	public static final ChoreoTraj HubtoDepotShoot = new ChoreoTraj(
 	    "HubtoDepotShoot",
 	    OptionalInt.empty(),
-	    3.90862,
+	    3.89116,
 	    new Pose2d(3.58, 4.035, Rotation2d.fromRadians(0)),
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
 	);
