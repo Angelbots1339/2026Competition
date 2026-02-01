@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.util.FieldUtil;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.regressions.ShooterRegression;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -38,14 +38,14 @@ public class Shoot extends Command {
 
 	@Override
 	public void initialize() {
-		// TODO: replace with regression
-		shooter.setRPS(ShooterConstants.shootRPS);
-
 	}
 
 	@Override
 	public void execute() {
 		Pose2d target = FieldUtil.getHubCenter();
+
+		double[] speeds = ShooterRegression.getRegressionRPS(swerve.getDistanceToHub());
+		shooter.setRPS(speeds[0], speeds[1]);
 
 		Supplier<Rotation2d> angle = () -> {
 			double xdiff = target.getX() - swerve.getPose().getX();
