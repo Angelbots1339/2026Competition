@@ -12,9 +12,9 @@ public class TuningManager {
 	public static SendableChooser<TuningMode> tuningModeChooser = new SendableChooser<TuningMode>();
 
 	static {
-		tuningModeChooser.addOption("Shooter", TuningMode.Shooter);
+		tuningModeChooser.setDefaultOption("Shooter", TuningMode.Shooter);
 		tuningModeChooser.addOption("Swerve", TuningMode.Swerve);
-		SmartDashboard.putData(tuningModeChooser);
+		SmartDashboard.putData("Tuning Mode", tuningModeChooser);
 	}
 
 	public static void init(Swerve swerve, Shooter shooter) {
