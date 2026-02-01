@@ -75,9 +75,11 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public void logPIDTuning() {
-		ShooterTuning.createMotorPID(TuningConstants.ShooterTuningConstants.ShooterVelocityPIDNTName, frontShooter,
+		ShooterTuning.createMotorPID(TuningConstants.ShooterTuningConstants.ShooterVelocityPIDNTName,
+				frontShooter,
 				ShooterConstants.baseConfig);
-		ShooterTuning.createMotorPID(TuningConstants.ShooterTuningConstants.SpinnerVelocityPIDNTName, spinner,
+		ShooterTuning.createMotorPID(TuningConstants.ShooterTuningConstants.SpinnerVelocityPIDNTName,
+				spinner,
 				ShooterConstants.spinnerConfig);
 	}
 }

@@ -14,6 +14,7 @@ public class TuningManager {
 	static {
 		tuningModeChooser.setDefaultOption("Shooter", TuningMode.Shooter);
 		tuningModeChooser.addOption("Swerve", TuningMode.Swerve);
+		tuningModeChooser.addOption("Shooter Regression", TuningMode.ShooterRegression);
 		SmartDashboard.putData("Tuning Mode", tuningModeChooser);
 	}
 
@@ -22,6 +23,8 @@ public class TuningManager {
 			SwerveTuning.init(swerve);
 		if (shooter != null)
 			ShooterTuning.init(shooter);
+		if (shooter != null && swerve != null)
+			ShooterRegressionTuning.init(swerve, shooter);
 	}
 
 	public static void changeMode() {

@@ -32,7 +32,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -166,10 +165,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
 	}
 
-	public Distance getHubDistance() {
-		return Meters.of(getPose().getTranslation().getDistance(FieldUtil.getHubCenter().getTranslation()));
-	}
-
 	@Logged(name = "Closest 15")
 	public Rotation2d getClosest15() {
 		Rotation2d closest = Rotation2d.fromDegrees(15);
@@ -215,13 +210,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	@Logged(name = "Distance to hub")
 	public double getDistanceToHub() {
-		Pose2d currentAllianceHub;
-		if (FieldUtil.getAlliance() == Alliance.Red) {
-			currentAllianceHub = FieldUtil.RedHubCenter;
-		} else {
-			currentAllianceHub = FieldUtil.BlueHubCenter;
-		}
-		return getPose().getTranslation().getDistance(currentAllianceHub.getTranslation());
+		return getPose().getTranslation().getDistance(FieldUtil.getHubCenter().getTranslation());
 	}
 
 	@Logged(importance = Importance.CRITICAL)
