@@ -60,6 +60,11 @@ public class Shooter extends SubsystemBase {
 		spinner.setControl(ShooterConstants.velocityTorqueControl.withVelocity(spinnerTargetRPS));
 	}
 
+	public void disable() {
+		frontShooter.set(0);
+		spinner.set(0);
+	}
+
 	@Logged(name = "Shooter RPS", importance = Importance.CRITICAL)
 	public double getShooterRPS() {
 		return frontShooter.getVelocity().getValueAsDouble();

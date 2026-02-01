@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -18,6 +19,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 
 import edu.wpi.first.math.MathUtil;
@@ -28,6 +30,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Voltage;
 
 public class Constants {
 	public class DriverConstants {
@@ -221,5 +224,23 @@ public class Constants {
 		public static final double deployedAngle = 0.0;
 		public static final double retractedAngle = 0.0;
 		public static final double intakeVelocity = 0.0;
+	}
+
+	public class IndexerConstants {
+		public static final int indexerMotorPort = 5;
+
+		public static final Voltage indexVoltage = Volts.of(2);
+
+		public static final TalonFXConfiguration config = new TalonFXConfiguration()
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withStatorCurrentLimit(80)
+						.withSupplyCurrentLimit(40)
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(true))
+				.withMotorOutput(new MotorOutputConfigs()
+						.withNeutralMode(NeutralModeValue.Coast)
+						.withInverted(InvertedValue.Clockwise_Positive));
+
+		public static final TorqueCurrentFOC torqueControl = new TorqueCurrentFOC(0).withMaxAbsDutyCycle(0.5);
 	}
 }

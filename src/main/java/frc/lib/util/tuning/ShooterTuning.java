@@ -1,7 +1,5 @@
 package frc.lib.util.tuning;
 
-import static edu.wpi.first.units.Units.Volts;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -37,7 +35,7 @@ public class ShooterTuning {
 
 		pidtuneFOC.whileTrue(Commands.run(() -> {
 			shooter.setRPS(shooterTargetRPS, spinnerTargetRPS);
-		}).handleInterrupt(() -> shooter.setVoltage(Volts.of(0))));
+		}).handleInterrupt(() -> shooter.disable()));
 	}
 
 	public static void createMotorPID(String key, TalonFX motor, TalonFXConfiguration config) {

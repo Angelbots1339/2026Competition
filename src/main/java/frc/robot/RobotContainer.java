@@ -46,6 +46,7 @@ public class RobotContainer {
 	private Swerve swerve = TunerConstants.swerve;
 	// private Intake intake = new Intake();
 	// private Shooter shooter = new Shooter();
+	// private Indexer indexer = new Indexer();
 
 	@Logged(name = "Reset Gyro")
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
