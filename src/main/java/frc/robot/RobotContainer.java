@@ -28,6 +28,9 @@ import frc.lib.util.FieldUtil;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 @Logged
@@ -45,6 +48,7 @@ public class RobotContainer {
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
 	// private Intake intake = new Intake();
+	// @Logged(importance = Importance.CRITICAL)
 	// private Shooter shooter = new Shooter();
 	// private Indexer indexer = new Indexer();
 
@@ -52,8 +56,8 @@ public class RobotContainer {
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
 	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
-	@Logged(name = "Point Drive")
-	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
+	@Logged(name = "Shoot")
+	private Trigger shoot = new Trigger(() -> driver.getRightTriggerAxis() > 0.7);
 
 	@Logged(name = "Bump Drive")
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
@@ -85,10 +89,14 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
-
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
+
 		pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
-		pointDrive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
+
+		shoot.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
+		// shoot.whileTrue(new Shoot(shooter, indexer, swerve, leftY, leftX,
+		// () -> driver.getRightBumperButton()));
+
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(), () -> true),
 						swerve));

@@ -112,6 +112,7 @@ public class Constants {
 		public static final int SpinnerPort = 2;
 
 		public static final double shootRPS = 60;
+		public static final double RPSTolerence = 5;
 
 		public static TalonFXConfiguration baseConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()

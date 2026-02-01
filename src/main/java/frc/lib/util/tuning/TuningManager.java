@@ -3,6 +3,7 @@ package frc.lib.util.tuning;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.TuningConstants.TuningMode;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
@@ -18,11 +19,11 @@ public class TuningManager {
 		SmartDashboard.putData("Tuning Mode", tuningModeChooser);
 	}
 
-	public static void init(Swerve swerve, Shooter shooter) {
+	public static void init(Swerve swerve, Shooter shooter, Indexer indexer) {
 		if (swerve != null)
 			SwerveTuning.init(swerve);
 		if (shooter != null)
-			ShooterTuning.init(shooter);
+			ShooterTuning.init(shooter, indexer);
 		if (shooter != null && swerve != null)
 			ShooterRegressionTuning.init(swerve, shooter);
 	}

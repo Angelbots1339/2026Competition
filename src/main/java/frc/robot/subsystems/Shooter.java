@@ -65,6 +65,18 @@ public class Shooter extends SubsystemBase {
 		spinner.set(0);
 	}
 
+	public boolean isAtSetpoint() {
+		return getShooterError() < ShooterConstants.RPSTolerence && getSpinnerError() < ShooterConstants.RPSTolerence;
+	}
+
+	private double getShooterError() {
+		return Math.abs(shooterTargetRPS - getShooterRPS());
+	}
+
+	private double getSpinnerError() {
+		return Math.abs(spinnerTargetRPS - getSpinnerRPS());
+	}
+
 	@Logged(name = "Shooter RPS", importance = Importance.CRITICAL)
 	public double getShooterRPS() {
 		return frontShooter.getVelocity().getValueAsDouble();

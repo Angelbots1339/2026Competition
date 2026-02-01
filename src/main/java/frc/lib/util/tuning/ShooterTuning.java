@@ -1,5 +1,7 @@
 package frc.lib.util.tuning;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -12,6 +14,7 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterTuning {
@@ -25,7 +28,7 @@ public class ShooterTuning {
 	private static double shooterTargetRPS = ShooterConstants.shootRPS;
 	private static double spinnerTargetRPS = ShooterConstants.shootRPS;
 
-	public static void init(Shooter shooter) {
+	public static void init(Shooter shooter, Indexer indexer) {
 		DogLog.tunable(TuningConstants.ShooterTuningConstants.ShooterTargetNTName, ShooterConstants.shootRPS,
 				target -> shooterTargetRPS = target);
 		DogLog.tunable(TuningConstants.ShooterTuningConstants.SpinnerTargetNTName, ShooterConstants.shootRPS,
@@ -35,7 +38,11 @@ public class ShooterTuning {
 
 		pidtuneFOC.whileTrue(Commands.run(() -> {
 			shooter.setRPS(shooterTargetRPS, spinnerTargetRPS);
-		}).handleInterrupt(() -> shooter.disable()));
+			indexer.setVoltage(Volts.of(1));
+		}).handleInterrupt(() -> {
+			shooter.disable();
+			indexer.disable();
+		}));
 	}
 
 	public static void createMotorPID(String key, TalonFX motor, TalonFXConfiguration config) {
