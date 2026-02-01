@@ -23,7 +23,6 @@ import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.Angle;
@@ -60,8 +59,6 @@ public class Constants {
 		public static final double angularDriveKD = 0.1;
 		public static final double angularDriveKS = 0;
 		public static final double angularDriveKV = 0;
-		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(angularDriveKS,
-				angularDriveKV);
 		public static final TrapezoidProfile.Constraints angularDriveConstraints = new TrapezoidProfile.Constraints(
 				10,
 				20);

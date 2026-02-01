@@ -28,9 +28,6 @@ import frc.lib.util.FieldUtil;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 @Logged
