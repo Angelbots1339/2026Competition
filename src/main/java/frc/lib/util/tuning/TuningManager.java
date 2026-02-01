@@ -25,7 +25,7 @@ public class TuningManager {
 		if (shooter != null)
 			ShooterTuning.init(shooter, indexer);
 		if (shooter != null && swerve != null)
-			ShooterRegressionTuning.init(swerve, shooter);
+			ShooterRegressionTuning.init(swerve, shooter, indexer);
 	}
 
 	public static void changeMode() {
