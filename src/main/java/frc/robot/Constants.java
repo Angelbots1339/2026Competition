@@ -87,23 +87,23 @@ public class Constants {
 			public static final String angularPIDNTName = tuningNTPrefix + "angular PID";
 		}
 
-		public class Shooter {
-			public static final String voltageNTName = tuningNTPrefix + "voltage";
-			public static final String velocityNTName = tuningNTPrefix + "velocity";
-			public static final String PNTName = tuningNTPrefix + "P";
-			public static final String INTName = tuningNTPrefix + "I";
-			public static final String DNTName = tuningNTPrefix + "D";
-			public static final String SNTName = tuningNTPrefix + "S";
-			public static final String VNTName = tuningNTPrefix + "V";
+		public class ShooterTuningConstants {
+			public static final String ShooterPrefix = "Shooter";
+			public static final String SpinnerVelocityPIDNTName = ShooterPrefix + "/Shooter PID";
+			public static final String ShooterVelocityPIDNTName = ShooterPrefix + "/Spinner PID";
+			public static final String ShooterTargetNTName = ShooterVelocityPIDNTName + "/Shooter Target RPS";
+			public static final String SpinnerTargetNTName = SpinnerVelocityPIDNTName + "/Spinner Target RPS";
 		}
 	}
 
 	public class ShooterConstants {
-		public static final int LeaderPort = 2;
-		public static final int FollowerPort = 0;
+		public static final int LeaderPort = 0;
+		public static final int FollowerPort = 1;
+		public static final int SpinnerPort = 2;
 
 		public static final double shootRPS = 60;
-		public static TalonFXConfiguration config = new TalonFXConfiguration()
+
+		public static TalonFXConfiguration baseConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))
@@ -113,14 +113,27 @@ public class Constants {
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(0.5))
+						.withSensorToMechanismRatio((44.0 / 44.0) * (18.0 / 44.0)))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(9)
-						.withKI(5)
+						.withKP(0)
+						.withKI(0)
 						.withKD(0)
 						.withKV(0)
-						.withKS(3));
+						.withKS(0));
+
+		public static TalonFXConfiguration spinnerConfig = baseConfig
+				.withMotorOutput(baseConfig.MotorOutput
+						.withInverted(InvertedValue.Clockwise_Positive))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(18.0 / 36.0))
+				.withSlot0(new Slot0Configs()
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
+						.withKP(0)
+						.withKI(0)
+						.withKD(0)
+						.withKV(0)
+						.withKS(0));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(1000));

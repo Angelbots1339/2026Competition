@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.TuningConstants;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterTuning {
@@ -21,29 +22,34 @@ public class ShooterTuning {
 	private static Trigger baseTrigger = new Trigger(() -> DriverStation.isTestEnabled());
 	private static Trigger pidtuneFOC = baseTrigger.and(() -> tester.getXButton());
 
-	private static double targetRPS = ShooterConstants.shootRPS;
+	private static double shooterTargetRPS = ShooterConstants.shootRPS;
+	private static double spinnerTargetRPS = ShooterConstants.shootRPS;
 
 	public static void init(Shooter shooter) {
-		DogLog.tunable("/target", ShooterConstants.shootRPS, target -> targetRPS = target);
-		createPID(shooter.leader, ShooterConstants.config);
+		DogLog.tunable(TuningConstants.ShooterTuningConstants.ShooterTargetNTName, ShooterConstants.shootRPS,
+				target -> shooterTargetRPS = target);
+		DogLog.tunable(TuningConstants.ShooterTuningConstants.SpinnerTargetNTName, ShooterConstants.shootRPS,
+				target -> spinnerTargetRPS = target);
+
+		shooter.logPIDTuning();
 
 		pidtuneFOC.whileTrue(Commands.run(() -> {
-			shooter.setVelocityFOC(targetRPS);
+			shooter.setRPS(shooterTargetRPS, spinnerTargetRPS);
 		}).handleInterrupt(() -> shooter.setVoltage(Volts.of(0))));
 	}
 
-	public static void createPID(TalonFX motor, TalonFXConfiguration config) {
-		DogLog.tunable("/kP", config.Slot0.kP,
+	public static void createMotorPID(String key, TalonFX motor, TalonFXConfiguration config) {
+		DogLog.tunable(key + "/kP", config.Slot0.kP,
 				newP -> motor.getConfigurator().apply(config.Slot0.withKP(newP)));
-		DogLog.tunable("/kI", config.Slot0.kI,
+		DogLog.tunable(key + "/kI", config.Slot0.kI,
 				newI -> motor.getConfigurator().apply(config.Slot0.withKI(newI)));
-		DogLog.tunable("/kD", config.Slot0.kD,
+		DogLog.tunable(key + "/kD", config.Slot0.kD,
 				newD -> motor.getConfigurator().apply(config.Slot0.withKD(newD)));
-		DogLog.tunable("/kS", config.Slot0.kS,
+		DogLog.tunable(key + "/kS", config.Slot0.kS,
 				newS -> motor.getConfigurator().apply(config.Slot0.withKS(newS)));
-		DogLog.tunable("/kV", config.Slot0.kV,
+		DogLog.tunable(key + "/kV", config.Slot0.kV,
 				newV -> motor.getConfigurator().apply(config.Slot0.withKV(newV)));
-		DogLog.tunable("/kG", config.Slot0.kG,
+		DogLog.tunable(key + "/kG", config.Slot0.kG,
 				newG -> motor.getConfigurator().apply(config.Slot0.withKG(newG)));
 	}
 }

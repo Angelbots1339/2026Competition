@@ -45,7 +45,6 @@ public class RobotContainer {
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
 	// private Intake intake = new Intake();
-
 	// private Shooter shooter = new Shooter();
 
 	@Logged(name = "Reset Gyro")

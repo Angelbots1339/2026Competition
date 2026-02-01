@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Hertz;
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -15,41 +14,70 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.ShooterTuning;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.TuningConstants;
 
 @Logged
 public class Shooter extends SubsystemBase {
-	public TalonFX leader = new TalonFX(ShooterConstants.LeaderPort);
-	private TalonFX follower = new TalonFX(ShooterConstants.FollowerPort);
+	private TalonFX frontShooter = new TalonFX(ShooterConstants.LeaderPort);
+	private TalonFX backShooter = new TalonFX(ShooterConstants.FollowerPort);
+
+	private TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
 
 	@Logged(importance = Importance.CRITICAL)
-	private double targetRPS = 0;
+	private double shooterTargetRPS = 0;
+
+	@Logged(importance = Importance.CRITICAL)
+	private double spinnerTargetRPS = 0;
 
 	/** Creates a new Shooter. */
 	public Shooter() {
-		leader.getConfigurator().apply(ShooterConstants.config);
-		follower.getConfigurator().apply(ShooterConstants.config);
+		frontShooter.getConfigurator().apply(ShooterConstants.baseConfig);
+		backShooter.getConfigurator().apply(ShooterConstants.baseConfig);
+		spinner.getConfigurator().apply(ShooterConstants.spinnerConfig);
 
-		follower.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Opposed));
+		backShooter.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Aligned));
 
-		leader.getVelocity().setUpdateFrequency(Hertz.of(100));
+		frontShooter.getVelocity().setUpdateFrequency(Hertz.of(100));
+		spinner.getVelocity().setUpdateFrequency(Hertz.of(100));
 	}
 
 	public void setVoltage(Voltage volts) {
-		leader.setControl(new VoltageOut(volts));
+		frontShooter.setControl(new VoltageOut(volts));
+		spinner.setControl(new VoltageOut(volts));
 	}
 
-	public void setVelocityFOC(double rps) {
-		targetRPS = rps;
-		leader.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetRPS));
+	public void setRPS(double rps) {
+		setRPS(rps, rps);
 	}
 
-	@Logged(name = "RPS", importance = Importance.CRITICAL)
-	public double getVelocity() {
-		return leader.getVelocity().getValue().in(RotationsPerSecond);
+	public void setRPS(double shooterRPS, double spinnerRPS) {
+		shooterTargetRPS = shooterRPS;
+		spinnerTargetRPS = spinnerRPS;
+
+		frontShooter.setControl(ShooterConstants.velocityTorqueControl.withVelocity(shooterTargetRPS));
+		spinner.setControl(ShooterConstants.velocityTorqueControl.withVelocity(spinnerTargetRPS));
+	}
+
+	@Logged(name = "Shooter RPS", importance = Importance.CRITICAL)
+	public double getShooterRPS() {
+		return frontShooter.getVelocity().getValueAsDouble();
+	}
+
+	@Logged(name = "Spinner RPS", importance = Importance.CRITICAL)
+	public double getSpinnerRPS() {
+		return spinner.getVelocity().getValueAsDouble();
 	}
 
 	@Override
 	public void periodic() {
+	}
+
+	public void logPIDTuning() {
+		ShooterTuning.createMotorPID(TuningConstants.ShooterTuningConstants.ShooterVelocityPIDNTName, frontShooter,
+				ShooterConstants.baseConfig);
+		ShooterTuning.createMotorPID(TuningConstants.ShooterTuningConstants.SpinnerVelocityPIDNTName, spinner,
+				ShooterConstants.spinnerConfig);
 	}
 }
