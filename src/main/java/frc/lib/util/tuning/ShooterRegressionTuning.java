@@ -36,6 +36,7 @@ public class ShooterRegressionTuning {
 	private static Trigger shoot = baseTrigger.and(() -> tester.getRightTriggerAxis() > 0.5);
 
 	private static Trigger addData = baseTrigger.and(() -> tester.getXButton());
+	private static Trigger clearData = baseTrigger.and(() -> tester.getStartButton());
 
 	private static double shooterTargetRPS = ShooterConstants.shootRPS;
 	private static double spinnerTargetRPS = ShooterConstants.shootRPS;
@@ -48,8 +49,6 @@ public class ShooterRegressionTuning {
 		DogLog.tunable(TuningConstants.ShooterTuningConstants.SpinnerTargetNTName, ShooterConstants.shootRPS,
 				target -> spinnerTargetRPS = target);
 
-		ShooterRegression.shotRPSMap.clear();
-
 		shoot.whileTrue(Commands.runOnce(() -> shooter.setRPS(shooterTargetRPS, spinnerTargetRPS), shooter)
 				.andThen(Commands.runOnce(() -> indexer.setVoltage(Volts.of(3)), indexer))
 				.onlyIf(() -> shooter.isAtSetpoint())).onFalse(Commands.runOnce(() -> {
@@ -57,6 +56,8 @@ public class ShooterRegressionTuning {
 					indexer.disable();
 				}, shooter, indexer));
 		baseTrigger.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
+
+		clearData.onTrue(Commands.runOnce(() -> ShooterRegression.shotRPSMap.clear()));
 
 		addData.onTrue(Commands.runOnce(() -> {
 			double[] data = { swerve.getDistanceToHub(), shooterTargetRPS, spinnerTargetRPS };
