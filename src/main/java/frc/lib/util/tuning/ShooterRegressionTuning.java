@@ -17,7 +17,9 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants;
+import frc.robot.Constants.TuningConstants.ShooterTuningConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
+import frc.robot.commands.Shoot;
 import frc.robot.regressions.ShooterRegression;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
@@ -34,8 +36,9 @@ public class ShooterRegressionTuning {
 	private static Trigger baseTrigger = new Trigger(
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.ShooterRegression);
 	private static Trigger shoot = baseTrigger.and(() -> tester.getRightTriggerAxis() > 0.5);
+	private static Trigger regressionShoot = baseTrigger.and(() -> tester.getLeftTriggerAxis() > 0.5);
 
-	private static Trigger addData = baseTrigger.and(() -> tester.getXButton());
+	private static Trigger addData = baseTrigger.and(() -> tester.getYButton());
 	private static Trigger clearData = baseTrigger.and(() -> tester.getStartButton());
 
 	private static double shooterTargetRPS = ShooterConstants.shootRPS;
@@ -50,12 +53,15 @@ public class ShooterRegressionTuning {
 				target -> spinnerTargetRPS = target);
 
 		shoot.whileTrue(Commands.runOnce(() -> shooter.setRPS(shooterTargetRPS, spinnerTargetRPS), shooter)
-				.andThen(Commands.runOnce(() -> indexer.setVoltage(Volts.of(3)), indexer))
-				.onlyIf(() -> shooter.isAtSetpoint())).onFalse(Commands.runOnce(() -> {
+				.andThen(Commands.runOnce(() -> indexer.setVoltage(Volts.of(3)), indexer)
+						.onlyIf(() -> shooter.isAtSetpoint())))
+				.onFalse(Commands.runOnce(() -> {
 					shooter.disable();
 					indexer.disable();
 				}, shooter, indexer));
 		baseTrigger.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
+
+		regressionShoot.whileTrue(new Shoot(shooter, indexer, swerve, leftY, leftX, () -> true));
 
 		clearData.onTrue(Commands.runOnce(() -> ShooterRegression.shotRPSMap.clear()));
 
@@ -64,7 +70,7 @@ public class ShooterRegressionTuning {
 			regressionData.add(data);
 			ShooterRegression.shotRPSMap.put(swerve.getDistanceToHub(),
 					new double[] { shooterTargetRPS, spinnerTargetRPS });
-			DogLog.log("regression data/" + regressionData.size(), data);
+			DogLog.log(ShooterTuningConstants.ShooterPrefix + "/regression data/" + regressionData.size(), data);
 		}));
 	}
 }
