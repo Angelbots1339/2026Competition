@@ -12,7 +12,6 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -100,11 +99,12 @@ public class Constants {
 	}
 
 	public class ShooterConstants {
-		public static final int LeaderPort = 2;
+		public static final int LeaderPort = 1;
 		public static final int FollowerPort = 0;
-		public static final int Follower2Port = 1;
+		public static final int SpinnerPort = 2;
 
 		public static final double shootRPS = 60;
+
 		public static TalonFXConfiguration config = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
@@ -113,101 +113,102 @@ public class Constants {
 						.withSupplyCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.Clockwise_Positive))
-				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(0.5))
+						.withInverted(InvertedValue.CounterClockwise_Positive))
+				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
 				.withSlot0(new Slot0Configs()
-						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(0.3)
-						.withKI(2)
-						.withKV(0.06)
-						.withKS(0.25))
-				.withSlot1(new Slot1Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
 						.withKP(9)
 						.withKI(5)
 						.withKV(0)
 						.withKS(3));
+
+		public static TalonFXConfiguration spinnerConfig = config
+				.withMotorOutput(new MotorOutputConfigs()
+						.withNeutralMode(NeutralModeValue.Coast)
+						.withInverted(InvertedValue.Clockwise_Positive))
+				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 36.0))
+				.withSlot0(new Slot0Configs()
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
+						.withKP(0)
+						.withKI(0)
+						.withKV(0)
+						.withKS(0));
+
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(1000));
 	}
+
 	public class IntakeConstants {
 		public static final int intakeMotorId = 8;
-		public static final int deployMotorId = 9; 
+		public static final int deployMotorId = 9;
 
 		public static final double deployIntakeGearRatio = 1 * 1;
 
 		public static final Slot0Configs deploySlot0 = new Slot0Configs()
-		.withKP(0)
-		.withKI(0)
-		.withKD(0)
-		.withKV(0)
-		.withKA(0)
-		.withKS(0)
-		.withKG(0)
-		.withGravityType(GravityTypeValue.Arm_Cosine)
-		.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+				.withKP(0)
+				.withKI(0)
+				.withKD(0)
+				.withKV(0)
+				.withKA(0)
+				.withKS(0)
+				.withKG(0)
+				.withGravityType(GravityTypeValue.Arm_Cosine)
+				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
 		public static final TalonFXConfiguration deployConfigs = new TalonFXConfiguration()
-			.withMotorOutput(
-				new MotorOutputConfigs()
-				.withNeutralMode(NeutralModeValue.Brake)
-				.withInverted(InvertedValue.Clockwise_Positive)
-				//make sure to change inverted when tuning!
-			)
-			.withFeedback(
-				new FeedbackConfigs()
-				.withSensorToMechanismRatio(deployIntakeGearRatio)
-			)
-			.withCurrentLimits(
-				new CurrentLimitsConfigs()
-				.withStatorCurrentLimit(35)
-			)
-			.withSoftwareLimitSwitch(
-				new SoftwareLimitSwitchConfigs()
-				.withForwardSoftLimitEnable(true)
-				.withReverseSoftLimitEnable(true)
-				.withForwardSoftLimitThreshold(1)
-				//this may need to change as well
-				.withReverseSoftLimitThreshold(0)
-			)
-			.withSlot0(deploySlot0);
+				.withMotorOutput(
+						new MotorOutputConfigs()
+								.withNeutralMode(NeutralModeValue.Brake)
+								.withInverted(InvertedValue.Clockwise_Positive)
+				// make sure to change inverted when tuning!
+				)
+				.withFeedback(
+						new FeedbackConfigs()
+								.withSensorToMechanismRatio(deployIntakeGearRatio))
+				.withCurrentLimits(
+						new CurrentLimitsConfigs()
+								.withStatorCurrentLimit(35))
+				.withSoftwareLimitSwitch(
+						new SoftwareLimitSwitchConfigs()
+								.withForwardSoftLimitEnable(true)
+								.withReverseSoftLimitEnable(true)
+								.withForwardSoftLimitThreshold(1)
+								// this may need to change as well
+								.withReverseSoftLimitThreshold(0))
+				.withSlot0(deploySlot0);
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
-		.withKP(0)
-		.withKI(0)
-		.withKD(0)
-		.withKV(0)
-		.withKA(0)
-		.withKS(0)
-		.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+				.withKP(0)
+				.withKI(0)
+				.withKD(0)
+				.withKV(0)
+				.withKA(0)
+				.withKS(0)
+				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
-		
 		public static final double intakeWheelGearRatio = 1 * 1;
 
 		public static final TalonFXConfiguration intakeConfigs = new TalonFXConfiguration()
-			.withMotorOutput(
-				new MotorOutputConfigs()
-				.withNeutralMode(NeutralModeValue.Brake)
-				.withInverted(InvertedValue.Clockwise_Positive)
-				//make sure to change inverted when tuning!
-			)
-			.withFeedback(
-				new FeedbackConfigs()
-				.withSensorToMechanismRatio(intakeWheelGearRatio)
-			)
-			.withCurrentLimits(
-				new CurrentLimitsConfigs()
-				.withStatorCurrentLimit(35)
-			)
-			.withSoftwareLimitSwitch(
-				new SoftwareLimitSwitchConfigs()
-				.withForwardSoftLimitEnable(true)
-				.withReverseSoftLimitEnable(true)
-				.withForwardSoftLimitThreshold(1)
-				//this may need to change as well
-				.withReverseSoftLimitThreshold(0)
-			)
-			.withSlot0(deploySlot0);
+				.withMotorOutput(
+						new MotorOutputConfigs()
+								.withNeutralMode(NeutralModeValue.Brake)
+								.withInverted(InvertedValue.Clockwise_Positive)
+				// make sure to change inverted when tuning!
+				)
+				.withFeedback(
+						new FeedbackConfigs()
+								.withSensorToMechanismRatio(intakeWheelGearRatio))
+				.withCurrentLimits(
+						new CurrentLimitsConfigs()
+								.withStatorCurrentLimit(35))
+				.withSoftwareLimitSwitch(
+						new SoftwareLimitSwitchConfigs()
+								.withForwardSoftLimitEnable(true)
+								.withReverseSoftLimitEnable(true)
+								.withForwardSoftLimitThreshold(1)
+								// this may need to change as well
+								.withReverseSoftLimitThreshold(0))
+				.withSlot0(deploySlot0);
 
 		public static final double deployedAngle = 0.0;
 		public static final double retractedAngle = 0.0;

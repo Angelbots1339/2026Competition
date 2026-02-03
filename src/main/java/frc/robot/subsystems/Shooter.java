@@ -6,8 +6,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import static edu.wpi.first.units.Units.Volts;
-
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -16,53 +14,53 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.TuningConstants;
 
 @Logged
 public class Shooter extends SubsystemBase {
 	public TalonFX leader = new TalonFX(ShooterConstants.LeaderPort);
 	private TalonFX follower = new TalonFX(ShooterConstants.FollowerPort);
-	// private TalonFX follower2 = new TalonFX(ShooterConstants.Follower2Port);
-	private AngularVelocity targetVelocity = RotationsPerSecond.of(0);
+
+	private TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
+
+	private double targetRPS = 0.0;
 
 	/** Creates a new Shooter. */
 	public Shooter() {
 		leader.getConfigurator().apply(ShooterConstants.config);
 		follower.getConfigurator().apply(ShooterConstants.config);
-		// follower2.getConfigurator().apply(ShooterConstants.config);
+		spinner.getConfigurator().apply(ShooterConstants.spinnerConfig);
 
-		follower.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Opposed));
-		// follower2.setControl(new Follower(ShooterConstants.LeaderPort,
-		// MotorAlignmentValue.Aligned));
+		follower.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Aligned));
 
 		leader.getVelocity().setUpdateFrequency(Hertz.of(100));
+		spinner.getVelocity().setUpdateFrequency(Hertz.of(100));
 	}
 
 	public void setVoltage(Voltage volts) {
 		leader.setControl(new VoltageOut(volts));
+		spinner.setControl(new VoltageOut(volts));
 	}
 
-	public void setVoltage() {
-		setVoltage(Volts.of(SmartDashboard.getNumber(TuningConstants.Shooter.voltageNTName, 0)));
+	public void setVelocity(double rps) {
+		targetRPS = rps;
+		leader.setControl(new VelocityVoltage(rps));
 	}
 
-	public void setVelocity(AngularVelocity velocity) {
-		targetVelocity = velocity;
-		leader.setControl(new VelocityVoltage(targetVelocity));
+	public void setVelocityFOC(double rps) {
+		targetRPS = rps;
+		leader.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetRPS));
+		spinner.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetRPS));
 	}
 
-	public void setVelocityFOC(AngularVelocity velocity) {
-		targetVelocity = velocity;
-		leader.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetVelocity));
-	}
-
-	public double getVelocity() {
+	public double getShooterRPS() {
 		return leader.getVelocity().getValue().in(RotationsPerSecond);
+	}
+
+	public double getSpinnerRPS() {
+		return spinner.getVelocity().getValue().in(RotationsPerSecond);
 	}
 
 	public void logTuning() {

@@ -1,12 +1,10 @@
 package frc.lib.util;
 
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.SignalLogger;
 
-import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,7 +30,7 @@ public class ShooterTuning {
 
 	private static Shooter shooter;
 
-	private static AngularVelocity targetAngle = RotationsPerSecond.zero();
+	private static double targetAngle = 0;
 
 	public static void init(Shooter shooter) {
 		ShooterTuning.shooter = shooter;
@@ -40,11 +38,11 @@ public class ShooterTuning {
 		setupSysId();
 
 		runVoltage.whileTrue(Commands.run(() -> {
-			shooter.setVoltage();
+			shooter.setVoltage(Volts.of(SmartDashboard.getNumber(TuningConstants.Shooter.voltageNTName, 0)));
 		}).handleInterrupt(() -> shooter.setVoltage(Volts.of(0))));
 		pidtune.or(pidtuneFOC).onTrue(Commands.runOnce(() -> {
 			shooter.leader.getConfigurator().apply(shooter.getPID());
-			targetAngle = RotationsPerSecond.of(SmartDashboard.getNumber(TuningConstants.Shooter.velocityNTName, 0));
+			targetAngle = SmartDashboard.getNumber(TuningConstants.Shooter.velocityNTName, 0);
 		}));
 		pidtune.whileTrue(Commands.run(() -> {
 			shooter.setVelocity(targetAngle);
