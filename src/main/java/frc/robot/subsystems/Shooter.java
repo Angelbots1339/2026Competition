@@ -25,7 +25,8 @@ public class Shooter extends SubsystemBase {
 
 	private TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
 
-	private double targetRPS = 0.0;
+	private double targetShooterRPS = 0.0;
+	private double targetSpinnerRPS = 0.0;
 
 	/** Creates a new Shooter. */
 	public Shooter() {
@@ -45,14 +46,19 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public void setVelocity(double rps) {
-		targetRPS = rps;
+		targetShooterRPS = rps;
 		leader.setControl(new VelocityVoltage(rps));
 	}
 
+	public void setVelocityFOC(double shooterRPS, double spinnerRPS) {
+		targetShooterRPS = shooterRPS;
+		targetSpinnerRPS = spinnerRPS;
+		leader.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetShooterRPS));
+		spinner.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetSpinnerRPS));
+	}
+
 	public void setVelocityFOC(double rps) {
-		targetRPS = rps;
-		leader.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetRPS));
-		spinner.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetRPS));
+		setVelocityFOC(rps, rps);
 	}
 
 	public double getShooterRPS() {
