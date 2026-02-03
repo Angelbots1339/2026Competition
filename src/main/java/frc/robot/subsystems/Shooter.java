@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase {
 	public TalonFX leader = new TalonFX(ShooterConstants.LeaderPort);
 	private TalonFX follower = new TalonFX(ShooterConstants.FollowerPort);
 
-	private TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
+	public TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
 
 	private TalonFX indexMotor = new TalonFX(ShooterConstants.IndexPort);
 

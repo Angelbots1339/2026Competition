@@ -87,6 +87,7 @@ public class Constants {
 		public static enum TuningMode {
 			Shooter,
 			Swerve,
+			Regression,
 		};
 
 		public class Swerve {
