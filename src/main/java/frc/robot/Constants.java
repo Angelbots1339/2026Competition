@@ -108,6 +108,7 @@ public class Constants {
 		public static final int LeaderPort = 1;
 		public static final int FollowerPort = 0;
 		public static final int SpinnerPort = 2;
+		public static final int IndexPort = 3;
 
 		public static final double shootRPS = 60;
 
@@ -139,6 +140,9 @@ public class Constants {
 						.withKI(0)
 						.withKV(0)
 						.withKS(0));
+
+		public static TalonFXConfiguration indexConfig = config.withMotorOutput(new MotorOutputConfigs()
+				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.Clockwise_Positive));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(1000));

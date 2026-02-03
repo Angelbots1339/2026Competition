@@ -25,6 +25,8 @@ public class Shooter extends SubsystemBase {
 
 	private TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
 
+	private TalonFX indexMotor = new TalonFX(ShooterConstants.IndexPort);
+
 	private double targetShooterRPS = 0.0;
 	private double targetSpinnerRPS = 0.0;
 
@@ -33,6 +35,7 @@ public class Shooter extends SubsystemBase {
 		leader.getConfigurator().apply(ShooterConstants.config);
 		follower.getConfigurator().apply(ShooterConstants.config);
 		spinner.getConfigurator().apply(ShooterConstants.spinnerConfig);
+		indexMotor.getConfigurator().apply(ShooterConstants.indexConfig);
 
 		follower.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Aligned));
 
@@ -57,6 +60,10 @@ public class Shooter extends SubsystemBase {
 		spinner.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetSpinnerRPS));
 	}
 
+	public void runIndex(double volts) {
+		indexMotor.setVoltage(volts);
+	}
+
 	public void setVelocityFOC(double rps) {
 		setVelocityFOC(rps, rps);
 	}
@@ -67,6 +74,14 @@ public class Shooter extends SubsystemBase {
 
 	public double getSpinnerRPS() {
 		return spinner.getVelocity().getValue().in(RotationsPerSecond);
+	}
+
+	public void disableShooter() {
+		setVelocityFOC(0);
+	}
+
+	public void disableIndex() {
+		runIndex(0);
 	}
 
 	public void logTuning() {

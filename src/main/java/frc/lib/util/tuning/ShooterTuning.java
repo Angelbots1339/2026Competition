@@ -36,12 +36,12 @@ public class ShooterTuning {
 			targetAngle = SmartDashboard.getNumber(TuningConstants.Shooter.velocityNTName, 0);
 		}));
 
-		pidtune.whileTrue(Commands.run(() -> {
-			shooter.setVelocity(targetAngle);
-		}).handleInterrupt(() -> shooter.setVoltage(Volts.of(0))));
-
 		pidtuneFOC.whileTrue(Commands.run(() -> {
 			shooter.setVelocityFOC(targetAngle);
-		}).handleInterrupt(() -> shooter.setVoltage(Volts.of(0))));
+			shooter.runIndex(2);
+		}).handleInterrupt(() -> {
+			shooter.setVoltage(Volts.of(0));
+			shooter.disableIndex();
+		}));
 	}
 }
