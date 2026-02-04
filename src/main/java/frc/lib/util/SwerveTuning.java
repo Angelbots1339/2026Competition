@@ -1,5 +1,6 @@
 package frc.lib.util;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -11,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.TuningConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Swerve;
 
@@ -25,16 +25,19 @@ public class SwerveTuning {
 
 	private static Swerve swerve;
 
+	private static Rotation2d targetAngle = Rotation2d.kZero;
+
 	public static void init(Swerve swerve) {
+		DogLog.tunable("Swerve/Angular PID/target", swerve.getPose().getRotation().getRadians(),
+				angle -> targetAngle = Rotation2d.fromRadians(angle));
+		swerve.logPID();
+
 		SwerveTuning.swerve = swerve;
-		swerve.logTuning();
 
 		characterizeSwerveRadius.whileTrue(characterizeWheelRadius());
 
 		testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() -> 0.0, () -> 0.0,
-				() -> Rotation2d.fromRadians(
-						SmartDashboard.getNumber(TuningConstants.Swerve.angularPIDNTName + "/goal",
-								0)),
+				() -> targetAngle,
 				() -> true),
 				swerve));
 	}
