@@ -6,9 +6,9 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
-import com.ctre.phoenix6.configs.Slot0Configs;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -48,24 +48,19 @@ public class Shooter extends SubsystemBase {
 		spinner.setControl(new VoltageOut(volts));
 	}
 
-	public void setVelocity(double rps) {
-		targetShooterRPS = rps;
-		leader.setControl(new VelocityVoltage(rps));
-	}
-
-	public void setVelocityFOC(double shooterRPS, double spinnerRPS) {
+	public void setRPS(double shooterRPS, double spinnerRPS) {
 		targetShooterRPS = shooterRPS;
 		targetSpinnerRPS = spinnerRPS;
 		leader.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetShooterRPS));
 		spinner.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetSpinnerRPS));
 	}
 
-	public void runIndex(double volts) {
-		indexMotor.setVoltage(volts);
+	public void setRPS(double rps) {
+		setRPS(rps, rps);
 	}
 
-	public void setVelocityFOC(double rps) {
-		setVelocityFOC(rps, rps);
+	public void runIndex(double volts) {
+		indexMotor.setVoltage(volts);
 	}
 
 	public double getShooterRPS() {
@@ -77,15 +72,19 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public void disableShooter() {
-		setVelocityFOC(0);
+		setVoltage(Volts.of(0));
 	}
 
 	public void disableIndex() {
 		runIndex(0);
 	}
 
+	public void disable() {
+		disableShooter();
+		disableIndex();
+	}
+
 	@Override
 	public void periodic() {
-		// This method will be called once per scheduler run
 	}
 }

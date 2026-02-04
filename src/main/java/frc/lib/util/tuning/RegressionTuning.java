@@ -5,7 +5,6 @@
 package frc.lib.util.tuning;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Volts;
 
 import java.util.function.Supplier;
 
@@ -44,11 +43,10 @@ public class RegressionTuning {
 		DogLog.tunable("Regression/target", ShooterConstants.shootRPS, target -> targetRPS = target);
 
 		pidtuneFOC.whileTrue(Commands.run(() -> {
-			shooter.setVelocityFOC(targetRPS);
+			shooter.setRPS(targetRPS);
 			shooter.runIndex(2);
 		}).handleInterrupt(() -> {
-			shooter.setVoltage(Volts.of(0));
-			shooter.disableIndex();
+			shooter.disable();
 		}));
 
 		regression.whileTrue(new Shoot(swerve, shooter, leftY, leftX));

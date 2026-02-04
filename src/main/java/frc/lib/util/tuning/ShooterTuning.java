@@ -31,11 +31,10 @@ public class ShooterTuning {
 		createPID("Shooter/spinner", shooter.spinner, ShooterConstants.spinnerConfig);
 
 		runShooter.whileTrue(Commands.run(() -> {
-			shooter.setVelocityFOC(targetRPS);
+			shooter.setRPS(targetRPS);
 			shooter.runIndex(2);
 		}).handleInterrupt(() -> {
-			shooter.setVoltage(Volts.of(0));
-			shooter.disableIndex();
+			shooter.disable();
 		}));
 	}
 
