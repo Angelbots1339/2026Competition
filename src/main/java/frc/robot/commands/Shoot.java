@@ -38,11 +38,11 @@ public class Shoot extends Command {
 
 		shooter.setRPS(params.shooterRPS());
 
-		if (!runIndex.get())
-			shooter.disableIndex();
-
 		if (shooter.atSetpoint() && runIndex.get())
 			shooter.runIndex(2);
+
+		if (!runIndex.get() || swerve.getRotationError().minus(params.angle()).getMeasure().gt(params.maxAngleError()))
+			shooter.disableIndex();
 	}
 
 	@Override
