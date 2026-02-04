@@ -168,10 +168,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return rotation;
 	}
 
-	public Distance getHubDistance() {
-		return Meters.of(getPose().getTranslation().getDistance(FieldUtil.getHubCenter().getTranslation()));
-	}
-
 	@Logged(name = "Closest 15")
 	public Rotation2d getClosest15() {
 		Rotation2d closest = Rotation2d.fromDegrees(15);
@@ -217,13 +213,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	@Logged(name = "Distance to hub")
 	public double getDistanceToHub() {
-		Pose2d currentAllianceHub;
-		if (FieldUtil.getAlliance() == Alliance.Red) {
-			currentAllianceHub = FieldUtil.RedHubCenter;
-		} else {
-			currentAllianceHub = FieldUtil.BlueHubCenter;
-		}
-		return getPose().getTranslation().getDistance(currentAllianceHub.getTranslation());
+		return getPose().getTranslation().getDistance(FieldUtil.getHubCenter().getTranslation());
 	}
 
 	@Logged(importance = Importance.CRITICAL)
@@ -331,8 +321,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	@Override
 	public void periodic() {
 		updateVision();
-		SmartDashboard.putNumber("distance to Hub",
-				FieldUtil.getHubCenter().getTranslation().getDistance(getPose().getTranslation()));
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {
