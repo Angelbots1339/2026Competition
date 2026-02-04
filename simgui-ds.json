@@ -1,4 +1,12 @@
 {
+<<<<<<< HEAD
+=======
+  "System Joysticks": {
+    "window": {
+      "visible": false
+    }
+  },
+>>>>>>> swerveTuning
   "keyboardJoysticks": [
     {
       "axisConfig": [

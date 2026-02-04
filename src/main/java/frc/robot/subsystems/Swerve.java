@@ -29,10 +29,10 @@ import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -44,7 +44,6 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.LimelightHelpers;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.Constants.TuningConstants;
 import frc.robot.Constants.VisionConstants;
 
 @Logged
@@ -64,24 +63,13 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
 	/* Keep track if we've ever applied the operator perspective before or not */
 
-	private static DoubleSubscriber appliedAngularKP = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kP",
-			RobotConstants.angularDriveKP);
-	private static DoubleSubscriber appliedAngularKI = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kI",
-			RobotConstants.angularDriveKI);;
-	private static DoubleSubscriber appliedAngularKD = DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "/kD",
-			RobotConstants.angularDriveKD);;
-	// private static DoubleSubscriber appliedAngularKS =
-	// DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "kS",
-	// RobotConstants.angularDriveKS);;
-	// private static DoubleSubscriber appliedAngularKV =
-	// DogLog.tunable(TuningConstants.Swerve.angularPIDNTName + "kV",
-	// RobotConstants.angularDriveKV);;
-
 	@Logged(name = "Has Applied Operator Perspective")
 	private boolean m_hasAppliedOperatorPerspective = false;
 
 	private PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
 			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD);
+	private SimpleMotorFeedforward angularDriveFF = new SimpleMotorFeedforward(RobotConstants.angularDriveKS,
+			RobotConstants.angularDriveKV);
 
 	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
@@ -136,8 +124,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// rotation target
 	public void angularDriveRequest(Supplier<Double> x, Supplier<Double> y, Supplier<Rotation2d> rot,
 			Supplier<Boolean> isFieldRelative) {
-		double rotation = angularDrivePID.calculate(MathUtil.angleModulus(getYaw().getRadians()),
-				MathUtil.angleModulus(rot.get().getRadians()));
+		double rotation = angularPIDCalc(rot.get());
 		ChassisSpeeds speeds = new ChassisSpeeds(x.get(), y.get(), rotation);
 
 		if (isFieldRelative.get())
@@ -150,7 +137,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return run(() -> {
 			double x = pidToPoseXController.calculate(getPose().getX(), target.get().getX());
 			double y = pidToPoseYController.calculate(getPose().getY(), target.get().getY());
-			double rotation = angularDrivePID.calculate(getYaw().getRadians(), target.get().getRotation().getRadians());
+			double rotation = angularPIDCalc(target.get().getRotation());
 
 			x = MathUtil.clamp(x, -RobotConstants.maxSpeed.in(MetersPerSecond),
 					RobotConstants.maxSpeed.in(MetersPerSecond));
@@ -171,8 +158,14 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 				.withDriveRequestType(DriveRequestType.Velocity));
 	}
 
-	public void logTuning() {
-		SmartDashboard.putData(TuningConstants.Swerve.angularPIDNTName, angularDrivePID);
+	public double angularPIDCalc(Rotation2d target) {
+		double rotation = angularDrivePID.calculate(getYaw().getRadians(),
+				target.getRadians());
+
+		// if doing setpoints/profiling change this velocity
+		rotation += angularDriveFF.calculate(Math.signum(target.minus(getYaw()).getRadians()));
+
+		return rotation;
 	}
 
 	public Distance getHubDistance() {
@@ -367,17 +360,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		m_simNotifier.startPeriodic(kSimLoopPeriod);
 	}
 
-	public void updatePID() {
-		if (angularDrivePID.getP() != appliedAngularKP.get()) {
-			angularDrivePID.setP(appliedAngularKP.get());
-		}
-
-		if (angularDrivePID.getI() != appliedAngularKI.get()) {
-			angularDrivePID.setI(appliedAngularKI.get());
-		}
-
-		if (angularDrivePID.getD() != appliedAngularKD.get()) {
-			angularDrivePID.setD(appliedAngularKD.get());
-		}
+	public void logPID() {
+		DogLog.tunable("Swerve/Angular PID/kP", angularDrivePID.getP(), p -> angularDrivePID.setP(p));
+		DogLog.tunable("Swerve/Angular PID/kI", angularDrivePID.getI(), i -> angularDrivePID.setI(i));
+		DogLog.tunable("Swerve/Angular PID/kD", angularDrivePID.getI(), d -> angularDrivePID.setD(d));
+		DogLog.tunable("Swerve/Angular PID/kS", angularDriveFF.getKs(), s -> angularDriveFF.setKs(s));
+		DogLog.tunable("Swerve/Angular PID/kV", angularDriveFF.getKv(), v -> angularDriveFF.setKv(v));
 	}
 }
