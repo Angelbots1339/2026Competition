@@ -1,7 +1,5 @@
 package frc.lib.util.tuning;
 
-import static edu.wpi.first.units.Units.Volts;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
