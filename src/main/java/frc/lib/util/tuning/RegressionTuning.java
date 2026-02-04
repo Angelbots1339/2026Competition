@@ -56,7 +56,7 @@ public class RegressionTuning {
 			shooter.disable();
 		}));
 
-		regression.whileTrue(new Shoot(swerve, shooter, leftY, leftX));
+		regression.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 
 		drive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
 

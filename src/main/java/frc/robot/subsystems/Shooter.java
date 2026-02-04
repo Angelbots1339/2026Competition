@@ -71,6 +71,14 @@ public class Shooter extends SubsystemBase {
 		return spinner.getVelocity().getValue().in(RotationsPerSecond);
 	}
 
+	public double getShooterError() {
+		return Math.abs(leader.getVelocity().getValueAsDouble() - targetShooterRPS);
+	}
+
+	public boolean atSetpoint() {
+		return getShooterError() < ShooterConstants.rpsTolerence;
+	}
+
 	public void disableShooter() {
 		setVoltage(Volts.of(0));
 	}

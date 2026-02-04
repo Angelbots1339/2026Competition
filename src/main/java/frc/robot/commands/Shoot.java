@@ -14,13 +14,15 @@ public class Shoot extends Command {
 
 	private Supplier<Double> x;
 	private Supplier<Double> y;
+	private Supplier<Boolean> runIndex;
 
-	public Shoot(Swerve swerve, Shooter shooter, Supplier<Double> x, Supplier<Double> y) {
+	public Shoot(Swerve swerve, Shooter shooter, Supplier<Double> x, Supplier<Double> y, Supplier<Boolean> runIndex) {
 		this.swerve = swerve;
 		this.shooter = shooter;
 
 		this.x = x;
 		this.y = y;
+		this.runIndex = runIndex;
 		addRequirements(shooter, swerve);
 	}
 
@@ -33,8 +35,14 @@ public class Shoot extends Command {
 	public void execute() {
 		ShooterParams params = ShooterRegression.getShotParams(swerve);
 		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
+
 		shooter.setRPS(params.shooterRPS());
-		shooter.runIndex(2);
+
+		if (!runIndex.get())
+			shooter.disableIndex();
+
+		if (shooter.atSetpoint() && runIndex.get())
+			shooter.runIndex(2);
 	}
 
 	@Override
