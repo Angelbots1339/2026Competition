@@ -84,33 +84,6 @@ public class Shooter extends SubsystemBase {
 		runIndex(0);
 	}
 
-	public void logTuning() {
-		SmartDashboard.putNumber(TuningConstants.Shooter.voltageNTName, 0);
-		SmartDashboard.putNumber(TuningConstants.Shooter.velocityNTName, 0);
-
-		SmartDashboard.putNumber(TuningConstants.Shooter.PNTName, ShooterConstants.config.Slot1.kP);
-		SmartDashboard.putNumber(TuningConstants.Shooter.INTName, ShooterConstants.config.Slot1.kI);
-		SmartDashboard.putNumber(TuningConstants.Shooter.DNTName, ShooterConstants.config.Slot1.kD);
-		SmartDashboard.putNumber(TuningConstants.Shooter.SNTName, ShooterConstants.config.Slot1.kS);
-		SmartDashboard.putNumber(TuningConstants.Shooter.VNTName, ShooterConstants.config.Slot1.kV);
-
-	}
-
-	public Slot0Configs getPID() {
-		double p = SmartDashboard.getNumber(TuningConstants.Shooter.PNTName, 0);
-		double i = SmartDashboard.getNumber(TuningConstants.Shooter.INTName, 0);
-		double d = SmartDashboard.getNumber(TuningConstants.Shooter.DNTName, 0);
-		double s = SmartDashboard.getNumber(TuningConstants.Shooter.SNTName, 0);
-		double v = SmartDashboard.getNumber(TuningConstants.Shooter.VNTName, 0);
-
-		return new Slot0Configs()
-				.withKP(p)
-				.withKI(i)
-				.withKD(d)
-				.withKV(v)
-				.withKS(s);
-	}
-
 	@Override
 	public void periodic() {
 		// This method will be called once per scheduler run
