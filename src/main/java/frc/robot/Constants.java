@@ -106,10 +106,10 @@ public class Constants {
 	}
 
 	public class ShooterConstants {
-		public static final int LeaderPort = 1;
-		public static final int FollowerPort = 0;
-		public static final int SpinnerPort = 2;
-		public static final int IndexPort = 3;
+		public static final int LeaderPort = 30;
+		public static final int FollowerPort = 32;
+		public static final int SpinnerPort = 36;
+		public static final int IndexPort = 34;
 
 		public static final double shootRPS = 60;
 

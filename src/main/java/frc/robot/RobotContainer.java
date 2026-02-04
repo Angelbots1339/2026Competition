@@ -72,7 +72,6 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 
-		// autoChooser = AutoBuilder.buildAutoChooser();
 		autoChooser.addOption("Hub Depot Outpost Tower",
 				autos.hubDepotOutpostTowerAuto());
 		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
