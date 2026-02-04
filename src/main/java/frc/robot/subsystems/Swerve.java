@@ -28,6 +28,7 @@ import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -61,6 +62,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	private PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
 			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD);
+	private SimpleMotorFeedforward angularDriveFF = new SimpleMotorFeedforward(RobotConstants.angularDriveKS,
+			RobotConstants.angularDriveKV);
 
 	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
 			RobotConstants.pidToPoseKD);
@@ -115,8 +118,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	// rotation target
 	public void angularDriveRequest(Supplier<Double> x, Supplier<Double> y, Supplier<Rotation2d> rot,
 			Supplier<Boolean> isFieldRelative) {
-		double rotation = angularDrivePID.calculate(MathUtil.angleModulus(getYaw().getRadians()),
-				MathUtil.angleModulus(rot.get().getRadians()));
+		double rotation = angularPIDCalc(rot.get());
 		ChassisSpeeds speeds = new ChassisSpeeds(x.get(), y.get(), rotation);
 
 		if (isFieldRelative.get())
@@ -129,7 +131,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return run(() -> {
 			double x = pidToPoseXController.calculate(getPose().getX(), target.get().getX());
 			double y = pidToPoseYController.calculate(getPose().getY(), target.get().getY());
-			double rotation = angularDrivePID.calculate(getYaw().getRadians(), target.get().getRotation().getRadians());
+			double rotation = angularPIDCalc(target.get().getRotation());
 
 			x = MathUtil.clamp(x, -RobotConstants.maxSpeed.in(MetersPerSecond),
 					RobotConstants.maxSpeed.in(MetersPerSecond));
@@ -144,6 +146,16 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public void driveRobotRelative(ChassisSpeeds speeds) {
 		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds)
 				.withDriveRequestType(DriveRequestType.Velocity));
+	}
+
+	public double angularPIDCalc(Rotation2d target) {
+		double rotation = angularDrivePID.calculate(getYaw().getRadians(),
+				target.getRadians());
+
+		// if doing setpoints/profiling change this velocity
+		rotation += angularDriveFF.calculate(Math.signum(target.minus(getYaw()).getRadians()));
+
+		return rotation;
 	}
 
 	@Logged(name = "Closest 15")
@@ -338,5 +350,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		DogLog.tunable("Swerve/Angular PID/kP", angularDrivePID.getP(), p -> angularDrivePID.setP(p));
 		DogLog.tunable("Swerve/Angular PID/kI", angularDrivePID.getI(), i -> angularDrivePID.setI(i));
 		DogLog.tunable("Swerve/Angular PID/kD", angularDrivePID.getI(), d -> angularDrivePID.setD(d));
+		DogLog.tunable("Swerve/Angular PID/kS", angularDriveFF.getKs(), s -> angularDriveFF.setKs(s));
+		DogLog.tunable("Swerve/Angular PID/kV", angularDriveFF.getKv(), v -> angularDriveFF.setKv(v));
 	}
 }

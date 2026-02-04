@@ -28,7 +28,7 @@ public class SwerveTuning {
 	private static Rotation2d targetAngle = Rotation2d.kZero;
 
 	public static void init(Swerve swerve) {
-		DogLog.tunable("Swerve/Angular PID/target", swerve.getPose().getRotation().getRadians(),
+		DogLog.tunable("Swerve/Angular PID/Rotation Target", swerve.getPose().getRotation().getRadians(),
 				angle -> targetAngle = Rotation2d.fromRadians(angle));
 		swerve.logPID();
 
