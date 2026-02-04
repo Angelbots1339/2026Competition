@@ -12,14 +12,12 @@ import java.util.function.Supplier;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.TuningConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.commands.Shoot;
 import frc.robot.subsystems.Shooter;
@@ -31,7 +29,6 @@ public class RegressionTuning {
 
 	private static Trigger baseTrigger = new Trigger(
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Regression);
-	private static Trigger pidtune = baseTrigger.and(() -> tester.getAButton());
 	private static Trigger pidtuneFOC = baseTrigger.and(() -> tester.getXButton());
 	private static Trigger drive = baseTrigger.and(() -> tester.getAButton());
 	private static Trigger regression = baseTrigger.and(() -> tester.getYButton());

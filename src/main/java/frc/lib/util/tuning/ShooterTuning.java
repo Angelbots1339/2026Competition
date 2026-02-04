@@ -8,12 +8,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.TuningConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.subsystems.Shooter;
 
@@ -23,8 +21,7 @@ public class ShooterTuning {
 
 	private static Trigger baseTrigger = new Trigger(
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Shooter);
-	private static Trigger runVoltage = baseTrigger.and(() -> tester.getYButton());
-	private static Trigger pidtuneFOC = baseTrigger.and(() -> tester.getXButton());
+	private static Trigger runShooter = baseTrigger.and(() -> tester.getXButton());
 
 	private static double targetRPS = ShooterConstants.shootRPS;
 
@@ -33,11 +30,7 @@ public class ShooterTuning {
 		createPID("Shooter/leader", shooter.leader, ShooterConstants.config);
 		createPID("Shooter/spinner", shooter.spinner, ShooterConstants.spinnerConfig);
 
-		runVoltage.whileTrue(Commands.run(() -> {
-			shooter.setVoltage(Volts.of(SmartDashboard.getNumber(TuningConstants.Shooter.voltageNTName, 0)));
-		}).handleInterrupt(() -> shooter.setVoltage(Volts.of(0))));
-
-		pidtuneFOC.whileTrue(Commands.run(() -> {
+		runShooter.whileTrue(Commands.run(() -> {
 			shooter.setVelocityFOC(targetRPS);
 			shooter.runIndex(2);
 		}).handleInterrupt(() -> {
