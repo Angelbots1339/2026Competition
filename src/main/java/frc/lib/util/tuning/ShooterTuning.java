@@ -1,5 +1,7 @@
 package frc.lib.util.tuning;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -20,13 +22,21 @@ public class ShooterTuning {
 	private static Trigger baseTrigger = new Trigger(
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Shooter);
 	private static Trigger runShooter = baseTrigger.and(() -> tester.getXButton());
+	private static Trigger runVoltage = baseTrigger.and(() -> tester.getAButton());
 
 	private static double targetRPS = ShooterConstants.shootRPS;
+	private static double voltage = 0;
 
 	public static void init(Shooter shooter) {
 		DogLog.tunable("Shooter/target", ShooterConstants.shootRPS, target -> targetRPS = target);
+		DogLog.tunable("Shooter/voltage", 0.0, target -> voltage = target);
 		createPID("Shooter/leader", shooter.leader, ShooterConstants.config);
 		createPID("Shooter/spinner", shooter.spinner, ShooterConstants.spinnerConfig);
+
+		runVoltage.whileTrue(Commands.run(() -> {
+			shooter.setVoltage(Volts.of(voltage));
+			shooter.runIndex(2);
+		}).handleInterrupt(() -> shooter.disable()));
 
 		runShooter.whileTrue(Commands.run(() -> {
 			shooter.setRPS(targetRPS);

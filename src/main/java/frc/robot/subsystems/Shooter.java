@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -52,7 +53,7 @@ public class Shooter extends SubsystemBase {
 		targetShooterRPS = shooterRPS;
 		targetSpinnerRPS = spinnerRPS;
 		leader.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetShooterRPS));
-		spinner.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetSpinnerRPS));
+		spinner.setControl(new VelocityTorqueCurrentFOC(targetSpinnerRPS));
 	}
 
 	public void setRPS(double rps) {

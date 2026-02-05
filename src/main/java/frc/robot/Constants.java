@@ -111,8 +111,15 @@ public class Constants {
 		public static final int SpinnerPort = 36;
 		public static final int IndexPort = 34;
 
-		public static final double shootRPS = 60;
+		public static final double shootRPS = 20;
 		public static final double rpsTolerence = 5;
+
+		public static TalonFXConfiguration base = new TalonFXConfiguration()
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withSupplyCurrentLimit(Amps.of(70))
+						.withStatorCurrentLimit(Amps.of(120))
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(true));
 
 		public static TalonFXConfiguration config = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
@@ -126,25 +133,27 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(9)
-						.withKI(5)
+						.withKP(8)
+						.withKI(0)
 						.withKV(0)
-						.withKS(3));
+						.withKS(5));
 
-		public static TalonFXConfiguration spinnerConfig = config
+		public static TalonFXConfiguration spinnerConfig = base
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.Clockwise_Positive))
+						.withInverted(InvertedValue.Clockwise_Positive)) // for some reason, if we extend config, this
+																			// doesn't get overridden
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(0)
+						// TODO: actual find values
+						.withKP(8)
 						.withKI(0)
 						.withKV(0)
-						.withKS(0));
+						.withKS(5));
 
 		public static TalonFXConfiguration indexConfig = config.withMotorOutput(new MotorOutputConfigs()
-				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.Clockwise_Positive));
+				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.CounterClockwise_Positive));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(1000));
