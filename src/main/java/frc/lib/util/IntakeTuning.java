@@ -1,0 +1,47 @@
+package frc.lib.util;
+
+import static edu.wpi.first.units.Units.Degrees;
+
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import dev.doglog.DogLog;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DriverConstants;
+import frc.robot.subsystems.Intake;
+
+public class IntakeTuning {
+	private static XboxController tester = new XboxController(DriverConstants.TesterPort);
+
+	private static Trigger baseTrigger = new Trigger(() -> DriverStation.isTestEnabled());
+	private static Trigger runIntake = baseTrigger.and(() -> tester.getAButton());
+	private static Trigger pidPosition = baseTrigger.and(() -> tester.getBButton());
+
+	private static double targetVoltage = 0.0;
+	private static Angle targetAngle = Degrees.of(0);
+
+	public static void init(Intake intake) {
+		DogLog.tunable("Intake/voltage", 0.0, target -> targetVoltage = target);
+		DogLog.tunable("Intake/Deploy PID/angle", 0.0, target -> targetAngle = Degrees.of(target));
+		intake.logTuning();
+
+		runIntake.whileTrue(
+				Commands.run(() -> intake.setIntakeVoltage(targetVoltage), intake)
+						.handleInterrupt(() -> intake.disable()));
+		pidPosition.whileTrue(
+				Commands.run(() -> intake.setIntakeAngle(targetAngle))
+						.handleInterrupt(() -> intake.disable()));
+	}
+
+	public static void logPID(String key, TalonFX motor, TalonFXConfiguration config) {
+		DogLog.tunable(key + "/kP", config.Slot0.kP, k -> motor.getConfigurator().apply(config.Slot0.withKP(k)));
+		DogLog.tunable(key + "/kI", config.Slot0.kI, k -> motor.getConfigurator().apply(config.Slot0.withKI(k)));
+		DogLog.tunable(key + "/kD", config.Slot0.kD, k -> motor.getConfigurator().apply(config.Slot0.withKD(k)));
+		DogLog.tunable(key + "/kS", config.Slot0.kS, k -> motor.getConfigurator().apply(config.Slot0.withKS(k)));
+		DogLog.tunable(key + "/kG", config.Slot0.kG, k -> motor.getConfigurator().apply(config.Slot0.withKG(k)));
+	}
+}
