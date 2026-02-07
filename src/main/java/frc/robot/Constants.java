@@ -142,7 +142,7 @@ public class Constants {
 		public static final int intakeMotorId = 8;
 		public static final int deployMotorId = 9;
 
-		public static final double deployIntakeGearRatio = 1 * 1;
+		public static final double deployIntakeGearRatio = 32.0 / 16.0;
 
 		public static final Slot0Configs deploySlot0 = new Slot0Configs()
 				.withKP(0)
@@ -159,19 +159,21 @@ public class Constants {
 				.withMotorOutput(
 						new MotorOutputConfigs()
 								.withNeutralMode(NeutralModeValue.Brake)
-								.withInverted(InvertedValue.Clockwise_Positive)
-				// make sure to change inverted when tuning!
-				)
+								.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(
 						new FeedbackConfigs()
 								.withSensorToMechanismRatio(deployIntakeGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(35))
+								.withStatorCurrentLimit(35)
+								.withSupplyCurrentLimit(70)
+								.withStatorCurrentLimitEnable(true)
+								.withSupplyCurrentLimitEnable(true))
 				.withSoftwareLimitSwitch(
 						new SoftwareLimitSwitchConfigs()
-								.withForwardSoftLimitEnable(true)
-								.withReverseSoftLimitEnable(true)
+								// TODO: figure out the software limits
+								.withForwardSoftLimitEnable(false)
+								.withReverseSoftLimitEnable(false)
 								.withForwardSoftLimitThreshold(1)
 								// this may need to change as well
 								.withReverseSoftLimitThreshold(0))
@@ -191,23 +193,17 @@ public class Constants {
 		public static final TalonFXConfiguration intakeConfigs = new TalonFXConfiguration()
 				.withMotorOutput(
 						new MotorOutputConfigs()
-								.withNeutralMode(NeutralModeValue.Brake)
-								.withInverted(InvertedValue.Clockwise_Positive)
-				// make sure to change inverted when tuning!
-				)
+								.withNeutralMode(NeutralModeValue.Coast)
+								.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(
 						new FeedbackConfigs()
 								.withSensorToMechanismRatio(intakeWheelGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(35))
-				.withSoftwareLimitSwitch(
-						new SoftwareLimitSwitchConfigs()
-								.withForwardSoftLimitEnable(true)
-								.withReverseSoftLimitEnable(true)
-								.withForwardSoftLimitThreshold(1)
-								// this may need to change as well
-								.withReverseSoftLimitThreshold(0))
+								.withStatorCurrentLimit(35)
+								.withSupplyCurrentLimit(70)
+								.withStatorCurrentLimitEnable(true)
+								.withSupplyCurrentLimitEnable(true))
 				.withSlot0(deploySlot0);
 
 		public static final double deployedAngle = 0.0;
