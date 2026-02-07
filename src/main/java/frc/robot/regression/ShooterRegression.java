@@ -1,5 +1,6 @@
 package frc.robot.regression;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 import edu.wpi.first.math.MathUtil;
@@ -18,11 +19,11 @@ public class ShooterRegression {
 	// TODO: actually fill data
 	public static final double[][] shotRPSData = {
 			// distance (m), shooter rps, spinner rps, TOF
-			{ 5.68, 80.0, 85.0 },
-			{ 4.55, 70.0, 75.0 },
-			{ 3.15, 60.0, 60.0 },
-			{ 1.88, 50.0, 45.0 },
-			{ 1.38, 30.0, 25.0 },
+			{ Inches.of(136).in(Meters), 48, 48 },
+			{ Inches.of(96).in(Meters), 41.5, 41.5 },
+			{ Inches.of(83).in(Meters), 38.5, 38.5 },
+			{ Inches.of(65).in(Meters), 36.5, 36.5 },
+			{ Inches.of(35).in(Meters), 35, 35 },
 	};
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
@@ -43,6 +44,7 @@ public class ShooterRegression {
 	}
 
 	public record ShooterParams(Rotation2d angle, double shooterRPS, double spinnerRPS, Angle maxAngleError) {
+
 	};
 
 	public static ShooterParams getShotParams(Swerve swerve) {

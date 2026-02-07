@@ -50,7 +50,7 @@ public class RegressionTuning {
 
 		pidtuneFOC.whileTrue(Commands.run(() -> {
 			shooter.setRPS(targetRPS);
-			shooter.runIndex(2);
+			shooter.runIndexVelocity(2);
 		}).handleInterrupt(() -> {
 			shooter.disable();
 		}));

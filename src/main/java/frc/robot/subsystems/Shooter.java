@@ -9,7 +9,9 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -26,7 +28,7 @@ public class Shooter extends SubsystemBase {
 
 	public TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
 
-	private TalonFX indexMotor = new TalonFX(ShooterConstants.IndexPort);
+	public TalonFX indexMotor = new TalonFX(ShooterConstants.IndexPort);
 
 	private double targetShooterRPS = 0.0;
 	private double targetSpinnerRPS = 0.0;
@@ -60,8 +62,8 @@ public class Shooter extends SubsystemBase {
 		setRPS(rps, rps);
 	}
 
-	public void runIndex(double volts) {
-		indexMotor.setVoltage(volts);
+	public void runIndexVelocity(double rps) {
+		indexMotor.setControl(new VelocityVoltage(rps));
 	}
 
 	public double getShooterRPS() {
@@ -85,7 +87,7 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public void disableIndex() {
-		runIndex(0);
+		indexMotor.setControl(new NeutralOut());
 	}
 
 	public void disable() {

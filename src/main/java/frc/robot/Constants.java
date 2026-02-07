@@ -134,11 +134,11 @@ public class Constants {
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
 						.withKP(9)
-						.withKI(3)
+						.withKI(6)
 						.withKV(0)
 						.withKS(10));
 
-		public static TalonFXConfiguration spinnerConfig = base
+		public static TalonFXConfiguration spinnerConfig = base.clone()
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.Clockwise_Positive)) // for some reason, if we extend config, this
@@ -152,8 +152,9 @@ public class Constants {
 						.withKV(0)
 						.withKS(6));
 
-		public static TalonFXConfiguration indexConfig = config.withMotorOutput(new MotorOutputConfigs()
-				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.CounterClockwise_Positive));
+		public static TalonFXConfiguration indexConfig = base.clone().withMotorOutput(new MotorOutputConfigs()
+				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.CounterClockwise_Positive))
+				.withSlot0(new Slot0Configs().withKP(0.35).withKI(0).withKD(0).withKS(0.5).withKV(0.065));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(1000));

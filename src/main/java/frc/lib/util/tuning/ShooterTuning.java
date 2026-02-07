@@ -25,22 +25,25 @@ public class ShooterTuning {
 	private static Trigger runVoltage = baseTrigger.and(() -> tester.getAButton());
 
 	private static double targetRPS = ShooterConstants.shootRPS;
+	private static double indexrps = 20;
 	private static double voltage = 0;
 
 	public static void init(Shooter shooter) {
 		DogLog.tunable("Shooter/target", ShooterConstants.shootRPS, target -> targetRPS = target);
 		DogLog.tunable("Shooter/voltage", 0.0, target -> voltage = target);
+		DogLog.tunable("Shooter/index velocity", indexrps, target -> indexrps = target);
 		createPID("Shooter/leader", shooter.leader, ShooterConstants.config);
 		createPID("Shooter/spinner", shooter.spinner, ShooterConstants.spinnerConfig);
+		createPID("Shooter/Indexer", shooter.indexMotor, ShooterConstants.indexConfig);
 
 		runVoltage.whileTrue(Commands.run(() -> {
 			shooter.setVoltage(Volts.of(voltage));
-			shooter.runIndex(2);
+			shooter.runIndexVelocity(indexrps);
 		}).handleInterrupt(() -> shooter.disable()));
 
 		runShooter.whileTrue(Commands.run(() -> {
 			shooter.setRPS(targetRPS);
-			shooter.runIndex(2);
+			shooter.runIndexVelocity(indexrps);
 		}).handleInterrupt(() -> {
 			shooter.disable();
 		}));
