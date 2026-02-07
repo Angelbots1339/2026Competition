@@ -4,6 +4,9 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -28,6 +31,10 @@ public class ShooterTuning {
 	private static Trigger runShooter = baseTrigger.and(() -> tester.getXButton());
 	private static Trigger runVoltage = baseTrigger.and(() -> tester.getAButton());
 	private static Trigger shootReg = baseTrigger.and(() -> tester.getYButton());
+	private static Trigger addData = baseTrigger.and(() -> tester.getBButton());
+	private static Trigger clearData = baseTrigger.and(() -> tester.getStartButton());
+
+	private static List<double[]> regressionData = new ArrayList<double[]>();
 
 	private static double shooterTargetRPS = ShooterConstants.shootRPS;
 	private static double spinnerTargetRPS = ShooterConstants.shootRPS;
@@ -63,6 +70,15 @@ public class ShooterTuning {
 			shooter.runIndexVelocity(indexrps);
 		}).handleInterrupt(() -> {
 			shooter.disable();
+		}));
+
+		clearData.onTrue(Commands.runOnce(() -> ShooterRegression.shotRPSMap.clear()));
+		addData.onTrue(Commands.runOnce(() -> {
+			double[] data = { distance.in(Meters), shooterTargetRPS, spinnerTargetRPS };
+			regressionData.add(data);
+			ShooterRegression.shotRPSMap.put(distance.in(Meters),
+					new double[] { shooterTargetRPS, shooterTargetRPS });
+			DogLog.log("regression data/" + regressionData.size(), data);
 		}));
 	}
 
