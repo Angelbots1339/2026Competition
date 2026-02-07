@@ -15,11 +15,11 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -89,6 +89,7 @@ public class Constants {
 			Shooter,
 			Swerve,
 			Intake,
+			Climber,
 		};
 
 		public class Swerve {
@@ -209,5 +210,41 @@ public class Constants {
 		public static final double deployedAngle = 0.0;
 		public static final double retractedAngle = 0.0;
 		public static final double intakeVelocity = 0.0;
+	}
+
+	public class ClimberConstants {
+		public static final int ClimberMotorPort = 28;
+		public static final Distance PitchDiameter = Inches.of(1.281);
+		public static final Distance MaxDistance = Inches.of(7.363);
+
+		public static final Distance ClimbPosition = Inches.of(5.00);
+		public static final Distance HomePosition = Inches.of(0);
+
+		public static final TalonFXConfiguration ClimberMotorConfig = new TalonFXConfiguration()
+				.withSoftwareLimitSwitch(
+						new SoftwareLimitSwitchConfigs()
+								.withForwardSoftLimitThreshold(MaxDistance.in(Meters))
+								.withReverseSoftLimitThreshold(0)
+								.withForwardSoftLimitEnable(true)
+								.withReverseSoftLimitEnable(true))
+				.withMotorOutput(new MotorOutputConfigs()
+						// Driving the hook down = positive
+						.withInverted(InvertedValue.CounterClockwise_Positive)
+						.withNeutralMode(NeutralModeValue.Brake))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(3 * 3 * 3 * PitchDiameter.in(Meters)))
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withSupplyCurrentLimit(Amps.of(70))
+						.withStatorCurrentLimit(Amps.of(120))
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(true))
+				.withSlot0(new Slot0Configs()
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
+						.withKP(0)
+						.withKI(0)
+						.withKD(0)
+						.withKS(0)
+						.withKG(0)
+						.withGravityType(GravityTypeValue.Elevator_Static));
 	}
 }

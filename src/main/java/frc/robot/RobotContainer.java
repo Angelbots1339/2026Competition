@@ -43,6 +43,7 @@ public class RobotContainer {
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
 	// private Intake intake = new Intake();
+	// private Climber climber = new Climber();
 	// private Shooter shooter = new Shooter();
 
 	@Logged(name = "Reset Gyro")
@@ -142,7 +143,7 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		// TuningManager.init(swerve, shooter, intake);
+		// TuningManager.init(swerve, shooter, intake, climber);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
