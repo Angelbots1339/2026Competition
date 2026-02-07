@@ -6,24 +6,21 @@ import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.tuning.ClimberTuning;
 import frc.robot.Constants.ClimberConstants;
 
+@Logged
 public class Climber extends SubsystemBase {
 	private TalonFX climberMotor = new TalonFX(ClimberConstants.ClimberMotorPort);
+
+	private Distance targetPosition = Meters.zero();
 
 	public Climber() {
 		climberMotor.getConfigurator().apply(ClimberConstants.ClimberMotorConfig);
 		climberMotor.setPosition(0);
-	}
-
-	public Distance getClimberPosition() {
-		return Meters.of(climberMotor.getPosition().getValueAsDouble());
-	}
-
-	public void setClimberPosition(Distance position) {
-		climberMotor.setControl(new PositionTorqueCurrentFOC(position.in(Meters)));
 	}
 
 	public void climb() {
@@ -36,6 +33,19 @@ public class Climber extends SubsystemBase {
 
 	public void disable() {
 		climberMotor.setControl(new NeutralOut());
+	}
+
+	public Distance getClimberPosition() {
+		return Meters.of(climberMotor.getPosition().getValueAsDouble());
+	}
+
+	public void setClimberPosition(Distance position) {
+		targetPosition = position;
+		climberMotor.setControl(new PositionTorqueCurrentFOC(position.in(Meters)));
+	}
+
+	public void logPID() {
+		ClimberTuning.createPID("Climber/Climber PID", climberMotor, ClimberConstants.ClimberMotorConfig);
 	}
 
 	@Override
