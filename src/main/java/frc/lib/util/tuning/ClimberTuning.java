@@ -27,6 +27,7 @@ public class ClimberTuning {
 
 	public static void init(Climber climber) {
 		DogLog.tunable("Climber/target", 0.0, target -> targetPosition = Meters.of(target));
+		climber.logPID();
 
 		runClimber.whileTrue(
 				Commands.run(() -> climber.setClimberPosition(targetPosition), climber)
