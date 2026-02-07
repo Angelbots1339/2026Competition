@@ -143,7 +143,7 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		// TuningManager.init(swerve, shooter, climber);
+		// TuningManager.init(swerve, shooter, intake, climber);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
