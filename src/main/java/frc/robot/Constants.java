@@ -14,11 +14,11 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -88,6 +88,8 @@ public class Constants {
 			Shooter,
 			Swerve,
 			Regression,
+			Intake,
+			Climber,
 		};
 
 		public class Swerve {
@@ -164,7 +166,7 @@ public class Constants {
 		public static final int intakeMotorId = 8;
 		public static final int deployMotorId = 9;
 
-		public static final double deployIntakeGearRatio = 1 * 1;
+		public static final double deployIntakeGearRatio = 32.0 / 16.0;
 
 		public static final Slot0Configs deploySlot0 = new Slot0Configs()
 				.withKP(0)
@@ -181,19 +183,21 @@ public class Constants {
 				.withMotorOutput(
 						new MotorOutputConfigs()
 								.withNeutralMode(NeutralModeValue.Brake)
-								.withInverted(InvertedValue.Clockwise_Positive)
-				// make sure to change inverted when tuning!
-				)
+								.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(
 						new FeedbackConfigs()
 								.withSensorToMechanismRatio(deployIntakeGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(35))
+								.withStatorCurrentLimit(35)
+								.withSupplyCurrentLimit(70)
+								.withStatorCurrentLimitEnable(true)
+								.withSupplyCurrentLimitEnable(true))
 				.withSoftwareLimitSwitch(
 						new SoftwareLimitSwitchConfigs()
-								.withForwardSoftLimitEnable(true)
-								.withReverseSoftLimitEnable(true)
+								// TODO: figure out the software limits
+								.withForwardSoftLimitEnable(false)
+								.withReverseSoftLimitEnable(false)
 								.withForwardSoftLimitThreshold(1)
 								// this may need to change as well
 								.withReverseSoftLimitThreshold(0))
@@ -213,27 +217,57 @@ public class Constants {
 		public static final TalonFXConfiguration intakeConfigs = new TalonFXConfiguration()
 				.withMotorOutput(
 						new MotorOutputConfigs()
-								.withNeutralMode(NeutralModeValue.Brake)
-								.withInverted(InvertedValue.Clockwise_Positive)
-				// make sure to change inverted when tuning!
-				)
+								.withNeutralMode(NeutralModeValue.Coast)
+								.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(
 						new FeedbackConfigs()
 								.withSensorToMechanismRatio(intakeWheelGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(35))
-				.withSoftwareLimitSwitch(
-						new SoftwareLimitSwitchConfigs()
-								.withForwardSoftLimitEnable(true)
-								.withReverseSoftLimitEnable(true)
-								.withForwardSoftLimitThreshold(1)
-								// this may need to change as well
-								.withReverseSoftLimitThreshold(0))
+								.withStatorCurrentLimit(35)
+								.withSupplyCurrentLimit(70)
+								.withStatorCurrentLimitEnable(true)
+								.withSupplyCurrentLimitEnable(true))
 				.withSlot0(deploySlot0);
 
 		public static final double deployedAngle = 0.0;
 		public static final double retractedAngle = 0.0;
 		public static final double intakeVelocity = 0.0;
+	}
+
+	public class ClimberConstants {
+		public static final int ClimberMotorPort = 28;
+		public static final Distance PitchDiameter = Inches.of(1.281);
+		public static final Distance MaxDistance = Inches.of(7.363);
+
+		public static final Distance ClimbPosition = Inches.of(5.00);
+		public static final Distance HomePosition = Inches.of(0);
+
+		public static final TalonFXConfiguration ClimberMotorConfig = new TalonFXConfiguration()
+				.withSoftwareLimitSwitch(
+						new SoftwareLimitSwitchConfigs()
+								.withForwardSoftLimitThreshold(MaxDistance.in(Meters))
+								.withReverseSoftLimitThreshold(0)
+								.withForwardSoftLimitEnable(true)
+								.withReverseSoftLimitEnable(true))
+				.withMotorOutput(new MotorOutputConfigs()
+						// Driving the hook down = positive
+						.withInverted(InvertedValue.CounterClockwise_Positive)
+						.withNeutralMode(NeutralModeValue.Brake))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(3 * 3 * 3 * PitchDiameter.in(Meters)))
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withSupplyCurrentLimit(Amps.of(70))
+						.withStatorCurrentLimit(Amps.of(120))
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(true))
+				.withSlot0(new Slot0Configs()
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
+						.withKP(0)
+						.withKI(0)
+						.withKD(0)
+						.withKS(0)
+						.withKG(0)
+						.withGravityType(GravityTypeValue.Elevator_Static));
 	}
 }
