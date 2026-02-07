@@ -111,7 +111,7 @@ public class Constants {
 		public static final int SpinnerPort = 36;
 		public static final int IndexPort = 34;
 
-		public static final double shootRPS = 50;
+		public static final double shootRPS = 41.5;
 		public static final double rpsTolerence = 1;
 
 		public static TalonFXConfiguration base = new TalonFXConfiguration()
@@ -133,8 +133,8 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(8)
-						.withKI(2)
+						.withKP(9)
+						.withKI(3)
 						.withKV(0)
 						.withKS(10));
 
