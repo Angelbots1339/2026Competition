@@ -27,6 +27,7 @@ import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 @Logged
@@ -43,7 +44,7 @@ public class RobotContainer {
 
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
-	// private Intake intake = new Intake();
+	 private Intake intake = new Intake();
 	// private Shooter shooter = new Shooter();
 	// private Climber climber = new Climber();
 
@@ -143,7 +144,7 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		TuningManager.init(null, null, null, null);
+		TuningManager.init(null, null, intake, null);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")

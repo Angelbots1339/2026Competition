@@ -163,8 +163,8 @@ public class Constants {
 	}
 
 	public class IntakeConstants {
-		public static final int intakeMotorId = 8;
-		public static final int deployMotorId = 9;
+		public static final int intakeMotorId = 22;
+		public static final int deployMotorId = 24;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0;
 
@@ -189,7 +189,7 @@ public class Constants {
 								.withSensorToMechanismRatio(deployIntakeGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(35)
+								.withStatorCurrentLimit(120)
 								.withSupplyCurrentLimit(70)
 								.withStatorCurrentLimitEnable(true)
 								.withSupplyCurrentLimitEnable(true))
