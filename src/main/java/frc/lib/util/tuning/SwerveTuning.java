@@ -1,11 +1,6 @@
-package frc.lib.util;
+package frc.lib.util.tuning;
 
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Volts;
-
-import com.ctre.phoenix6.SignalLogger;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
+import dev.doglog.DogLog;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -16,10 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.TuningConstants;
+
+import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Swerve;
 
@@ -27,83 +21,28 @@ public class SwerveTuning {
 
 	private static XboxController tester = new XboxController(DriverConstants.TesterPort);
 
-	private static Trigger baseTrigger = new Trigger(() -> DriverStation.isTestEnabled());
+	private static Trigger baseTrigger = new Trigger(
+			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Swerve);
 	private static Trigger characterizeSwerveRadius = baseTrigger.and(() -> tester.getAButton());
 	private static Trigger testRotation = baseTrigger.and(() -> tester.getBButton());
-	private static Trigger sysIdRotation = baseTrigger.and(() -> tester.getYButton());
 
 	private static Swerve swerve;
 
-	private static final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
-	private static SysIdRoutine m_sysIdRoutineRotation = null;
+	private static Rotation2d targetAngle = Rotation2d.kZero;
 
 	public static void init(Swerve swerve) {
+		DogLog.tunable("Swerve/Angular PID/Rotation Target", swerve.getPose().getRotation().getRadians(),
+				angle -> targetAngle = Rotation2d.fromRadians(angle));
+		swerve.logPID();
+
 		SwerveTuning.swerve = swerve;
-		setupSysId();
-		swerve.logTuning();
 
 		characterizeSwerveRadius.whileTrue(characterizeWheelRadius());
 
 		testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() -> 0.0, () -> 0.0,
-				() -> Rotation2d.fromRadians(
-						SmartDashboard.getNumber(TuningConstants.Swerve.angularPIDNTName + "/goal",
-								0)),
+				() -> targetAngle,
 				() -> true),
 				swerve));
-
-		sysIdRotation.whileTrue(Commands.sequence(
-				Commands.runOnce(SignalLogger::start),
-				sysIdQuasistatic(m_sysIdRoutineRotation, Direction.kForward),
-				Commands.waitSeconds(2),
-				sysIdQuasistatic(m_sysIdRoutineRotation, Direction.kReverse),
-				Commands.waitSeconds(2),
-				sysIdDynamic(m_sysIdRoutineRotation, Direction.kForward),
-				Commands.waitSeconds(2),
-				sysIdDynamic(m_sysIdRoutineRotation, Direction.kReverse),
-				Commands.runOnce(SignalLogger::stop)));
-	}
-
-	public static void setupSysId() {
-		m_sysIdRoutineRotation = new SysIdRoutine(
-				new SysIdRoutine.Config(
-						/* This is in radians per second², but SysId only supports "volts per second" */
-						Volts.of(Math.PI / 6).per(Second),
-						/* This is in radians per second, but SysId only supports "volts" */
-						Volts.of(Math.PI),
-						null, // Use default timeout (10 s)
-						// Log state with SignalLogger class
-						state -> SignalLogger.writeString("SysIdRotation_State", state.toString())),
-				new SysIdRoutine.Mechanism(
-						output -> {
-							/* output is actually radians per second, but SysId only supports "volts" */
-							swerve.setControl(m_rotationCharacterization.withRotationalRate(output.in(Volts)));
-							/* also log the requested output for SysId */
-							SignalLogger.writeDouble("Rotational_Rate", output.in(Volts));
-						},
-						null,
-						swerve));
-	}
-
-	/**
-	 * Runs the SysId Quasistatic test in the given direction for the routine
-	 * specified by {@link #m_sysIdRoutineToApply}.
-	 *
-	 * @param direction Direction of the SysId Quasistatic test
-	 * @return Command to run
-	 */
-	public static Command sysIdQuasistatic(SysIdRoutine routine, SysIdRoutine.Direction direction) {
-		return routine.quasistatic(direction);
-	}
-
-	/**
-	 * Runs the SysId Dynamic test in the given direction for the routine
-	 * specified by {@link #m_sysIdRoutineToApply}.
-	 *
-	 * @param direction Direction of the SysId Dynamic test
-	 * @return Command to run
-	 */
-	public static Command sysIdDynamic(SysIdRoutine routine, SysIdRoutine.Direction direction) {
-		return routine.dynamic(direction);
 	}
 
 	/* yoinked from mechanical advantage */
