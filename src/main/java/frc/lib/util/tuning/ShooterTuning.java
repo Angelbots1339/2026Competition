@@ -1,11 +1,14 @@
 package frc.lib.util.tuning;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -13,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
+import frc.robot.regression.ShooterRegression;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterTuning {
@@ -23,17 +27,20 @@ public class ShooterTuning {
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Shooter);
 	private static Trigger runShooter = baseTrigger.and(() -> tester.getXButton());
 	private static Trigger runVoltage = baseTrigger.and(() -> tester.getAButton());
+	private static Trigger shootReg = baseTrigger.and(() -> tester.getYButton());
 
 	private static double shooterTargetRPS = ShooterConstants.shootRPS;
 	private static double spinnerTargetRPS = ShooterConstants.shootRPS;
 	private static double indexrps = 20;
 	private static double voltage = 0;
+	private static Distance distance = Meters.zero();
 
 	public static void init(Shooter shooter) {
 		DogLog.tunable("Shooter/Spinner target", ShooterConstants.shootRPS, target -> spinnerTargetRPS = target);
 		DogLog.tunable("Shooter/Shooter target", ShooterConstants.shootRPS, target -> shooterTargetRPS = target);
 		DogLog.tunable("Shooter/voltage", 0.0, target -> voltage = target);
 		DogLog.tunable("Shooter/index velocity", indexrps, target -> indexrps = target);
+		DogLog.tunable("Shooter/distance", indexrps, target -> distance = Inches.of(target));
 		createPID("Shooter/leader", shooter.leader, ShooterConstants.config);
 		createPID("Shooter/spinner", shooter.spinner, ShooterConstants.spinnerConfig);
 		createPID("Shooter/Indexer", shooter.indexMotor, ShooterConstants.indexConfig);
@@ -45,6 +52,14 @@ public class ShooterTuning {
 
 		runShooter.whileTrue(Commands.run(() -> {
 			shooter.setRPS(shooterTargetRPS, spinnerTargetRPS);
+			shooter.runIndexVelocity(indexrps);
+		}).handleInterrupt(() -> {
+			shooter.disable();
+		}));
+
+		shootReg.whileTrue(Commands.run(() -> {
+			double[] speed = ShooterRegression.getRegressionRPS(distance.in(Meters));
+			shooter.setRPS(speed[0], speed[1]);
 			shooter.runIndexVelocity(indexrps);
 		}).handleInterrupt(() -> {
 			shooter.disable();

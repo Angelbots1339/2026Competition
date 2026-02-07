@@ -135,10 +135,10 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(9)
-						.withKI(6)
+						.withKP(6.5)
+						.withKI(1)
 						.withKV(0)
-						.withKS(10));
+						.withKS(18));
 
 		public static TalonFXConfiguration spinnerConfig = base.clone()
 				.withMotorOutput(new MotorOutputConfigs()

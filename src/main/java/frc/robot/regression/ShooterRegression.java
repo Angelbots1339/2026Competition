@@ -19,12 +19,13 @@ public class ShooterRegression {
 	// TODO: actually fill data
 	public static final double[][] shotRPSData = {
 			// distance (m), shooter rps, spinner rps, TOF
-			{ Inches.of(136).in(Meters), 48, 48 },
-			{ Inches.of(120).in(Meters), 44, 44 },
+			{ Inches.of(130).in(Meters), 48.5, 43 },
 			{ Inches.of(100).in(Meters), 42, 38 }, // top spinner slightly slower makes it better
-			{ Inches.of(96).in(Meters), 41.5, 41.5 },
-			{ Inches.of(83).in(Meters), 38.5, 38.5 },
-			{ Inches.of(65).in(Meters), 36.5, 36.5 },
+			{ Inches.of(80).in(Meters), 39, 37 }, // top spinner slightly slower makes it better
+			{ Inches.of(45).in(Meters), 36, 32 }, // top spinner slightly slower makes it better
+			// { Inches.of(96).in(Meters), 41.5, 41.5 },
+			// { Inches.of(83).in(Meters), 38.5, 38.5 },
+			// { Inches.of(65).in(Meters), 36.5, 36.5 },
 			{ Inches.of(35).in(Meters), 35, 35 },
 	};
 
