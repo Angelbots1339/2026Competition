@@ -133,7 +133,7 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(9)
+						.withKP(10)
 						.withKI(6)
 						.withKV(0)
 						.withKS(10));
@@ -147,8 +147,8 @@ public class Constants {
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
 						// TODO: actual find values
-						.withKP(10)
-						.withKI(5)
+						.withKP(9)
+						.withKI(6)
 						.withKV(0)
 						.withKS(6));
 
@@ -157,7 +157,7 @@ public class Constants {
 				.withSlot0(new Slot0Configs().withKP(0.35).withKI(0).withKD(0).withKS(0.5).withKV(0.065));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
-				.withUpdateFreqHz(Hertz.of(1000));
+				.withUpdateFreqHz(Hertz.of(100));
 	}
 
 	public class IntakeConstants {
