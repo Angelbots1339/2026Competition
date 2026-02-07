@@ -13,19 +13,20 @@ public class TuningManager {
 
 	public static SendableChooser<TuningMode> tuningModeChooser = new SendableChooser<TuningMode>();
 
-	static {
+	public static void init(Swerve swerve, Shooter shooter, Intake intake, Climber climber) {
 		tuningModeChooser.setDefaultOption("Shooter", TuningMode.Shooter);
 		tuningModeChooser.addOption("Swerve", TuningMode.Swerve);
+		tuningModeChooser.addOption("Regression", TuningMode.Regression);
 		tuningModeChooser.addOption("Intake", TuningMode.Intake);
 		tuningModeChooser.addOption("Climber", TuningMode.Climber);
-		SmartDashboard.putData(tuningModeChooser);
-	}
+		SmartDashboard.putData("Tuning Mode", tuningModeChooser);
 
-	public static void init(Swerve swerve, Shooter shooter, Intake intake, Climber climber) {
 		if (swerve != null)
 			SwerveTuning.init(swerve);
 		if (shooter != null)
 			ShooterTuning.init(shooter);
+		if (shooter != null && swerve != null)
+			RegressionTuning.init(swerve, shooter);
 		if (intake != null)
 			IntakeTuning.init(intake);
 		if (climber != null)

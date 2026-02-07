@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
+import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
@@ -43,8 +44,8 @@ public class RobotContainer {
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
 	// private Intake intake = new Intake();
-	// private Climber climber = new Climber();
 	// private Shooter shooter = new Shooter();
+	// private Climber climber = new Climber();
 
 	@Logged(name = "Reset Gyro")
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
@@ -70,7 +71,6 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 
-		// autoChooser = AutoBuilder.buildAutoChooser();
 		autoChooser.addOption("Hub Depot Outpost Tower",
 				autos.hubDepotOutpostTowerAuto());
 		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
@@ -143,7 +143,7 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		// TuningManager.init(swerve, shooter, intake, climber);
+		TuningManager.init(null, null, null, null);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")

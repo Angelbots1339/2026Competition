@@ -25,6 +25,7 @@ public class FieldUtil {
 			Meter.convertFrom(87.46 + 82.32, Inches), Rotation2d.k180deg);
 
 	public static Distance towerWidth = Inches.of(47.00);
+	public static Distance hubRadius = Inches.of(41.7 / 2.0);
 
 	public static enum HubShiftTime {
 		TRANSITION_SHIFT_START(140),
