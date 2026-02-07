@@ -3,6 +3,7 @@ package frc.lib.util.tuning;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.TuningConstants.TuningMode;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
@@ -14,14 +15,17 @@ public class TuningManager {
 	static {
 		tuningModeChooser.setDefaultOption("Shooter", TuningMode.Shooter);
 		tuningModeChooser.addOption("Swerve", TuningMode.Swerve);
+		tuningModeChooser.addOption("Climber", TuningMode.Climber);
 		SmartDashboard.putData(tuningModeChooser);
 	}
 
-	public static void init(Swerve swerve, Shooter shooter) {
+	public static void init(Swerve swerve, Shooter shooter, Climber climber) {
 		if (swerve != null)
 			SwerveTuning.init(swerve);
 		if (shooter != null)
 			ShooterTuning.init(shooter);
+		if (climber != null)
+			ClimberTuning.init(climber);
 	}
 
 	public static void changeMode() {
