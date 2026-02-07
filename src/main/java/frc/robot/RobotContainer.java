@@ -42,10 +42,10 @@ public class RobotContainer {
 	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
 			* RobotConstants.maxRot.in(RadiansPerSecond);
 
-	@Logged(importance = Importance.CRITICAL)
+	// @Logged(importance = Importance.CRITICAL)
 	// private Swerve swerve = TunerConstants.swerve;
 	// private Intake intake = new Intake();
-	private Shooter shooter = new Shooter();
+	// private Shooter shooter = new Shooter();
 	// private Climber climber = new Climber();
 
 	@Logged(name = "Reset Gyro")
@@ -148,7 +148,7 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		TuningManager.init(null, shooter, null, null);
+		TuningManager.init(null, null, null, null);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
