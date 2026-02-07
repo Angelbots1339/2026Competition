@@ -24,12 +24,9 @@ public class ShooterTuning {
 	private static Trigger pidtune = baseTrigger.and(() -> tester.getAButton());
 	private static Trigger pidtuneFOC = baseTrigger.and(() -> tester.getXButton());
 
-	private static Shooter shooter;
-
 	private static AngularVelocity targetAngle = RotationsPerSecond.zero();
 
 	public static void init(Shooter shooter) {
-		ShooterTuning.shooter = shooter;
 		shooter.logTuning();
 
 		runVoltage.whileTrue(Commands.run(() -> {

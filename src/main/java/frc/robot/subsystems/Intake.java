@@ -14,7 +14,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.util.IntakeTuning;
+import frc.lib.util.tuning.IntakeTuning;
 import frc.robot.Constants.IntakeConstants;
 
 @Logged()
