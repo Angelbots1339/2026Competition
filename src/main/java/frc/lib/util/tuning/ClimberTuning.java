@@ -25,13 +25,14 @@ public class ClimberTuning {
 	private static Trigger runClimber = baseTrigger.and(() -> tester.getYButton());
 	private static Trigger unwind = baseTrigger.and(() -> tester.getXButton());
 	private static Trigger runVoltage = baseTrigger.and(() -> tester.getAButton());
+	private static Trigger resetPosition = baseTrigger.and(() -> tester.getBButton());
 
 	private static Distance targetPosition = Meters.zero();
-	private static double voltage = 0.0;
+	private static double voltage = 0.5;
 
 	public static void init(Climber climber) {
 		DogLog.tunable("Climber/target", 0.0, target -> targetPosition = Meters.of(target));
-		DogLog.tunable("Climber/voltage", 0.0, target -> voltage = target);
+		DogLog.tunable("Climber/voltage", voltage, target -> voltage = target);
 		climber.logPID();
 
 		runVoltage.whileTrue(Commands.run(() -> climber.setVoltage(voltage)).handleInterrupt(() -> climber.disable()));
@@ -42,6 +43,7 @@ public class ClimberTuning {
 		runClimber.whileTrue(
 				Commands.run(() -> climber.setClimberPosition(targetPosition), climber)
 						.handleInterrupt(() -> climber.disable()));
+		resetPosition.onTrue(Commands.runOnce(() -> climber.resetClimberPosition()));
 	}
 
 	public static void createPID(String key, TalonFX motor, TalonFXConfiguration config) {
