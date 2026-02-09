@@ -19,11 +19,13 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -50,6 +52,10 @@ public class Constants {
 
 		public static final Translation2d climberOffset = new Translation2d(Inches.of(-12.046), Meters.zero());
 
+	}
+
+	public class AlignConstants {
+
 		// has least amount of error, overshooting seems to be result of wheel slip on
 		// concrete
 		public static final double angularDriveKP = 6.78;
@@ -69,6 +75,9 @@ public class Constants {
 		public static final double pidToPoseKS = 0.15;
 		public static final Distance pidToPoseTolerance = Meters.of(0.03); // Meters
 		public static final LinearVelocity pidToPoseMaxSpeed = MetersPerSecond.of(1); // Meters per second
+		public static final PathConstraints ppConstraints = new PathConstraints(
+				3.0, 4.0,
+				Units.degreesToRadians(540), Units.degreesToRadians(720));
 	}
 
 	public class VisionConstants {

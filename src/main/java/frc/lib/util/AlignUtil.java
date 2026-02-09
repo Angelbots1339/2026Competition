@@ -4,14 +4,12 @@ import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Arrays;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.AlignConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.Swerve;
 
@@ -32,10 +30,6 @@ public class AlignUtil {
 
 	public static final Transform2d towerAlignStart = new Transform2d(0.3, 0, Rotation2d.kZero);
 
-	public static final PathConstraints ppConstraints = new PathConstraints(
-			3.0, 4.0,
-			Units.degreesToRadians(540), Units.degreesToRadians(720));
-
 	public static Pose2d getTargetTower(Swerve swerve) {
 		Pose2d target = swerve.getPose().nearest(Arrays.asList(
 				FieldUtil.getTowerCenter().transformBy(leftTowerOffset),
@@ -44,7 +38,7 @@ public class AlignUtil {
 	}
 
 	public static Command ppPathFind(Pose2d target) {
-		return AutoBuilder.pathfindToPose(target, ppConstraints);
+		return AutoBuilder.pathfindToPose(target, AlignConstants.ppConstraints);
 	}
 
 	// this needs to be defered so we build the target at run time
