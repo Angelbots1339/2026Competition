@@ -3,14 +3,15 @@ package frc.lib.util;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Arrays;
-import java.util.function.Supplier;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.Swerve;
 
@@ -31,6 +32,10 @@ public class AlignUtil {
 
 	public static final Transform2d towerAlignStart = new Transform2d(0.3, 0, Rotation2d.kZero);
 
+	public static final PathConstraints ppConstraints = new PathConstraints(
+			3.0, 4.0,
+			Units.degreesToRadians(540), Units.degreesToRadians(720));
+
 	public static Pose2d getTargetTower(Swerve swerve) {
 		Pose2d target = swerve.getPose().nearest(Arrays.asList(
 				FieldUtil.getTowerCenter().transformBy(leftTowerOffset),
@@ -38,9 +43,20 @@ public class AlignUtil {
 		return target;
 	}
 
+	public static Command ppPathFind(Pose2d target) {
+		return AutoBuilder.pathfindToPose(target, ppConstraints);
+	}
+
+	// this needs to be defered so we build the target at run time
 	public static Command driveToTowerSide(Swerve swerve) {
+		Pose2d target = getTargetTower(swerve);
+		Pose2d alignStart = getTargetTower(swerve).plus(towerAlignStart);
 		return Commands.sequence(
-				swerve.pidtoPose(() -> getTargetTower(swerve).plus(towerAlignStart)),
-				swerve.pidtoPose(() -> getTargetTower(swerve)));
+				ppPathFind(alignStart),
+				swerve.pidtoPose(() -> alignStart), // PP doesn't guarentee correct
+													// heading so run pidtopose in
+													// place to make sure heading is
+													// correct
+				swerve.pidtoPose(() -> target));
 	}
 }
