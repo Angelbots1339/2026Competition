@@ -239,9 +239,9 @@ public class Constants {
 	public class ClimberConstants {
 		public static final int ClimberMotorPort = 28;
 		public static final Distance PitchDiameter = Inches.of(0.5);
-		public static final Distance MaxDistance = Inches.of(5);
+		public static final Distance MaxDistance = Centimeters.of(15);
 
-		public static final Distance ClimbPosition = Inches.of(4.5);
+		public static final Distance ClimbPosition = Centimeters.of(10);
 		public static final Distance HomePosition = Inches.of(0);
 
 		public static final TalonFXConfiguration ClimberMotorConfig = new TalonFXConfiguration()
@@ -256,7 +256,8 @@ public class Constants {
 						.withInverted(InvertedValue.CounterClockwise_Positive)
 						.withNeutralMode(NeutralModeValue.Brake))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(3 * 5))
+						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough diameter of the
+																	// climber
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))

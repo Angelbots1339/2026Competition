@@ -21,6 +21,7 @@ public class Climber extends SubsystemBase {
 
 	public Climber() {
 		climberMotor.getConfigurator().apply(ClimberConstants.ClimberMotorConfig);
+		// make sure the climber is fully extended to the second sharpie mark
 		climberMotor.setPosition(0);
 	}
 

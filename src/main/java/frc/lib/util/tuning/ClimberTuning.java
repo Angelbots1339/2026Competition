@@ -1,5 +1,6 @@
 package frc.lib.util.tuning;
 
+import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -36,7 +37,6 @@ public class ClimberTuning {
 		runVoltage.whileTrue(Commands.run(() -> climber.setVoltage(voltage)).handleInterrupt(() -> climber.disable()));
 		unwind.whileTrue(Commands.run(() -> climber.setVoltage(-voltage)).handleInterrupt(() -> {
 			climber.disable();
-			climber.resetClimberPosition();
 		}));
 
 		runClimber.whileTrue(
