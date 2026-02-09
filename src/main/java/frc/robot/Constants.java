@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Inches;
@@ -237,10 +238,10 @@ public class Constants {
 
 	public class ClimberConstants {
 		public static final int ClimberMotorPort = 28;
-		public static final Distance PitchDiameter = Inches.of(1.281);
-		public static final Distance MaxDistance = Inches.of(7.363);
+		public static final Distance PitchDiameter = Inches.of(0.5);
+		public static final Distance MaxDistance = Inches.of(5);
 
-		public static final Distance ClimbPosition = Inches.of(5.00);
+		public static final Distance ClimbPosition = Inches.of(4.5);
 		public static final Distance HomePosition = Inches.of(0);
 
 		public static final TalonFXConfiguration ClimberMotorConfig = new TalonFXConfiguration()
@@ -255,14 +256,14 @@ public class Constants {
 						.withInverted(InvertedValue.CounterClockwise_Positive)
 						.withNeutralMode(NeutralModeValue.Brake))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(3 * 3 * 3 * PitchDiameter.in(Meters)))
+						.withSensorToMechanismRatio(3 * 5))
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
 				.withSlot0(new Slot0Configs()
-						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
 						.withKP(0)
 						.withKI(0)
 						.withKD(0)

@@ -22,12 +22,22 @@ public class ClimberTuning {
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Climber);
 
 	private static Trigger runClimber = baseTrigger.and(() -> tester.getYButton());
+	private static Trigger unwind = baseTrigger.and(() -> tester.getXButton());
+	private static Trigger runVoltage = baseTrigger.and(() -> tester.getAButton());
 
 	private static Distance targetPosition = Meters.zero();
+	private static double voltage = 0.0;
 
 	public static void init(Climber climber) {
 		DogLog.tunable("Climber/target", 0.0, target -> targetPosition = Meters.of(target));
+		DogLog.tunable("Climber/voltage", 0.0, target -> voltage = target);
 		climber.logPID();
+
+		runVoltage.whileTrue(Commands.run(() -> climber.setVoltage(voltage)).handleInterrupt(() -> climber.disable()));
+		unwind.whileTrue(Commands.run(() -> climber.setVoltage(-voltage)).handleInterrupt(() -> {
+			climber.disable();
+			climber.resetClimberPosition();
+		}));
 
 		runClimber.whileTrue(
 				Commands.run(() -> climber.setClimberPosition(targetPosition), climber)
