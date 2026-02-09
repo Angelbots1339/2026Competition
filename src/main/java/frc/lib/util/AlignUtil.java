@@ -42,15 +42,14 @@ public class AlignUtil {
 	}
 
 	// this needs to be defered so we build the target at run time
-	public static Command driveToTowerSide(Swerve swerve) {
+	public static Command driveToClimbPosition(Swerve swerve) {
 		Pose2d target = getTargetTower(swerve);
 		Pose2d alignStart = getTargetTower(swerve).plus(towerAlignStart);
 		return Commands.sequence(
 				ppPathFind(alignStart),
-				swerve.pidtoPose(() -> alignStart), // PP doesn't guarentee correct
-													// heading so run pidtopose in
-													// place to make sure heading is
-													// correct
+				// PP doesn' tguarentee correct heading so run pidtopose in place to make sure
+				// heading is correct
+				swerve.pidtoPose(() -> alignStart),
 				swerve.pidtoPose(() -> target));
 	}
 }
