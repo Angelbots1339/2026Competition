@@ -144,11 +144,15 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 			ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rotation, getYaw());
 			driveRobotRelative(speeds);
-		});
+		}).until(() -> atSetpoint());
 	}
 
 	public Rotation2d getRotationError() {
 		return Rotation2d.fromRadians(angularDrivePID.getError());
+	}
+
+	public boolean atSetpoint() {
+		return pidToPoseXController.atSetpoint() && pidToPoseYController.atSetpoint() && angularDrivePID.atSetpoint();
 	}
 
 	public void driveRobotRelative(ChassisSpeeds speeds) {

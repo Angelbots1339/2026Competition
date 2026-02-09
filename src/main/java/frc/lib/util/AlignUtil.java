@@ -3,10 +3,14 @@ package frc.lib.util;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.Swerve;
 
@@ -25,10 +29,18 @@ public class AlignUtil {
 			FieldUtil.towerWidth.div(2).unaryMinus().plus(RobotConstants.climberOffset.getMeasureX()),
 			Rotation2d.kCW_90deg);
 
+	public static final Transform2d towerAlignStart = new Transform2d(0.3, 0, Rotation2d.kZero);
+
+	public static Pose2d getTargetTower(Swerve swerve) {
+		Pose2d target = swerve.getPose().nearest(Arrays.asList(
+				FieldUtil.getTowerCenter().transformBy(leftTowerOffset),
+				FieldUtil.getTowerCenter().transformBy(rightTowerOffset)));
+		return target;
+	}
+
 	public static Command driveToTowerSide(Swerve swerve) {
-		return swerve.pidtoPose(
-				() -> swerve.getPose().nearest(Arrays.asList(
-						FieldUtil.getTowerCenter().transformBy(leftTowerOffset),
-						FieldUtil.getTowerCenter().transformBy(rightTowerOffset))));
+		return Commands.sequence(
+				swerve.pidtoPose(() -> getTargetTower(swerve).plus(towerAlignStart)),
+				swerve.pidtoPose(() -> getTargetTower(swerve)));
 	}
 }
