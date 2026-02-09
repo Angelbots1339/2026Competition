@@ -28,7 +28,7 @@ public class ClimberTuning {
 	private static Trigger resetPosition = baseTrigger.and(() -> tester.getBButton());
 
 	private static Distance targetPosition = Meters.zero();
-	private static double voltage = 0.5;
+	private static double voltage = 1.0;
 
 	public static void init(Climber climber) {
 		DogLog.tunable("Climber/target", 0.0, target -> targetPosition = Meters.of(target));
