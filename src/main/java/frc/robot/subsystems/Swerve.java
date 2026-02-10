@@ -181,6 +181,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	public void setYaw(Rotation2d yaw) {
 		getPigeon2().setYaw(yaw.getDegrees());
+		resetRotation(yaw);
 	}
 
 	public void resetGyro() {
