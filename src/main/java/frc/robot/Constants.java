@@ -166,16 +166,16 @@ public class Constants {
 		public static final int intakeMotorId = 22;
 		public static final int deployMotorId = 24;
 
-		public static final double deployIntakeGearRatio = 32.0 / 16.0;
+		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
 		public static final Slot0Configs deploySlot0 = new Slot0Configs()
-				.withKP(0)
+				.withKP(35)
 				.withKI(0)
-				.withKD(0)
+				.withKD(1)
 				.withKV(0)
 				.withKA(0)
 				.withKS(0)
-				.withKG(0)
+				.withKG(0.35)
 				.withGravityType(GravityTypeValue.Arm_Cosine)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
