@@ -241,8 +241,8 @@ public class Constants {
 		public static final Distance PitchDiameter = Inches.of(0.5);
 		public static final Distance MaxDistance = Centimeters.of(15);
 
-		public static final Distance ClimbPosition = Centimeters.of(10);
-		public static final Distance HomePosition = Inches.of(0);
+		public static final Distance ClimbPosition = Centimeters.of(0);
+		public static final Distance HomePosition = Inches.of(10);
 
 		public static final TalonFXConfiguration ClimberMotorConfig = new TalonFXConfiguration()
 				.withSoftwareLimitSwitch(

@@ -71,6 +71,7 @@ public class RobotContainer {
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
+		setDefaultCommands();
 
 		// autoChooser.addOption("Hub Depot Outpost Tower",
 		// autos.hubDepotOutpostTowerAuto());
@@ -140,6 +141,10 @@ public class RobotContainer {
 				}).withTimeout(1.5).andThen(Commands.run(() -> {
 					driver.setRumble(RumbleType.kBothRumble, 0.0);
 				}).withTimeout(1.0)));
+	}
+
+	public void setDefaultCommands() {
+		climber.setDefaultCommand(Commands.run(() -> climber.home(), climber));
 	}
 
 	@Logged(name = "Current auto")
