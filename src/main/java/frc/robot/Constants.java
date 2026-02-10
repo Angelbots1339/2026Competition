@@ -2,6 +2,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
@@ -10,6 +12,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -201,7 +204,10 @@ public class Constants {
 								.withForwardSoftLimitThreshold(1)
 								// this may need to change as well
 								.withReverseSoftLimitThreshold(0))
-				.withSlot0(deploySlot0);
+				.withSlot0(deploySlot0)
+				.withMotionMagic(new MotionMagicConfigs()
+						.withMotionMagicCruiseVelocity(DegreesPerSecond.of(90))
+						.withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(180)));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
 				.withKP(0)
