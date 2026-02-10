@@ -239,7 +239,7 @@ public class Constants {
 	public class ClimberConstants {
 		public static final int ClimberMotorPort = 28;
 		public static final Distance PitchDiameter = Inches.of(0.5);
-		public static final Distance MaxDistance = Centimeters.of(15);
+		public static final Distance MaxDistance = Centimeters.of(17);
 
 		public static final Distance ClimbPosition = Centimeters.of(0);
 		public static final Distance HomePosition = Inches.of(10);

@@ -140,7 +140,6 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		climber.setDefaultCommand(Commands.run(() -> climber.home(), climber));
 	}
 
 	@Logged(name = "Current auto")
