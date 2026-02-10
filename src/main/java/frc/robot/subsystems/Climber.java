@@ -15,7 +15,7 @@ import frc.robot.Constants.ClimberConstants;
 
 @Logged
 public class Climber extends SubsystemBase {
-	private TalonFX climberMotor = new TalonFX(ClimberConstants.ClimberMotorPort);
+	private TalonFX climberMotor = new TalonFX(ClimberConstants.ClimberMotorPort, "*");
 
 	private Distance targetPosition = Meters.zero();
 
