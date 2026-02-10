@@ -1,6 +1,10 @@
 package frc.lib.util.tuning;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -45,5 +49,14 @@ public class IntakeTuning {
 		DogLog.tunable(key + "/kD", config.Slot0.kD, k -> motor.getConfigurator().apply(config.Slot0.withKD(k)));
 		DogLog.tunable(key + "/kS", config.Slot0.kS, k -> motor.getConfigurator().apply(config.Slot0.withKS(k)));
 		DogLog.tunable(key + "/kG", config.Slot0.kG, k -> motor.getConfigurator().apply(config.Slot0.withKG(k)));
+		DogLog.tunable(key + "/vel",
+				RotationsPerSecond.of(config.MotionMagic.MotionMagicCruiseVelocity).in(DegreesPerSecond),
+				k -> motor.getConfigurator()
+						.apply(config.MotionMagic.withMotionMagicCruiseVelocity(DegreesPerSecond.of(k))));
+		DogLog.tunable(key + "/acc",
+				RotationsPerSecondPerSecond.of(config.MotionMagic.MotionMagicAcceleration)
+						.in(DegreesPerSecondPerSecond),
+				k -> motor.getConfigurator()
+						.apply(config.MotionMagic.withMotionMagicAcceleration(DegreesPerSecondPerSecond.of(k))));
 	}
 }
