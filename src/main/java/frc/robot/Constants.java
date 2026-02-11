@@ -59,10 +59,10 @@ public class Constants {
 
 		// has least amount of error, overshooting seems to be result of wheel slip on
 		// concrete
-		public static final double angularDriveKP = 6.78;
+		public static final double angularDriveKP = 5.3;
 		public static final double angularDriveKI = 0;
-		public static final double angularDriveKD = 0.1;
-		public static final double angularDriveKS = 0;
+		public static final double angularDriveKD = 0;
+		public static final double angularDriveKS = 0.12;
 		public static final double angularDriveKV = 0;
 		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(angularDriveKS,
 				angularDriveKV);
