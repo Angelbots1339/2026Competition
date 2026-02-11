@@ -141,7 +141,7 @@ public class Constants {
 						.withSupplyCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.CounterClockwise_Positive))
+						.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
@@ -153,8 +153,9 @@ public class Constants {
 		public static TalonFXConfiguration spinnerConfig = base.clone()
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.Clockwise_Positive)) // for some reason, if we extend config, this
-																			// doesn't get overridden
+						.withInverted(InvertedValue.CounterClockwise_Positive)) // for some reason, if we extend config,
+																				// this
+				// doesn't get overridden
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
@@ -165,8 +166,13 @@ public class Constants {
 						.withKS(6));
 
 		public static TalonFXConfiguration indexConfig = base.clone().withMotorOutput(new MotorOutputConfigs()
-				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.CounterClockwise_Positive))
-				.withSlot0(new Slot0Configs().withKP(0.35).withKI(0).withKD(0).withKS(0.5).withKV(0.065));
+				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.Clockwise_Positive))
+				.withSlot0(new Slot0Configs()
+						.withKP(0.35)
+						.withKI(0)
+						.withKD(0)
+						.withKS(0.5)
+						.withKV(0.065));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(100));
