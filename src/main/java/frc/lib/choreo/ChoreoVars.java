@@ -13,10 +13,10 @@ import edu.wpi.first.units.measure.*;
 public final class ChoreoVars {
 
     public static final class Poses {
-        public static final Pose2d LeftBumpStart = new Pose2d(3.634, 5.909, Rotation2d.kZero);
         public static final Pose2d DepotIntake = new Pose2d(0.5, 5.002, Rotation2d.fromRadians(1.571));
         public static final Pose2d DepotShoot = new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588));
         public static final Pose2d HubStart = new Pose2d(3.58, 4.035, Rotation2d.kZero);
+        public static final Pose2d LeftBumpStart = new Pose2d(3.634, 5.909, Rotation2d.kZero);
         public static final Pose2d LeftStart = new Pose2d(3.647, 6.065, Rotation2d.kZero);
         public static final Pose2d LeftTowerAlign = new Pose2d(1.07, 4.916, Rotation2d.fromRadians(1.571));
         public static final Pose2d Outpost = new Pose2d(2, 0.721, Rotation2d.fromRadians(3.142));

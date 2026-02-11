@@ -11,24 +11,18 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Swerve;
 
 @Logged
 public class RobotContainer {
@@ -71,6 +65,7 @@ public class RobotContainer {
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
+		setDefaultCommands();
 
 		// autoChooser.addOption("Hub Depot Outpost Tower",
 		// autos.hubDepotOutpostTowerAuto());
@@ -140,6 +135,9 @@ public class RobotContainer {
 				}).withTimeout(1.5).andThen(Commands.run(() -> {
 					driver.setRumble(RumbleType.kBothRumble, 0.0);
 				}).withTimeout(1.0)));
+	}
+
+	public void setDefaultCommands() {
 	}
 
 	@Logged(name = "Current auto")

@@ -1,6 +1,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Inches;
@@ -19,11 +20,13 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -50,25 +53,32 @@ public class Constants {
 
 		public static final Translation2d climberOffset = new Translation2d(Inches.of(-12.046), Meters.zero());
 
+	}
+
+	public class AlignConstants {
+
 		// has least amount of error, overshooting seems to be result of wheel slip on
 		// concrete
-		public static final double angularDriveKP = 6.78;
+		public static final double angularDriveKP = 5.3;
 		public static final double angularDriveKI = 0;
-		public static final double angularDriveKD = 0.1;
-		public static final double angularDriveKS = 0;
+		public static final double angularDriveKD = 0;
+		public static final double angularDriveKS = 0.12;
 		public static final double angularDriveKV = 0;
 		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(angularDriveKS,
 				angularDriveKV);
 		public static final TrapezoidProfile.Constraints angularDriveConstraints = new TrapezoidProfile.Constraints(
 				10,
 				20);
-		public static final Angle angularDriveTolerance = Degrees.of(0.25); // Degrees
+		public static final Angle angularDriveTolerance = Degrees.of(0.5); // Degrees
 
 		public static final double pidToPoseKP = 2.5;
 		public static final double pidToPoseKD = 0;
 		public static final double pidToPoseKS = 0.15;
 		public static final Distance pidToPoseTolerance = Meters.of(0.03); // Meters
 		public static final LinearVelocity pidToPoseMaxSpeed = MetersPerSecond.of(1); // Meters per second
+		public static final PathConstraints ppConstraints = new PathConstraints(
+				3.0, 4.0,
+				Units.degreesToRadians(540), Units.degreesToRadians(720));
 	}
 
 	public class VisionConstants {
@@ -237,11 +247,11 @@ public class Constants {
 
 	public class ClimberConstants {
 		public static final int ClimberMotorPort = 28;
-		public static final Distance PitchDiameter = Inches.of(1.281);
-		public static final Distance MaxDistance = Inches.of(7.363);
+		public static final Distance PitchDiameter = Inches.of(0.5);
+		public static final Distance MaxDistance = Centimeters.of(17);
 
-		public static final Distance ClimbPosition = Inches.of(5.00);
-		public static final Distance HomePosition = Inches.of(0);
+		public static final Distance ClimbPosition = Centimeters.of(0);
+		public static final Distance HomePosition = Inches.of(10);
 
 		public static final TalonFXConfiguration ClimberMotorConfig = new TalonFXConfiguration()
 				.withSoftwareLimitSwitch(
@@ -255,19 +265,21 @@ public class Constants {
 						.withInverted(InvertedValue.CounterClockwise_Positive)
 						.withNeutralMode(NeutralModeValue.Brake))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(3 * 3 * 3 * PitchDiameter.in(Meters)))
+						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough diameter of the
+																	// climber
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
 				.withSlot0(new Slot0Configs()
-						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(0)
+						// TODO do motion magic later
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
+						.withKP(120)
 						.withKI(0)
 						.withKD(0)
 						.withKS(0)
-						.withKG(0)
+						.withKG(10)
 						.withGravityType(GravityTypeValue.Elevator_Static));
 	}
 }
