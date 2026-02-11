@@ -264,12 +264,13 @@ public class Constants {
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
 				.withSlot0(new Slot0Configs()
+						// TODO do motion magic later
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-						.withKP(0)
+						.withKP(120)
 						.withKI(0)
 						.withKD(0)
 						.withKS(0)
-						.withKG(0)
+						.withKG(10)
 						.withGravityType(GravityTypeValue.Elevator_Static));
 	}
 }

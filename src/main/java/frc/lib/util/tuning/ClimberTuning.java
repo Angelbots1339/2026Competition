@@ -41,7 +41,7 @@ public class ClimberTuning {
 		}));
 
 		runClimber.whileTrue(
-				Commands.run(() -> climber.setClimberPosition(targetPosition), climber)
+				Commands.run(() -> climber.setClimberPosition(targetPosition))
 						.handleInterrupt(() -> climber.disable()));
 		resetPosition.onTrue(Commands.runOnce(() -> climber.resetClimberPosition()));
 	}
