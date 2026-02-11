@@ -73,8 +73,6 @@ public class RobotContainer {
 		configureControllerAlerts();
 		setDefaultCommands();
 
-		autoChooser.addCmd("Hub Depot Outpost Tower",
-				autos::hubDepotOutpostTowerAuto);
 		autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
 		autoChooser.addCmd("bump test", autos::bumpTest);
 		autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
