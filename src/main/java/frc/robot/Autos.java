@@ -89,11 +89,14 @@ public class Autos {
 	public Command leftNeutralAuto() {
 		final var routine = factory.newRoutine("Left Neutral");
 		final var leftNeutralToShoot = routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name());
+		final var leftNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
 
 		routine.active().onTrue(
 				Commands.sequence(
 						leftNeutralToShoot.resetOdometry(),
 						leftNeutralToShoot.cmd(),
+						shoot.get(),
+						leftNeutral2.cmd(),
 						shoot.get()));
 
 		return routine.cmd();
@@ -103,11 +106,15 @@ public class Autos {
 		final var routine = factory.newRoutine("Right Neutral");
 		final var rightNeutralToShoot = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name()).getRawTrajectory()));
+		final var rightNeutral2 = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
 
 		routine.active().onTrue(
 				Commands.sequence(
 						rightNeutralToShoot.resetOdometry(),
 						rightNeutralToShoot.cmd(),
+						shoot.get(),
+						rightNeutral2.cmd(),
 						shoot.get()));
 
 		return routine.cmd();

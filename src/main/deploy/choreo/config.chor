@@ -75,6 +75,20 @@
      "val":-1.5707963267948966
     }
    },
+   "LeftNeutralStop":{
+    "x":{
+     "exp":"LeftNeutralStart.x",
+     "val":7.763760089874268
+    },
+    "y":{
+     "exp":"5.530969619750977 m",
+     "val":5.530969619750977
+    },
+    "heading":{
+     "exp":"LeftNeutralStart.heading",
+     "val":-1.5707963267948966
+    }
+   },
    "LeftStart":{
     "x":{
      "exp":"3.6429224014282227 m",
