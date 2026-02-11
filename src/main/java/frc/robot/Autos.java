@@ -3,6 +3,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import choreo.auto.AutoFactory;
 import choreo.trajectory.SwerveSample;
@@ -15,10 +16,10 @@ import frc.robot.subsystems.Swerve;
 
 public class Autos {
 	private AutoFactory factory;
-	private Swerve swerve;
+
+	Supplier<Command> shoot = null;
 
 	public Autos(Swerve swerve) {
-		this.swerve = swerve;
 		factory = new AutoFactory(
 				swerve::getPose, // A function that returns the current field-relative Pose2d of the robot
 				swerve::resetPose, // A function that receives a field-relative Pose2d to reset the robot's
@@ -33,6 +34,9 @@ public class Autos {
 		Command intakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
 		Command intakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
 
+		shoot = () -> swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)
+				.withTimeout(2);
+
 		factory.bind("IntakeStart", intakeOpen);
 		factory.bind("IntakeStop", intakeClose);
 	}
@@ -44,7 +48,7 @@ public class Autos {
 				Commands.sequence(
 						bumptest.resetOdometry(),
 						bumptest.cmd(),
-						swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
+						shoot.get()));
 
 		return routine.cmd();
 	}
@@ -58,6 +62,7 @@ public class Autos {
 				Commands.sequence(
 						hubToDepotShoot.resetOdometry(),
 						hubToDepotShoot.cmd(),
+						shoot.get(),
 						depotShoottoTower.cmd()));
 
 		return routine.cmd();
@@ -74,8 +79,10 @@ public class Autos {
 				Commands.sequence(
 						hubToDepotShoot.resetOdometry(),
 						hubToDepotShoot.cmd(),
+						shoot.get(),
 						depotShoottoOutpost.cmd(),
 						outpostToShoot.cmd(),
+						shoot.get(),
 						outpostShoottoTower.cmd()));
 
 		return routine.cmd();
@@ -88,7 +95,8 @@ public class Autos {
 		routine.active().onTrue(
 				Commands.sequence(
 						leftNeutralToShoot.resetOdometry(),
-						leftNeutralToShoot.cmd()));
+						leftNeutralToShoot.cmd(),
+						shoot.get()));
 
 		return routine.cmd();
 	}
@@ -101,7 +109,8 @@ public class Autos {
 		routine.active().onTrue(
 				Commands.sequence(
 						rightNeutralToShoot.resetOdometry(),
-						rightNeutralToShoot.cmd()));
+						rightNeutralToShoot.cmd(),
+						shoot.get()));
 
 		return routine.cmd();
 	}
