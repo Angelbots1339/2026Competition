@@ -55,9 +55,9 @@ public record ChoreoTraj(
 	public static final ChoreoTraj LeftNeutralToShoot = new ChoreoTraj(
 	    "LeftNeutralToShoot",
 	    OptionalInt.empty(),
-	    4.79722,
+	    5.45869,
 	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142)),
-	    new Pose2d(2.929, 5.775, Rotation2d.fromRadians(-0.832))
+	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
 	);
 	public static final ChoreoTraj OutpostShoottoTower = new ChoreoTraj(
 	    "OutpostShoottoTower",
