@@ -27,6 +27,7 @@ import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Swerve;
 
 @Logged
@@ -45,7 +46,7 @@ public class RobotContainer {
 	private Swerve swerve = TunerConstants.swerve;
 	// private Intake intake = new Intake();
 	// private Shooter shooter = new Shooter();
-	// private Climber climber = new Climber();
+	private Climber climber = new Climber();
 
 	@Logged(name = "Reset Gyro")
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
@@ -70,6 +71,7 @@ public class RobotContainer {
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
+		setDefaultCommands();
 
 		autoChooser.addOption("Hub Depot Outpost Tower",
 				autos.hubDepotOutpostTowerAuto());
@@ -137,13 +139,16 @@ public class RobotContainer {
 				}).withTimeout(1.0)));
 	}
 
+	public void setDefaultCommands() {
+	}
+
 	@Logged(name = "Current auto")
 	public Command getAutonomousCommand() {
 		return autoChooser.getSelected();
 	}
 
 	public void testingInit() {
-		TuningManager.init(null, null, null, null);
+		TuningManager.init(swerve, null, null, climber);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
