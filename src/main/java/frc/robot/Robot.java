@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Seconds;
 
+import com.pathplanner.lib.commands.PathfindingCommand;
+
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
@@ -26,6 +28,7 @@ public class Robot extends TimedRobot {
 
 	public Robot() {
 		m_robotContainer = new RobotContainer();
+		PathfindingCommand.warmupCommand().schedule();
 
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog());

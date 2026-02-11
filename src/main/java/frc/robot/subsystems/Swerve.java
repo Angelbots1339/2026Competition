@@ -41,7 +41,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.LimelightHelpers;
-import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.AlignConstants;
 import frc.robot.Constants.VisionConstants;
 
 @Logged
@@ -64,23 +64,23 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	@Logged(name = "Has Applied Operator Perspective")
 	private boolean m_hasAppliedOperatorPerspective = false;
 
-	private PIDController angularDrivePID = new PIDController(RobotConstants.angularDriveKP,
-			RobotConstants.angularDriveKI, RobotConstants.angularDriveKD);
-	private SimpleMotorFeedforward angularDriveFF = new SimpleMotorFeedforward(RobotConstants.angularDriveKS,
-			RobotConstants.angularDriveKV);
+	private PIDController angularDrivePID = new PIDController(AlignConstants.angularDriveKP,
+			AlignConstants.angularDriveKI, AlignConstants.angularDriveKD);
+	private SimpleMotorFeedforward angularDriveFF = new SimpleMotorFeedforward(AlignConstants.angularDriveKS,
+			AlignConstants.angularDriveKV);
 
-	private PIDController pidToPoseXController = new PIDController(RobotConstants.pidToPoseKP, 0,
-			RobotConstants.pidToPoseKD);
-	private PIDController pidToPoseYController = new PIDController(RobotConstants.pidToPoseKP, 0,
-			RobotConstants.pidToPoseKD);
+	private PIDController pidToPoseXController = new PIDController(AlignConstants.pidToPoseKP, 0,
+			AlignConstants.pidToPoseKD);
+	private PIDController pidToPoseYController = new PIDController(AlignConstants.pidToPoseKP, 0,
+			AlignConstants.pidToPoseKD);
 
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
-		angularDrivePID.setTolerance(RobotConstants.angularDriveTolerance.in(Radians));
+		angularDrivePID.setTolerance(AlignConstants.angularDriveTolerance.in(Radians));
 		angularDrivePID.enableContinuousInput(-Math.PI, Math.PI);
-		pidToPoseXController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
-		pidToPoseYController.setTolerance(RobotConstants.pidToPoseTolerance.in(Meters));
+		pidToPoseXController.setTolerance(AlignConstants.pidToPoseTolerance.in(Meters));
+		pidToPoseYController.setTolerance(AlignConstants.pidToPoseTolerance.in(Meters));
 
 		resetPose(Pose2d.kZero);
 		resetGyro();
@@ -137,18 +137,22 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 			double y = pidToPoseYController.calculate(getPose().getY(), target.get().getY());
 			double rotation = angularPIDCalc(target.get().getRotation());
 
-			x = MathUtil.clamp(x, -RobotConstants.maxSpeed.in(MetersPerSecond),
-					RobotConstants.maxSpeed.in(MetersPerSecond));
-			y = MathUtil.clamp(y, -RobotConstants.maxSpeed.in(MetersPerSecond),
-					RobotConstants.maxSpeed.in(MetersPerSecond));
+			x = MathUtil.clamp(x, -AlignConstants.pidToPoseMaxSpeed.in(MetersPerSecond),
+					AlignConstants.pidToPoseMaxSpeed.in(MetersPerSecond));
+			y = MathUtil.clamp(y, -AlignConstants.pidToPoseMaxSpeed.in(MetersPerSecond),
+					AlignConstants.pidToPoseMaxSpeed.in(MetersPerSecond));
 
 			ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rotation, getYaw());
 			driveRobotRelative(speeds);
-		});
+		}).until(() -> atSetpoint());
 	}
 
 	public Rotation2d getRotationError() {
 		return Rotation2d.fromRadians(angularDrivePID.getError());
+	}
+
+	public boolean atSetpoint() {
+		return pidToPoseXController.atSetpoint() && pidToPoseYController.atSetpoint() && angularDrivePID.atSetpoint();
 	}
 
 	public void driveRobotRelative(ChassisSpeeds speeds) {
