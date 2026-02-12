@@ -64,7 +64,8 @@ public class Constants {
 		public static final double angularDriveKD = 0;
 		public static final double angularDriveKS = 0.12;
 		public static final double angularDriveKV = 0;
-		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(angularDriveKS,
+		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(
+				angularDriveKS,
 				angularDriveKV);
 		public static final TrapezoidProfile.Constraints angularDriveConstraints = new TrapezoidProfile.Constraints(
 				10,
@@ -120,8 +121,8 @@ public class Constants {
 	public class ShooterConstants {
 		public static final int LeaderPort = 30;
 		public static final int FollowerPort = 32;
-		public static final int SpinnerPort = 36;
-		public static final int IndexPort = 34;
+		public static final int SpinnerPort = 34;
+		public static final int IndexPort = 36;
 
 		public static final double shootRPS = 41.5;
 		public static final double rpsTolerence = 1;
@@ -145,16 +146,19 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(6.5)
-						.withKI(1)
+						.withKP(10)
+						.withKI(3)
 						.withKV(0)
-						.withKS(18));
+						.withKS(10));
 
 		public static TalonFXConfiguration spinnerConfig = base.clone()
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.CounterClockwise_Positive)) // for some reason, if we extend config,
-																				// this
+						.withInverted(InvertedValue.CounterClockwise_Positive)) // for some
+													// reason, if
+													// we extend
+													// config,
+													// this
 				// doesn't get overridden
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
@@ -271,8 +275,9 @@ public class Constants {
 						.withInverted(InvertedValue.CounterClockwise_Positive)
 						.withNeutralMode(NeutralModeValue.Brake))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough diameter of the
-																	// climber
+						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough
+												// diameter of the
+												// climber
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))

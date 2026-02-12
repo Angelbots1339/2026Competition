@@ -43,8 +43,10 @@ public class ShooterTuning {
 	private static Distance distance = Meters.zero();
 
 	public static void init(Shooter shooter) {
-		DogLog.tunable("Shooter/Spinner target", ShooterConstants.shootRPS, target -> spinnerTargetRPS = target);
-		DogLog.tunable("Shooter/Shooter target", ShooterConstants.shootRPS, target -> shooterTargetRPS = target);
+		DogLog.tunable("Shooter/Spinner target", ShooterConstants.shootRPS,
+				target -> spinnerTargetRPS = target);
+		DogLog.tunable("Shooter/Shooter target", ShooterConstants.shootRPS,
+				target -> shooterTargetRPS = target);
 		DogLog.tunable("Shooter/voltage", 0.0, target -> voltage = target);
 		DogLog.tunable("Shooter/index velocity", indexrps, target -> indexrps = target);
 		DogLog.tunable("Shooter/distance", indexrps, target -> distance = Inches.of(target));
