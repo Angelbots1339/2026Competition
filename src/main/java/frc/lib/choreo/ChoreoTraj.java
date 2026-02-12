@@ -31,12 +31,19 @@ public record ChoreoTraj(
 	    new Pose2d(3.634, 5.909, Rotation2d.fromRadians(0)),
 	    new Pose2d(1.587, 4.022, Rotation2d.fromRadians(0))
 	);
-	public static final ChoreoTraj DepotShoottoOutpost = new ChoreoTraj(
-	    "DepotShoottoOutpost",
+	public static final ChoreoTraj DepotShootNeutral2 = new ChoreoTraj(
+	    "DepotShootNeutral2",
 	    OptionalInt.empty(),
-	    1.81762,
+	    5.68249,
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588)),
-	    new Pose2d(2, 0.721, Rotation2d.fromRadians(3.142))
+	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
+	);
+	public static final ChoreoTraj DepotShootOutpostShoot = new ChoreoTraj(
+	    "DepotShootOutpostShoot",
+	    OptionalInt.empty(),
+	    3.7101,
+	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588)),
+	    new Pose2d(2.529, 2.131, Rotation2d.fromRadians(0.664))
 	);
 	public static final ChoreoTraj DepotShoottoTower = new ChoreoTraj(
 	    "DepotShoottoTower",
@@ -48,16 +55,16 @@ public record ChoreoTraj(
 	public static final ChoreoTraj HubtoDepotShoot = new ChoreoTraj(
 	    "HubtoDepotShoot",
 	    OptionalInt.empty(),
-	    3.89116,
-	    new Pose2d(3.58, 4.035, Rotation2d.fromRadians(0)),
+	    3.37038,
+	    new Pose2d(3.565, 5.04, Rotation2d.fromRadians(1.571)),
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
 	);
 	public static final ChoreoTraj LeftNeutralToShoot = new ChoreoTraj(
 	    "LeftNeutralToShoot",
 	    OptionalInt.empty(),
-	    4.79722,
+	    5.40269,
 	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142)),
-	    new Pose2d(2.929, 5.775, Rotation2d.fromRadians(-0.832))
+	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
 	);
 	public static final ChoreoTraj OutpostShoottoTower = new ChoreoTraj(
 	    "OutpostShoottoTower",
@@ -66,13 +73,6 @@ public record ChoreoTraj(
 	    new Pose2d(2.529, 2.131, Rotation2d.fromRadians(0.664)),
 	    new Pose2d(1.079, 2.593, Rotation2d.fromRadians(-1.571))
 	);
-	public static final ChoreoTraj OutposttoShoot = new ChoreoTraj(
-	    "OutposttoShoot",
-	    OptionalInt.empty(),
-	    2.14593,
-	    new Pose2d(2, 0.721, Rotation2d.fromRadians(3.142)),
-	    new Pose2d(2.529, 2.131, Rotation2d.fromRadians(0.664))
-	);
 
     /**
      * A map between trajectory names and their corresponding data.
@@ -80,12 +80,12 @@ public record ChoreoTraj(
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
     	Map.entry("BumpTest", BumpTest),
-		Map.entry("DepotShoottoOutpost", DepotShoottoOutpost),
+		Map.entry("DepotShootNeutral2", DepotShootNeutral2),
+		Map.entry("DepotShootOutpostShoot", DepotShootOutpostShoot),
 		Map.entry("DepotShoottoTower", DepotShoottoTower),
 		Map.entry("HubtoDepotShoot", HubtoDepotShoot),
 		Map.entry("LeftNeutralToShoot", LeftNeutralToShoot),
-		Map.entry("OutpostShoottoTower", OutpostShoottoTower),
-		Map.entry("OutposttoShoot", OutposttoShoot)
+		Map.entry("OutpostShoottoTower", OutpostShoottoTower)
     );
 
     /**

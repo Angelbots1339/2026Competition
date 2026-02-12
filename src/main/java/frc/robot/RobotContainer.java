@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import java.util.function.Supplier;
 
+import choreo.auto.AutoChooser;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,7 +17,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -65,7 +65,7 @@ public class RobotContainer {
 	// driver.getLeftBumperButton());
 
 	@Logged(name = "Current Auto")
-	private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+	private AutoChooser autoChooser = new AutoChooser();
 	private Autos autos = new Autos(swerve);
 
 	public RobotContainer() {
@@ -73,12 +73,11 @@ public class RobotContainer {
 		configureControllerAlerts();
 		setDefaultCommands();
 
-		autoChooser.addOption("Hub Depot Outpost Tower",
-				autos.hubDepotOutpostTowerAuto());
-		autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
-		autoChooser.addOption("bump test", autos.bumpTest());
-		autoChooser.addOption("left neutral", autos.leftNeutralAuto());
-		autoChooser.addOption("right neutral", autos.rightNeutralAuto());
+		autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
+		autoChooser.addCmd("Hub Depot Outpost Tower", autos::hubDepotOutpostTowerAuto);
+		autoChooser.addCmd("bump test", autos::bumpTest);
+		autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
+		autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
@@ -144,7 +143,7 @@ public class RobotContainer {
 
 	@Logged(name = "Current auto")
 	public Command getAutonomousCommand() {
-		return autoChooser.getSelected();
+		return autoChooser.selectedCommand();
 	}
 
 	public void testingInit() {

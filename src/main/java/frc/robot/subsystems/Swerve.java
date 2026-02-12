@@ -74,6 +74,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private PIDController pidToPoseYController = new PIDController(AlignConstants.pidToPoseKP, 0,
 			AlignConstants.pidToPoseKD);
 
+	private boolean useVision = false;
+
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
@@ -137,6 +139,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 			double y = pidToPoseYController.calculate(getPose().getY(), target.get().getY());
 			double rotation = angularPIDCalc(target.get().getRotation());
 
+			if (pidToPoseXController.atSetpoint())
+				x = 0;
+			if (pidToPoseYController.atSetpoint())
+				y = 0;
+
 			x = MathUtil.clamp(x, -AlignConstants.pidToPoseMaxSpeed.in(MetersPerSecond),
 					AlignConstants.pidToPoseMaxSpeed.in(MetersPerSecond));
 			y = MathUtil.clamp(y, -AlignConstants.pidToPoseMaxSpeed.in(MetersPerSecond),
@@ -166,6 +173,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 		// if doing setpoints/profiling change this velocity
 		rotation += angularDriveFF.calculate(Math.signum(target.minus(getYaw()).getRadians()));
+
+		if (angularDrivePID.atSetpoint())
+			return 0;
 
 		return rotation;
 	}
@@ -325,9 +335,14 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		addVisionMeasurement(mt2.pose, Utils.fpgaToCurrentTime(mt2.timestampSeconds));
 	}
 
+	public void enableVision() {
+		useVision = true;
+	}
+
 	@Override
 	public void periodic() {
-		updateVision();
+		if (useVision)
+			updateVision();
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {
