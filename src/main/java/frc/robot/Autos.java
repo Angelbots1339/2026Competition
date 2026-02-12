@@ -39,6 +39,7 @@ public class Autos {
 
 		factory.bind("IntakeStart", intakeOpen);
 		factory.bind("IntakeStop", intakeClose);
+		factory.bind("UseVision", Commands.runOnce(() -> swerve.enableVision()));
 	}
 
 	public Command bumpTest() {
