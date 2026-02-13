@@ -180,6 +180,8 @@ public class Constants {
 		public static final Angle deployedAngle = Degrees.of(14.0);
 		public static final Angle retractedAngle = Degrees.of(110.0);
 
+		public static final Angle IntakeAngleTolerence = Degrees.of(1);
+
 		public static final Slot0Configs deploySlot0 = new Slot0Configs()
 				.withKP(35)
 				.withKI(0)

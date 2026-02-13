@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -37,8 +38,17 @@ public class Intake extends SubsystemBase {
 		deployMotor.setControl(new PositionVoltage(angle));
 	}
 
-	public double getIntakeAngle() {
-		return deployMotor.getPosition().getValue().in(Degrees);
+	public void setIntakeMotionAngle(Angle angle) {
+		targetAngle = angle;
+		deployMotor.setControl(new MotionMagicTorqueCurrentFOC(angle));
+	}
+
+	public Angle getIntakeAngle() {
+		return deployMotor.getPosition().getValue();
+	}
+
+	public boolean isAtSetpoint() {
+		return getIntakeAngle().isNear(targetAngle, IntakeConstants.IntakeAngleTolerence);
 	}
 
 	public void setIntakeVelocity(double Velocity) {
