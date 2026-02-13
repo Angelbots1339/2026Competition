@@ -54,6 +54,10 @@ public class Intake extends SubsystemBase {
 		deployMotor.setControl(new NeutralOut());
 	}
 
+	public void resetPosition(Angle angle) {
+		deployMotor.setPosition(angle);
+	}
+
 	public void logTuning() {
 		IntakeTuning.logPID("Intake/Deploy PID", deployMotor, IntakeConstants.deployConfigs);
 	}
@@ -61,4 +65,5 @@ public class Intake extends SubsystemBase {
 	@Override
 	public void periodic() {
 	}
+
 }
