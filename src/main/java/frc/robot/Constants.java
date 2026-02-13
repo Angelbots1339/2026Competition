@@ -177,6 +177,9 @@ public class Constants {
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
+		public static final Angle deployedAngle = Degrees.of(14.0);
+		public static final Angle retractedAngle = Degrees.of(110.0);
+
 		public static final Slot0Configs deploySlot0 = new Slot0Configs()
 				.withKP(35)
 				.withKI(0)
@@ -207,9 +210,9 @@ public class Constants {
 								// TODO: figure out the software limits
 								.withForwardSoftLimitEnable(false)
 								.withReverseSoftLimitEnable(false)
-								.withForwardSoftLimitThreshold(1)
+								.withForwardSoftLimitThreshold(deployedAngle)
 								// this may need to change as well
-								.withReverseSoftLimitThreshold(0))
+								.withReverseSoftLimitThreshold(retractedAngle))
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
 						.withMotionMagicCruiseVelocity(DegreesPerSecond.of(90))
@@ -242,9 +245,6 @@ public class Constants {
 								.withSupplyCurrentLimitEnable(true))
 				.withSlot0(deploySlot0);
 
-		public static final double deployedAngle = 0.0;
-		public static final double retractedAngle = 0.0;
-		public static final double intakeVelocity = 0.0;
 	}
 
 	public class ClimberConstants {
