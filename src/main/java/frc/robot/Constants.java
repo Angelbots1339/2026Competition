@@ -132,13 +132,6 @@ public class Constants {
 		public static final double shootRPS = 41.5;
 		public static final double rpsTolerence = 1;
 
-		public static TalonFXConfiguration base = new TalonFXConfiguration()
-				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(70))
-						.withStatorCurrentLimit(Amps.of(80))
-						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimitEnable(true));
-
 		public static TalonFXConfiguration config = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
@@ -156,26 +149,36 @@ public class Constants {
 						.withKV(0)
 						.withKS(10));
 
-		public static TalonFXConfiguration spinnerConfig = base.clone()
+		public static TalonFXConfiguration spinnerConfig = new TalonFXConfiguration()
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withSupplyCurrentLimit(Amps.of(70))
+						.withStatorCurrentLimit(Amps.of(80))
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.CounterClockwise_Positive)) // for some
-													// reason, if
-													// we extend
-													// config,
-													// this
-				// doesn't get overridden
-				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 36.0))
+						.withInverted(InvertedValue.CounterClockwise_Positive))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						// TODO: actual find values
 						.withKP(9)
 						.withKI(6)
 						.withKV(0)
 						.withKS(6));
 
-		public static TalonFXConfiguration indexConfig = base.clone().withMotorOutput(new MotorOutputConfigs()
-				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.Clockwise_Positive))
+		public static TalonFXConfiguration indexConfig = new TalonFXConfiguration()
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withSupplyCurrentLimit(Amps.of(70))
+						.withStatorCurrentLimit(Amps.of(50))
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(true))
+				.withMotorOutput(new MotorOutputConfigs()
+						.withNeutralMode(NeutralModeValue.Coast)
+						.withInverted(InvertedValue.Clockwise_Positive))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(2))
+				// TODO: Retune for new mechanism ratio
 				.withSlot0(new Slot0Configs()
 						.withKP(0.4)
 						.withKI(0)
