@@ -56,9 +56,13 @@ public class RegressionTuning {
 		}));
 
 		regression.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true))
-				.whileFalse(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
+				.whileFalse(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(),
+						() -> true));
 
-		clearData.onTrue(Commands.runOnce(() -> ShooterRegression.shotRPSMap.clear()));
+		clearData.onTrue(Commands.runOnce(() -> {
+			ShooterRegression.shotRPSMap.clear();
+			regressionData.clear();
+		}));
 		addData.onTrue(Commands.runOnce(() -> {
 			double[] data = { swerve.getDistanceToHub(), targetRPS, targetRPS };
 			regressionData.add(data);

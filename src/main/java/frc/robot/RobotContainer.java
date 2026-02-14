@@ -23,6 +23,9 @@ import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.Shooter;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Swerve;
 
 @Logged
 public class RobotContainer {
@@ -69,6 +72,7 @@ public class RobotContainer {
 
 		// autoChooser.addOption("Hub Depot Outpost Tower",
 		// autos.hubDepotOutpostTowerAuto());
+		// autos.hubDepotOutpostTowerAuto());
 		// autoChooser.addOption("Hub Depot Tower", autos.hubDepotTowerAuto());
 		// autoChooser.addOption("bump test", autos.bumpTest());
 		// autoChooser.addOption("left neutral", autos.leftNeutralAuto());
@@ -93,6 +97,32 @@ public class RobotContainer {
 		// leftX, () -> {
 		// ChassisSpeeds speeds =
 		// ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
+		// swerve.getYaw());
+		// // prevent turning when at very low speeds
+		// if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
+		// return swerve.getYaw();
+		// }
+		// return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
+		// speeds.vxMetersPerSecond));
+		// }, () -> true), swerve));
+		// swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () ->
+		// true));
+		//
+		// resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
+		// pidtoPose.whileTrue(AlignUtil.driveToTowerSide(swerve));
+		// pointDrive.whileTrue(
+		// swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () ->
+		// true));
+		// bumpDrive.whileTrue(
+		// Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () ->
+		// swerve.getClosest15(),
+		// () -> true),
+		// swerve));
+		//
+		// snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
+		// leftX, () -> {
+		// ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+		// swerve.getRobotRelativeSpeeds(),
 		// swerve.getYaw());
 		// // prevent turning when at very low speeds
 		// if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {

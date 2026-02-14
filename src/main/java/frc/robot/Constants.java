@@ -130,14 +130,14 @@ public class Constants {
 		public static TalonFXConfiguration base = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
-						.withStatorCurrentLimit(Amps.of(120))
+						.withStatorCurrentLimit(Amps.of(80))
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true));
 
 		public static TalonFXConfiguration config = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
-						.withStatorCurrentLimit(Amps.of(120))
+						.withStatorCurrentLimit(Amps.of(80))
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
@@ -172,11 +172,11 @@ public class Constants {
 		public static TalonFXConfiguration indexConfig = base.clone().withMotorOutput(new MotorOutputConfigs()
 				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.Clockwise_Positive))
 				.withSlot0(new Slot0Configs()
-						.withKP(0.35)
+						.withKP(0.4)
 						.withKI(0)
 						.withKD(0)
-						.withKS(0.5)
-						.withKV(0.065));
+						.withKS(0.4898)
+						.withKV(0.15));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(100));
