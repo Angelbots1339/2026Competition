@@ -64,7 +64,8 @@ public class Constants {
 		public static final double angularDriveKD = 0;
 		public static final double angularDriveKS = 0.12;
 		public static final double angularDriveKV = 0;
-		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(angularDriveKS,
+		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(
+				angularDriveKS,
 				angularDriveKV);
 		public static final TrapezoidProfile.Constraints angularDriveConstraints = new TrapezoidProfile.Constraints(
 				10,
@@ -153,8 +154,11 @@ public class Constants {
 		public static TalonFXConfiguration spinnerConfig = base.clone()
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.Clockwise_Positive)) // for some reason, if we extend config, this
-																			// doesn't get overridden
+						.withInverted(InvertedValue.Clockwise_Positive)) // for some reason, if
+													// we extend
+													// config, this
+													// doesn't get
+													// overridden
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
@@ -165,8 +169,10 @@ public class Constants {
 						.withKS(6));
 
 		public static TalonFXConfiguration indexConfig = base.clone().withMotorOutput(new MotorOutputConfigs()
-				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.CounterClockwise_Positive))
-				.withSlot0(new Slot0Configs().withKP(0.35).withKI(0).withKD(0).withKS(0.5).withKV(0.065));
+				.withNeutralMode(NeutralModeValue.Coast)
+				.withInverted(InvertedValue.CounterClockwise_Positive))
+				.withSlot0(new Slot0Configs().withKP(0.35).withKI(0).withKD(0).withKS(0.5)
+						.withKV(0.065));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(100));
@@ -265,8 +271,9 @@ public class Constants {
 						.withInverted(InvertedValue.CounterClockwise_Positive)
 						.withNeutralMode(NeutralModeValue.Brake))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough diameter of the
-																	// climber
+						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough
+												// diameter of the
+												// climber
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))
@@ -281,5 +288,19 @@ public class Constants {
 						.withKS(0)
 						.withKG(10)
 						.withGravityType(GravityTypeValue.Elevator_Static));
+	}
+
+	public class IndexerConstants {
+		public static final int IndexerMotorPort = 26;
+		public static final TalonFXConfiguration IndexerMotorConfig = new TalonFXConfiguration()
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withStatorCurrentLimit(80)
+						.withSupplyCurrentLowerTime(50)
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(true))
+				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1))
+				.withMotorOutput(new MotorOutputConfigs()
+						.withInverted(InvertedValue.Clockwise_Positive)
+						.withNeutralMode(NeutralModeValue.Coast));
 	}
 }
