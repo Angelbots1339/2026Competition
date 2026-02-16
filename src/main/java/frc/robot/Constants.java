@@ -177,8 +177,9 @@ public class Constants {
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
-		public static final Angle deployedAngle = Degrees.of(14.0);
-		public static final Angle retractedAngle = Degrees.of(110.0);
+		// angle of COM in CAD
+		public static final Angle MinAngle = Degrees.of(15.6121);
+		public static final Angle MaxAngle = Degrees.of(154.392);
 
 		public static final Angle IntakeAngleTolerence = Degrees.of(1);
 
@@ -212,9 +213,9 @@ public class Constants {
 								// TODO: figure out the software limits
 								.withForwardSoftLimitEnable(false)
 								.withReverseSoftLimitEnable(false)
-								.withForwardSoftLimitThreshold(deployedAngle)
+								.withForwardSoftLimitThreshold(MinAngle)
 								// this may need to change as well
-								.withReverseSoftLimitThreshold(retractedAngle))
+								.withReverseSoftLimitThreshold(MaxAngle))
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
 						.withMotionMagicCruiseVelocity(DegreesPerSecond.of(90))
