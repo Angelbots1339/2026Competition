@@ -188,6 +188,8 @@ public class Constants {
 
 		public static final Angle IntakeAngleTolerence = Degrees.of(1);
 
+		// Recalc:
+		// https://www.reca.lc/arm?armMass=%7B%22s%22%3A5.134%2C%22u%22%3A%22lbs%22%7D&comLength=%7B%22s%22%3A10.203%2C%22u%22%3A%22in%22%7D&currentLimit=%7B%22s%22%3A70%2C%22u%22%3A%22A%22%7D&efficiency=90&endAngle=%7B%22s%22%3A115.558%2C%22u%22%3A%22deg%22%7D&iterationLimit=10000&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%22%7D&ratio=%7B%22magnitude%22%3A18%2C%22ratioType%22%3A%22Reduction%22%7D&startAngle=%7B%22s%22%3A15.5614%2C%22u%22%3A%22deg%22%7D
 		public static final Slot0Configs deploySlot0 = new Slot0Configs()
 				.withKP(35)
 				.withKI(0)
