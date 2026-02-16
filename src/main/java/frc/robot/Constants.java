@@ -175,6 +175,11 @@ public class Constants {
 		public static final int intakeMotorId = 22;
 		public static final int deployMotorId = 24;
 
+		public static final Angle DeployedAngle = Degrees.of(2);
+		public static final double IntakeVelocity = 5;
+		public static final double IntakeVoltage = 2;
+		public static final Angle RetractedAngle = Degrees.of(154);
+
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
 		// angle of COM in CAD
@@ -210,11 +215,9 @@ public class Constants {
 								.withSupplyCurrentLimitEnable(true))
 				.withSoftwareLimitSwitch(
 						new SoftwareLimitSwitchConfigs()
-								// TODO: figure out the software limits
 								.withForwardSoftLimitEnable(false)
 								.withReverseSoftLimitEnable(false)
 								.withForwardSoftLimitThreshold(MinAngle)
-								// this may need to change as well
 								.withReverseSoftLimitThreshold(MaxAngle))
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
@@ -230,7 +233,7 @@ public class Constants {
 				.withKS(0)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
-		public static final double intakeWheelGearRatio = 1 * 1;
+		public static final double intakeWheelGearRatio = 18.0 / 12.0;
 
 		public static final TalonFXConfiguration intakeConfigs = new TalonFXConfiguration()
 				.withMotorOutput(

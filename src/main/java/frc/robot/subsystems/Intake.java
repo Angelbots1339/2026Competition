@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.tuning.IntakeTuning;
 import frc.robot.Constants.IntakeConstants;
 
-@Logged()
+@Logged
 public class Intake extends SubsystemBase {
 	private TalonFX intakeMotor = new TalonFX(IntakeConstants.intakeMotorId, "*");
 	private TalonFX deployMotor = new TalonFX(IntakeConstants.deployMotorId, "*");
@@ -30,7 +30,7 @@ public class Intake extends SubsystemBase {
 		deployMotor.getConfigurator().apply(IntakeConstants.deployConfigs);
 		intakeMotor.getConfigurator().apply(IntakeConstants.intakeConfigs);
 
-		deployMotor.setPosition(0);
+		deployMotor.setPosition(IntakeConstants.MaxAngle);
 	}
 
 	public void setIntakeAngle(Angle angle) {
