@@ -37,7 +37,7 @@ public class Shoot extends Command {
 		ShooterParams params = ShooterRegression.getShotParams(swerve);
 		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
 
-		shooter.setRPS(params.shooterRPS());
+		shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 
 		if (shooter.atSetpoint() && runIndex.get())
 			shooter.runIndexVelocity(20);
