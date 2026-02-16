@@ -74,12 +74,16 @@ public class ShooterTuning {
 			shooter.disable();
 		}));
 
-		clearData.onTrue(Commands.runOnce(() -> ShooterRegression.shotRPSMap.clear()));
+		clearData.onTrue(Commands.runOnce(() -> {
+			ShooterRegression.shotRPSMap.clear();
+			regressionData.clear();
+		}));
+
 		addData.onTrue(Commands.runOnce(() -> {
 			double[] data = { distance.in(Meters), shooterTargetRPS, spinnerTargetRPS };
 			regressionData.add(data);
 			ShooterRegression.shotRPSMap.put(distance.in(Meters),
-					new double[] { shooterTargetRPS, shooterTargetRPS });
+					new double[] { shooterTargetRPS, spinnerTargetRPS });
 			DogLog.log("regression data/" + regressionData.size(), data);
 		}));
 	}
