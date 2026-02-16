@@ -132,9 +132,9 @@ public class Constants {
 		public static final double shootRPS = 41.5;
 		public static final double rpsTolerence = 1;
 
-		public static TalonFXConfiguration config = new TalonFXConfiguration()
+		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(70))
+						.withSupplyCurrentLimit(Amps.of(30))
 						.withStatorCurrentLimit(Amps.of(80))
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
@@ -151,8 +151,8 @@ public class Constants {
 
 		public static TalonFXConfiguration spinnerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(70))
-						.withStatorCurrentLimit(Amps.of(80))
+						.withSupplyCurrentLimit(Amps.of(15))
+						.withStatorCurrentLimit(Amps.of(50))
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
@@ -169,8 +169,8 @@ public class Constants {
 
 		public static TalonFXConfiguration indexConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(70))
-						.withStatorCurrentLimit(Amps.of(50))
+						.withSupplyCurrentLimit(Amps.of(15))
+						.withStatorCurrentLimit(Amps.of(30))
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()

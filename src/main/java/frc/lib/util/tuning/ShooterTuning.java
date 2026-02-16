@@ -50,7 +50,7 @@ public class ShooterTuning {
 		DogLog.tunable("Shooter/voltage", 0.0, target -> voltage = target);
 		DogLog.tunable("Shooter/index velocity", indexrps, target -> indexrps = target);
 		DogLog.tunable("Shooter/distance", indexrps, target -> distance = Inches.of(target));
-		TuningManager.createPID("Shooter/leader", shooter.leader, ShooterConstants.config);
+		TuningManager.createPID("Shooter/leader", shooter.leader, ShooterConstants.ShooterConfig);
 		TuningManager.createPID("Shooter/spinner", shooter.spinner, ShooterConstants.spinnerConfig);
 		TuningManager.createPID("Shooter/Indexer", shooter.indexMotor, ShooterConstants.indexConfig);
 
