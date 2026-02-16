@@ -16,7 +16,8 @@ public class Shoot extends Command {
 	private Supplier<Double> y;
 	private Supplier<Boolean> runIndex;
 
-	public Shoot(Swerve swerve, Shooter shooter, Supplier<Double> x, Supplier<Double> y, Supplier<Boolean> runIndex) {
+	public Shoot(Swerve swerve, Shooter shooter, Supplier<Double> x, Supplier<Double> y,
+			Supplier<Boolean> runIndex) {
 		this.swerve = swerve;
 		this.shooter = shooter;
 
@@ -39,9 +40,10 @@ public class Shoot extends Command {
 		shooter.setRPS(params.shooterRPS());
 
 		if (shooter.atSetpoint() && runIndex.get())
-			shooter.runIndexVelocity(2);
+			shooter.runIndexVelocity(20);
 
-		if (!runIndex.get() || swerve.getRotationError().minus(params.angle()).getMeasure().gt(params.maxAngleError()))
+		if (!runIndex.get() || swerve.getRotationError().minus(params.angle()).getMeasure()
+				.gt(params.maxAngleError()))
 			shooter.disableIndex();
 	}
 

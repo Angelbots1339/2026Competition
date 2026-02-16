@@ -26,6 +26,7 @@ import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -53,7 +54,7 @@ public class RobotContainer {
 
 	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
 	@Logged(name = "Point Drive")
-	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
+	private Trigger shoot = new Trigger(() -> driver.getXButton());
 
 	@Logged(name = "Bump Drive")
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
@@ -86,8 +87,7 @@ public class RobotContainer {
 
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
-		pointDrive.whileTrue(
-				swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
+		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
