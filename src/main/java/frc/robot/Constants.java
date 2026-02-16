@@ -101,6 +101,7 @@ public class Constants {
 			Regression,
 			Intake,
 			Climber,
+			Indexer,
 		};
 
 		public class Swerve {
