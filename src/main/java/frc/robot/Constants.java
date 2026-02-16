@@ -87,8 +87,8 @@ public class Constants {
 		public static final double maxUsableRange = 4.0;
 
 		// current limelight location
-		// forward = 0.110m
-		// top = 0.618m
+		// forward = 0.016m
+		// top = 0.675m
 		// pitch = 12deg
 
 		public static double calcStdDev(double metersFromTarget) {
