@@ -175,16 +175,16 @@ public class Constants {
 		public static final int intakeMotorId = 22;
 		public static final int deployMotorId = 24;
 
-		public static final Angle DeployedAngle = Degrees.of(2);
+		public static final Angle DeployedAngle = Degrees.of(17);
 		public static final double IntakeVelocity = 5;
 		public static final double IntakeVoltage = 2;
-		public static final Angle RetractedAngle = Degrees.of(154);
+		public static final Angle RetractedAngle = Degrees.of(115);
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
 		// angle of COM in CAD
-		public static final Angle MinAngle = Degrees.of(15.6121);
-		public static final Angle MaxAngle = Degrees.of(154.392);
+		public static final Angle MinAngle = Degrees.of(15.5614);
+		public static final Angle MaxAngle = Degrees.of(115.558);
 
 		public static final Angle IntakeAngleTolerence = Degrees.of(1);
 
