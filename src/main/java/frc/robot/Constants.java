@@ -298,9 +298,17 @@ public class Constants {
 						.withSupplyCurrentLowerTime(50)
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
-				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(24.0 / 24.0))
 				.withMotorOutput(new MotorOutputConfigs()
-						.withInverted(InvertedValue.Clockwise_Positive)
-						.withNeutralMode(NeutralModeValue.Coast));
+						.withInverted(InvertedValue.CounterClockwise_Positive)
+						.withNeutralMode(NeutralModeValue.Coast))
+				.withSlot0(new Slot0Configs()
+						.withKP(0)
+						.withKI(0)
+						.withKD(0)
+						.withKS(0)
+						.withKV(0)
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign));
 	}
 }
