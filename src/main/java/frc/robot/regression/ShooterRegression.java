@@ -16,15 +16,16 @@ import frc.lib.util.FieldUtil;
 import frc.robot.subsystems.Swerve;
 
 public class ShooterRegression {
-	// TODO: actually fill data
 	public static final double[][] shotRPSData = {
-			// distance (m), shooter rps, spinner rps, TOF
-			{ Inches.of(136).in(Meters), 48, 48 },
-			{ Inches.of(120).in(Meters), 44, 44 },
-			{ Inches.of(96).in(Meters), 41.5, 41.5 },
-			{ Inches.of(83).in(Meters), 38.5, 38.5 },
-			{ Inches.of(65).in(Meters), 36.5, 36.5 },
-			{ Inches.of(35).in(Meters), 35, 35 },
+			// distance (m), shooter rps, spinner rps
+			// -0.038 is the offset of the shooter front from center of robot
+			// original distance is the distance from front of shooter to hub wall
+			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(49)).in(Meters), 41, 23 },
+			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(60)).in(Meters), 41, 25 },
+			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(85)).in(Meters), 37, 40 },
+			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(104)).in(Meters), 40, 39 },
+			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(136)).in(Meters), 43, 43 },
+			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(170)).in(Meters), 45, 45 },
 	};
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
