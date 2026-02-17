@@ -84,7 +84,7 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> false));
+		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
 		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
