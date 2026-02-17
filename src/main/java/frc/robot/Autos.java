@@ -3,6 +3,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Meters;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import choreo.auto.AutoFactory;
 import choreo.trajectory.SwerveSample;
@@ -15,10 +16,10 @@ import frc.robot.subsystems.Swerve;
 
 public class Autos {
 	private AutoFactory factory;
-	private Swerve swerve;
+
+	Supplier<Command> shoot = null;
 
 	public Autos(Swerve swerve) {
-		this.swerve = swerve;
 		factory = new AutoFactory(
 				swerve::getPose, // A function that returns the current field-relative Pose2d of the robot
 				swerve::resetPose, // A function that receives a field-relative Pose2d to reset the robot's
@@ -33,8 +34,12 @@ public class Autos {
 		Command intakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
 		Command intakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
 
+		shoot = () -> swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)
+				.withTimeout(2);
+
 		factory.bind("IntakeStart", intakeOpen);
 		factory.bind("IntakeStop", intakeClose);
+		factory.bind("UseVision", Commands.runOnce(() -> swerve.enableVision()));
 	}
 
 	public Command bumpTest() {
@@ -44,7 +49,7 @@ public class Autos {
 				Commands.sequence(
 						bumptest.resetOdometry(),
 						bumptest.cmd(),
-						swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)));
+						shoot.get()));
 
 		return routine.cmd();
 	}
@@ -58,25 +63,26 @@ public class Autos {
 				Commands.sequence(
 						hubToDepotShoot.resetOdometry(),
 						hubToDepotShoot.cmd(),
+						shoot.get(),
 						depotShoottoTower.cmd()));
 
 		return routine.cmd();
 	}
 
 	public Command hubDepotOutpostTowerAuto() {
-		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
+		final var routine = factory.newRoutine("Hub Depot Tower");
 		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
-		final var depotShoottoOutpost = routine.trajectory(ChoreoTraj.DepotShoottoOutpost.name());
-		final var outpostToShoot = routine.trajectory(ChoreoTraj.OutposttoShoot.name());
-		final var outpostShoottoTower = routine.trajectory(ChoreoTraj.OutpostShoottoTower.name());
+		final var depotShootToOutpostShoot = routine.trajectory(ChoreoTraj.DepotShootOutpostShoot.name());
+		final var outpostShootToTower = routine.trajectory(ChoreoTraj.OutpostShoottoTower.name());
 
 		routine.active().onTrue(
 				Commands.sequence(
 						hubToDepotShoot.resetOdometry(),
 						hubToDepotShoot.cmd(),
-						depotShoottoOutpost.cmd(),
-						outpostToShoot.cmd(),
-						outpostShoottoTower.cmd()));
+						shoot.get(),
+						depotShootToOutpostShoot.cmd(),
+						shoot.get(),
+						outpostShootToTower.cmd()));
 
 		return routine.cmd();
 	}
@@ -84,11 +90,15 @@ public class Autos {
 	public Command leftNeutralAuto() {
 		final var routine = factory.newRoutine("Left Neutral");
 		final var leftNeutralToShoot = routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name());
+		final var leftNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
 
 		routine.active().onTrue(
 				Commands.sequence(
 						leftNeutralToShoot.resetOdometry(),
-						leftNeutralToShoot.cmd()));
+						leftNeutralToShoot.cmd(),
+						shoot.get(),
+						leftNeutral2.cmd(),
+						shoot.get()));
 
 		return routine.cmd();
 	}
@@ -97,11 +107,16 @@ public class Autos {
 		final var routine = factory.newRoutine("Right Neutral");
 		final var rightNeutralToShoot = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name()).getRawTrajectory()));
+		final var rightNeutral2 = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
 
 		routine.active().onTrue(
 				Commands.sequence(
 						rightNeutralToShoot.resetOdometry(),
-						rightNeutralToShoot.cmd()));
+						rightNeutralToShoot.cmd(),
+						shoot.get(),
+						rightNeutral2.cmd(),
+						shoot.get()));
 
 		return routine.cmd();
 	}

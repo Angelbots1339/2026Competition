@@ -35,8 +35,8 @@ public class Shooter extends SubsystemBase {
 
 	/** Creates a new Shooter. */
 	public Shooter() {
-		leader.getConfigurator().apply(ShooterConstants.config);
-		follower.getConfigurator().apply(ShooterConstants.config);
+		leader.getConfigurator().apply(ShooterConstants.ShooterConfig);
+		follower.getConfigurator().apply(ShooterConstants.ShooterConfig);
 		spinner.getConfigurator().apply(ShooterConstants.spinnerConfig);
 		indexMotor.getConfigurator().apply(ShooterConstants.indexConfig);
 
