@@ -44,7 +44,7 @@ public class RobotContainer {
 			* RobotConstants.maxRot.in(RadiansPerSecond);
 
 	@Logged(importance = Importance.CRITICAL)
-	// private Swerve swerve = TunerConstants.swerve;
+	private Swerve swerve = TunerConstants.swerve;
 	// private Intake intake = new Intake();
 	private Shooter shooter = new Shooter();
 	// private Climber climber = new Climber();
@@ -84,10 +84,8 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		// swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () ->
-		// true));
-		//
-		// resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
+		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> false));
+		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		// pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
 		// shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 		// bumpDrive.whileTrue(
