@@ -44,7 +44,7 @@ public class RobotContainer {
 			* RobotConstants.maxRot.in(RadiansPerSecond);
 
 	@Logged(importance = Importance.CRITICAL)
-	// private Swerve swerve = TunerConstants.swerve;
+	private Swerve swerve = TunerConstants.swerve;
 	// private Intake intake = new Intake();
 	private Shooter shooter = new Shooter();
 	// private Climber climber = new Climber();
@@ -53,6 +53,7 @@ public class RobotContainer {
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
 	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
+
 	@Logged(name = "Point Drive")
 	private Trigger shoot = new Trigger(() -> driver.getXButton());
 
@@ -73,7 +74,6 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-
 		// autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
 		// autoChooser.addCmd("Hub Depot Outpost Tower",
 		// autos::hubDepotOutpostTowerAuto);
@@ -84,32 +84,27 @@ public class RobotContainer {
 	}
 
 	private void configureBindings() {
-		// swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () ->
-		// true));
-		//
-		// resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
-		// pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
-		// shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
-		// bumpDrive.whileTrue(
-		// Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () ->
-		// swerve.getClosest15(),
-		// () -> true),
-		// swerve));
-		//
-		// snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
-		// leftX, () -> {
-		// ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(
-		// swerve.getRobotRelativeSpeeds(),
-		// swerve.getYaw());
-		// // prevent turning when at very low speeds
-		// if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
-		// return swerve.getYaw();
-		// }
-		// return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
-		// speeds.vxMetersPerSecond));
-		// }, () -> true), swerve));
-		// swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () ->
-		// true));
+		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
+		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
+		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
+		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		bumpDrive.whileTrue(
+				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
+						() -> true),
+						swerve));
+
+		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
+				leftX, () -> {
+					ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+							swerve.getRobotRelativeSpeeds(),
+							swerve.getYaw());
+					// prevent turning when at very low speeds
+					if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
+						return swerve.getYaw();
+					}
+					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
+							speeds.vxMetersPerSecond));
+				}, () -> true), swerve));
 		// deployIntake.onTrue(Commands.run(() -> {
 		// intake.setWristAngle(IntakeConstants.deployedAngle);
 		// intake.setIntakeVelocity(IntakeConstants.intakeVelocity);
@@ -155,7 +150,7 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		TuningManager.init(null, shooter, null, null);
+		TuningManager.init(swerve, shooter, null, null);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")

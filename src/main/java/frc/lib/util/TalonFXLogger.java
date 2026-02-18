@@ -9,19 +9,20 @@ import edu.wpi.first.epilogue.logging.ClassSpecificLogger;
 import edu.wpi.first.epilogue.logging.EpilogueBackend;
 
 @CustomLoggerFor(TalonFX.class)
-public class TalonFXLogger extends ClassSpecificLogger<TalonFX>{
-    public TalonFXLogger() {
-        super(TalonFX.class);
-    }
+public class TalonFXLogger extends ClassSpecificLogger<TalonFX> {
+	public TalonFXLogger() {
+		super(TalonFX.class);
+	}
 
-    @Override
-    public void update(EpilogueBackend backend, TalonFX motor) {
-        if (Epilogue.shouldLog(Logged.Importance.DEBUG)) {
-            backend.log("CanID", motor.getDeviceID());
-            backend.log("Applied Voltage (V)", motor.getMotorVoltage().getValueAsDouble());
-            backend.log("Current Velocity (rps)", motor.getVelocity().getValueAsDouble());
-            backend.log("Encoder Position (Rotations)", motor.getPosition().getValueAsDouble());
-            backend.log("Current (A)", motor.getStatorCurrent().getValueAsDouble());
-        }
-    }
+	@Override
+	public void update(EpilogueBackend backend, TalonFX motor) {
+		if (Epilogue.shouldLog(Logged.Importance.DEBUG)) {
+			backend.log("CanID", motor.getDeviceID());
+			backend.log("Applied Voltage (V)", motor.getMotorVoltage().getValueAsDouble());
+			backend.log("Current Velocity (rps)", motor.getVelocity().getValueAsDouble());
+			backend.log("Encoder Position (Rotations)", motor.getPosition().getValueAsDouble());
+			backend.log("Stator Current (A)", motor.getStatorCurrent().getValueAsDouble());
+			backend.log("Supply Current (A)", motor.getSupplyCurrent().getValueAsDouble());
+		}
+	}
 }
