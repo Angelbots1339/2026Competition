@@ -42,9 +42,10 @@ public class Shoot extends Command {
 		if (shooter.atSetpoint() && runIndex.get())
 			shooter.runIndexVelocity(20);
 
-		if (!runIndex.get() || swerve.getRotationError().minus(params.angle()).getMeasure()
-				.gt(params.maxAngleError()))
-			shooter.disableIndex();
+		// if (!runIndex.get() ||
+		// swerve.getRotationError().minus(params.angle()).getMeasure()
+		// .gt(params.maxAngleError()))
+		// shooter.disableIndex();
 	}
 
 	@Override
