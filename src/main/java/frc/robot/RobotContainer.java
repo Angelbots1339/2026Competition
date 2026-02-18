@@ -55,6 +55,7 @@ public class RobotContainer {
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
 	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
+
 	@Logged(name = "Point Drive")
 	private Trigger shoot = new Trigger(() -> driver.getXButton());
 
@@ -74,7 +75,6 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-
 		// autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
 		// autoChooser.addCmd("Hub Depot Outpost Tower",
 		// autos::hubDepotOutpostTowerAuto);
@@ -86,7 +86,6 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
-
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
 		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));

@@ -26,6 +26,7 @@ public class ShooterRegression {
 			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(104)).in(Meters), 40, 39 },
 			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(136)).in(Meters), 43, 43 },
 			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(170)).in(Meters), 45, 45 },
+			{ 1.48, 41, 16 },
 	};
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();

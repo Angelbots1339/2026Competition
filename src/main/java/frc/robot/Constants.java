@@ -133,6 +133,7 @@ public class Constants {
 		public static final int IndexPort = 36;
 
 		public static final double shootRPS = 41.5;
+		public static final double indexerRPS = 20.0;
 		public static final double rpsTolerence = 1;
 
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
@@ -147,7 +148,7 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(10)
+						.withKP(8)
 						.withKI(3)
 						.withKV(0)
 						.withKS(10));
@@ -165,8 +166,8 @@ public class Constants {
 						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(9)
-						.withKI(6)
+						.withKP(7)
+						.withKI(3)
 						.withKV(0)
 						.withKS(6));
 
@@ -298,8 +299,8 @@ public class Constants {
 						.withNeutralMode(NeutralModeValue.Brake))
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough
-												// diameter of the
-												// climber
+				// diameter of the
+				// climber
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))

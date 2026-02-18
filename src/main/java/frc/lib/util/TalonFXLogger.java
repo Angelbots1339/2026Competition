@@ -19,7 +19,8 @@ public class TalonFXLogger extends ClassSpecificLogger<TalonFX> {
 		if (Epilogue.shouldLog(Logged.Importance.DEBUG)) {
 			backend.log("CanID", motor.getDeviceID());
 			backend.log("Applied Voltage (V)", motor.getMotorVoltage().getValueAsDouble());
-			backend.log("Current (A)", motor.getStatorCurrent().getValueAsDouble());
+			backend.log("Stator Current (A)", motor.getStatorCurrent().getValueAsDouble());
+			backend.log("Supply Current (A)", motor.getSupplyCurrent().getValueAsDouble());
 			backend.log("Current Acceleration (rps/s)", motor.getAcceleration().getValueAsDouble());
 			backend.log("Current Velocity (rps)", motor.getVelocity().getValueAsDouble());
 			backend.log("Encoder Position (Rotations)", motor.getPosition().getValueAsDouble());
