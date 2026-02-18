@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.commands.Shoot;
 import frc.robot.regression.ShooterRegression;
@@ -35,6 +36,7 @@ public class RegressionTuning {
 
 	private static Trigger addData = baseTrigger.and(() -> tester.getBButton());
 	private static Trigger clearData = baseTrigger.and(() -> tester.getStartButton());
+	private static Trigger drive = baseTrigger.and(() -> tester.getRightTriggerAxis() > 0.2);
 
 	private static Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-tester.getLeftY(), true)
 			* RobotConstants.maxSpeed.in(MetersPerSecond);
@@ -51,14 +53,14 @@ public class RegressionTuning {
 
 		pidtuneFOC.whileTrue(Commands.run(() -> {
 			shooter.setRPS(shooterRPS, spinnerRPS);
-			shooter.runIndexVelocity(2);
+			shooter.runIndexVelocity(ShooterConstants.indexerRPS);
 		}).handleInterrupt(() -> {
 			shooter.disable();
 		}));
 
-		regression.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true))
-				.whileFalse(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(),
-						() -> true));
+		regression.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		drive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(),
+				() -> true));
 
 		clearData.onTrue(Commands.runOnce(() -> {
 			ShooterRegression.shotRPSMap.clear();

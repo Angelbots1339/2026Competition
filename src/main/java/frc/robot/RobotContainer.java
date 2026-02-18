@@ -89,23 +89,22 @@ public class RobotContainer {
 		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
 		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 		bumpDrive.whileTrue(
-			Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () ->
-				swerve.getClosest15(),
-			() -> true),
-				swerve));
+				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
+						() -> true),
+						swerve));
 
 		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
-			leftX, () -> {
-				ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(
-					swerve.getRobotRelativeSpeeds(),
-					swerve.getYaw());
-				// prevent turning when at very low speeds
-				if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
-					return swerve.getYaw();
-				}
-				return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
-					speeds.vxMetersPerSecond));
-			}, () -> true), swerve));
+				leftX, () -> {
+					ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+							swerve.getRobotRelativeSpeeds(),
+							swerve.getYaw());
+					// prevent turning when at very low speeds
+					if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
+						return swerve.getYaw();
+					}
+					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
+							speeds.vxMetersPerSecond));
+				}, () -> true), swerve));
 		// deployIntake.onTrue(Commands.run(() -> {
 		// intake.setWristAngle(IntakeConstants.deployedAngle);
 		// intake.setIntakeVelocity(IntakeConstants.intakeVelocity);
@@ -151,7 +150,7 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		TuningManager.init(null, shooter, null, null);
+		TuningManager.init(swerve, shooter, null, null);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
