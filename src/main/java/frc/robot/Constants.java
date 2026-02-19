@@ -284,9 +284,7 @@ public class Constants {
 						.withInverted(InvertedValue.CounterClockwise_Positive)
 						.withNeutralMode(NeutralModeValue.Brake))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(27)) // 1/20 is a tested roough
-				// diameter of the
-				// climber
+						.withSensorToMechanismRatio(3 * 3 * 3 * PitchDiameter.times(Math.PI).in(Meters)))
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))
