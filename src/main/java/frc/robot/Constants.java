@@ -184,7 +184,6 @@ public class Constants {
 						.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(2))
-				// TODO: Retune for new mechanism ratio
 				.withSlot0(new Slot0Configs()
 						.withKP(0.4)
 						.withKI(0)
@@ -201,8 +200,7 @@ public class Constants {
 		public static final int deployMotorId = 24;
 
 		public static final Angle DeployedAngle = Degrees.of(27);
-		public static final double IntakeVelocity = 5;
-		public static final double IntakeVoltage = 2;
+		public static final double IntakeVoltage = 5;
 		public static final Angle RetractedAngle = Degrees.of(115);
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
