@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -22,9 +21,8 @@ import frc.robot.Constants.IntakeConstants;
 
 @Logged
 public class Intake extends SubsystemBase {
-	private TalonFX intakeMotor = new TalonFX(IntakeConstants.intakeMotorId, "*");
-	private TalonFX deployMotor = new TalonFX(IntakeConstants.deployMotorId, "*");
-
+	private TalonFX intakeMotor = new TalonFX(IntakeConstants.intakeMotorId);
+	private TalonFX deployMotor = new TalonFX(IntakeConstants.deployMotorId);
 	private Angle targetAngle = Degrees.zero();
 
 	public Intake() {
