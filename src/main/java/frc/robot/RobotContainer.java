@@ -25,7 +25,6 @@ import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
@@ -65,7 +64,8 @@ public class RobotContainer {
 	@Logged(name = "Snake Drive")
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
 
-	private Trigger deployIntake = new Trigger(() -> driver.getLeftBumperButton());
+	@Logged(name = "Run Intake")
+	private Trigger runIntake = new Trigger(() -> driver.getLeftBumperButton());
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
@@ -106,14 +106,9 @@ public class RobotContainer {
 					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
-		deployIntake.onTrue(Commands.run(() -> {
-			intake.setIntakeMotionAngle(IntakeConstants.DeployedAngle);
-			intake.setIntakeVoltage(IntakeConstants.IntakeVoltage);
-		}, intake))
-				.onFalse(Commands.run(() -> {
-					intake.setIntakeAngle(IntakeConstants.RetractedAngle);
-					intake.setIntakeVelocity(0);
-				}, intake));
+
+		runIntake.whileTrue(intake.runIntake())
+				.onFalse(intake.stopIntake());
 	}
 
 	public void configureControllerAlerts() {
@@ -143,6 +138,7 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
+		intake.setDefaultCommand(intake.deploy());
 	}
 
 	@Logged(name = "Current auto")
