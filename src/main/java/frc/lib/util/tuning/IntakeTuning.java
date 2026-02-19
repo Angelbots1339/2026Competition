@@ -62,16 +62,14 @@ public class IntakeTuning {
 		DogLog.tunable(key + "/kA", config.Slot0.kA,
 				k -> motor.getConfigurator().apply(config.Slot0.withKA(k)));
 		DogLog.tunable(key + "/vel",
-				RotationsPerSecond.of(config.MotionMagic.MotionMagicCruiseVelocity)
-						.in(DegreesPerSecond),
+				config.MotionMagic.MotionMagicCruiseVelocity,
 				k -> motor.getConfigurator()
 						.apply(config.MotionMagic.withMotionMagicCruiseVelocity(
-								DegreesPerSecond.of(k))));
+								RotationsPerSecond.of(k))));
 		DogLog.tunable(key + "/acc",
-				RotationsPerSecondPerSecond.of(config.MotionMagic.MotionMagicAcceleration)
-						.in(DegreesPerSecondPerSecond),
+				config.MotionMagic.MotionMagicAcceleration,
 				k -> motor.getConfigurator()
 						.apply(config.MotionMagic.withMotionMagicAcceleration(
-								DegreesPerSecondPerSecond.of(k))));
+								RotationsPerSecondPerSecond.of(k))));
 	}
 }
