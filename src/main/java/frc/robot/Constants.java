@@ -266,7 +266,7 @@ public class Constants {
 
 	public class ClimberConstants {
 		public static final int ClimberMotorPort = 28;
-		public static final Distance PitchDiameter = Inches.of(0.5);
+		public static final Distance PitchDiameter = Inches.of(1.281);
 		public static final Distance MaxDistance = Centimeters.of(17);
 
 		public static final Distance ClimbPosition = Centimeters.of(0);
@@ -284,7 +284,7 @@ public class Constants {
 						.withInverted(InvertedValue.CounterClockwise_Positive)
 						.withNeutralMode(NeutralModeValue.Brake))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough
+						.withSensorToMechanismRatio(27)) // 1/20 is a tested roough
 				// diameter of the
 				// climber
 				.withCurrentLimits(new CurrentLimitsConfigs()
@@ -295,11 +295,11 @@ public class Constants {
 				.withSlot0(new Slot0Configs()
 						// TODO do motion magic later
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-						.withKP(120)
+						.withKP(0)
 						.withKI(0)
 						.withKD(0)
 						.withKS(0)
-						.withKG(10)
+						.withKG(0)
 						.withGravityType(GravityTypeValue.Elevator_Static));
 	}
 }
