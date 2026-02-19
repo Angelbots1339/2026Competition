@@ -1,6 +1,10 @@
 package frc.lib.util.tuning;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -22,6 +26,7 @@ public class IntakeTuning {
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Intake);
 	private static Trigger runIntake = baseTrigger.and(() -> tester.getAButton());
 	private static Trigger pidPosition = baseTrigger.and(() -> tester.getBButton());
+	private static Trigger setPosition = baseTrigger.and(() -> tester.getXButton());
 
 	private static double targetVoltage = 0.0;
 	private static Angle targetAngle = Degrees.of(0);
@@ -37,13 +42,36 @@ public class IntakeTuning {
 		pidPosition.whileTrue(
 				Commands.run(() -> intake.setIntakeAngle(targetAngle))
 						.handleInterrupt(() -> intake.disable()));
+
+		setPosition.onTrue(Commands.runOnce(() -> intake.resetPosition(targetAngle)));
 	}
 
 	public static void logPID(String key, TalonFX motor, TalonFXConfiguration config) {
-		DogLog.tunable(key + "/kP", config.Slot0.kP, k -> motor.getConfigurator().apply(config.Slot0.withKP(k)));
-		DogLog.tunable(key + "/kI", config.Slot0.kI, k -> motor.getConfigurator().apply(config.Slot0.withKI(k)));
-		DogLog.tunable(key + "/kD", config.Slot0.kD, k -> motor.getConfigurator().apply(config.Slot0.withKD(k)));
-		DogLog.tunable(key + "/kS", config.Slot0.kS, k -> motor.getConfigurator().apply(config.Slot0.withKS(k)));
-		DogLog.tunable(key + "/kG", config.Slot0.kG, k -> motor.getConfigurator().apply(config.Slot0.withKG(k)));
+		DogLog.tunable(key + "/kP", config.Slot0.kP,
+				k -> motor.getConfigurator().apply(config.Slot0.withKP(k)));
+		DogLog.tunable(key + "/kI", config.Slot0.kI,
+				k -> motor.getConfigurator().apply(config.Slot0.withKI(k)));
+		DogLog.tunable(key + "/kD", config.Slot0.kD,
+				k -> motor.getConfigurator().apply(config.Slot0.withKD(k)));
+		DogLog.tunable(key + "/kS", config.Slot0.kS,
+				k -> motor.getConfigurator().apply(config.Slot0.withKS(k)));
+		DogLog.tunable(key + "/kG", config.Slot0.kG,
+				k -> motor.getConfigurator().apply(config.Slot0.withKG(k)));
+		DogLog.tunable(key + "/kA", config.MotionMagic.MotionMagicExpo_kA,
+				k -> motor.getConfigurator().apply(config.MotionMagic.withMotionMagicExpo_kA(k)));
+		DogLog.tunable(key + "/kV", config.MotionMagic.MotionMagicExpo_kV,
+				k -> motor.getConfigurator().apply(config.MotionMagic.withMotionMagicExpo_kV(k)));
+		DogLog.tunable(key + "/vel",
+				RotationsPerSecond.of(config.MotionMagic.MotionMagicCruiseVelocity)
+						.in(DegreesPerSecond),
+				k -> motor.getConfigurator()
+						.apply(config.MotionMagic.withMotionMagicCruiseVelocity(
+								DegreesPerSecond.of(k))));
+		DogLog.tunable(key + "/acc",
+				RotationsPerSecondPerSecond.of(config.MotionMagic.MotionMagicAcceleration)
+						.in(DegreesPerSecondPerSecond),
+				k -> motor.getConfigurator()
+						.apply(config.MotionMagic.withMotionMagicAcceleration(
+								DegreesPerSecondPerSecond.of(k))));
 	}
 }

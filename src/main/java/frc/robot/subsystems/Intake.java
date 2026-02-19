@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -14,29 +16,58 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.tuning.IntakeTuning;
 import frc.robot.Constants.IntakeConstants;
 
-@Logged()
+@Logged
 public class Intake extends SubsystemBase {
-	private TalonFX intakeMotor = new TalonFX(IntakeConstants.intakeMotorId);
+	private TalonFX intakeMotor = new TalonFX(IntakeConstants.intakeMotorId, "*");
 	private TalonFX deployMotor = new TalonFX(IntakeConstants.deployMotorId);
-
 	private Angle targetAngle = Degrees.zero();
 
 	public Intake() {
 		deployMotor.getConfigurator().apply(IntakeConstants.deployConfigs);
 		intakeMotor.getConfigurator().apply(IntakeConstants.intakeConfigs);
+
+		deployMotor.setPosition(IntakeConstants.MaxAngle);
+	}
+
+	public Command deploy() {
+		return run(() -> setIntakeAngle(IntakeConstants.DeployedAngle));
+	}
+
+	public Command retract() {
+		return run(() -> setIntakeAngle(IntakeConstants.RetractedAngle));
+	}
+
+	public Command runIntake() {
+		return run(() -> {
+			setIntakeAngle(IntakeConstants.DeployedAngle);
+			setIntakeVoltage(IntakeConstants.IntakeVoltage);
+		});
+	}
+
+	public Command stopIntake() {
+		return run(() -> setIntakeVoltage(0));
 	}
 
 	public void setIntakeAngle(Angle angle) {
 		targetAngle = angle;
-		deployMotor.setControl(new PositionVoltage(angle));
+		deployMotor.setControl(new MotionMagicVoltage(angle));
 	}
 
-	public double getIntakeAngle() {
-		return deployMotor.getPosition().getValue().in(Degrees);
+	public Angle getIntakeAngle() {
+		return deployMotor.getPosition().getValue();
+	}
+
+	public double getIntakeAngleDegrees() {
+		return getIntakeAngle().in(Degrees);
+	}
+
+	public boolean isAtSetpoint() {
+		return getIntakeAngle().isNear(targetAngle, IntakeConstants.IntakeAngleTolerence);
 	}
 
 	public void setIntakeVelocity(double Velocity) {
@@ -52,6 +83,10 @@ public class Intake extends SubsystemBase {
 		deployMotor.setControl(new NeutralOut());
 	}
 
+	public void resetPosition(Angle angle) {
+		deployMotor.setPosition(angle);
+	}
+
 	public void logTuning() {
 		IntakeTuning.logPID("Intake/Deploy PID", deployMotor, IntakeConstants.deployConfigs);
 	}
@@ -59,4 +94,5 @@ public class Intake extends SubsystemBase {
 	@Override
 	public void periodic() {
 	}
+
 }

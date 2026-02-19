@@ -3,14 +3,19 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -179,7 +184,6 @@ public class Constants {
 						.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(2))
-				// TODO: Retune for new mechanism ratio
 				.withSlot0(new Slot0Configs()
 						.withKP(0.4)
 						.withKI(0)
@@ -192,19 +196,34 @@ public class Constants {
 	}
 
 	public class IntakeConstants {
-		public static final int intakeMotorId = 8;
-		public static final int deployMotorId = 9;
+		public static final int intakeMotorId = 22;
+		public static final int deployMotorId = 24;
 
-		public static final double deployIntakeGearRatio = 32.0 / 16.0;
+		public static final Angle DeployedAngle = Degrees.of(27);
+		public static final double IntakeVoltage = 5;
+		public static final Angle RetractedAngle = Degrees.of(115);
 
+		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
+
+		// angle of COM in CAD
+		// public static final Angle MinAngle = Degrees.of(15.5614);
+		// public static final Angle MaxAngle = Degrees.of(115.558);
+
+		public static final Angle MinAngle = Degrees.of(27);
+		public static final Angle MaxAngle = Degrees.of(115.558);
+
+		public static final Angle IntakeAngleTolerence = Degrees.of(1);
+
+		// Recalc:
+		// https://www.reca.lc/arm?armMass=%7B%22s%22%3A5.134%2C%22u%22%3A%22lbs%22%7D&comLength=%7B%22s%22%3A10.203%2C%22u%22%3A%22in%22%7D&currentLimit=%7B%22s%22%3A70%2C%22u%22%3A%22A%22%7D&efficiency=90&endAngle=%7B%22s%22%3A115.558%2C%22u%22%3A%22deg%22%7D&iterationLimit=10000&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%22%7D&ratio=%7B%22magnitude%22%3A18%2C%22ratioType%22%3A%22Reduction%22%7D&startAngle=%7B%22s%22%3A15.5614%2C%22u%22%3A%22deg%22%7D
 		public static final Slot0Configs deploySlot0 = new Slot0Configs()
-				.withKP(0)
+				.withKP(15)
 				.withKI(0)
 				.withKD(0)
 				.withKV(0)
 				.withKA(0)
-				.withKS(0)
-				.withKG(0)
+				.withKS(0.1)
+				.withKG(0.35)
 				.withGravityType(GravityTypeValue.Arm_Cosine)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
@@ -218,19 +237,20 @@ public class Constants {
 								.withSensorToMechanismRatio(deployIntakeGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(35)
+								.withStatorCurrentLimit(120)
 								.withSupplyCurrentLimit(70)
 								.withStatorCurrentLimitEnable(true)
 								.withSupplyCurrentLimitEnable(true))
 				.withSoftwareLimitSwitch(
 						new SoftwareLimitSwitchConfigs()
-								// TODO: figure out the software limits
-								.withForwardSoftLimitEnable(false)
-								.withReverseSoftLimitEnable(false)
-								.withForwardSoftLimitThreshold(1)
-								// this may need to change as well
-								.withReverseSoftLimitThreshold(0))
-				.withSlot0(deploySlot0);
+								.withForwardSoftLimitEnable(true)
+								.withReverseSoftLimitEnable(true)
+								.withForwardSoftLimitThreshold(MaxAngle)
+								.withReverseSoftLimitThreshold(MinAngle))
+				.withSlot0(deploySlot0)
+				.withMotionMagic(new MotionMagicConfigs()
+						.withMotionMagicCruiseVelocity(RotationsPerSecond.of(12.0))
+						.withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(24.0)));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
 				.withKP(0)
@@ -241,7 +261,7 @@ public class Constants {
 				.withKS(0)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
-		public static final double intakeWheelGearRatio = 1 * 1;
+		public static final double intakeWheelGearRatio = 18.0 / 12.0;
 
 		public static final TalonFXConfiguration intakeConfigs = new TalonFXConfiguration()
 				.withMotorOutput(
@@ -259,9 +279,6 @@ public class Constants {
 								.withSupplyCurrentLimitEnable(true))
 				.withSlot0(deploySlot0);
 
-		public static final double deployedAngle = 0.0;
-		public static final double retractedAngle = 0.0;
-		public static final double intakeVelocity = 0.0;
 	}
 
 	public class ClimberConstants {
