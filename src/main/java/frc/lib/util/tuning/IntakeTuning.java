@@ -61,6 +61,10 @@ public class IntakeTuning {
 				k -> motor.getConfigurator().apply(config.Slot0.withKS(k)));
 		DogLog.tunable(key + "/kG", config.Slot0.kG,
 				k -> motor.getConfigurator().apply(config.Slot0.withKG(k)));
+		DogLog.tunable(key + "/kA", config.MotionMagic.MotionMagicExpo_kA,
+				k -> motor.getConfigurator().apply(config.MotionMagic.withMotionMagicExpo_kA(k)));
+		DogLog.tunable(key + "/kV", config.MotionMagic.MotionMagicExpo_kV,
+				k -> motor.getConfigurator().apply(config.MotionMagic.withMotionMagicExpo_kV(k)));
 		DogLog.tunable(key + "/vel",
 				RotationsPerSecond.of(config.MotionMagic.MotionMagicCruiseVelocity)
 						.in(DegreesPerSecond),
