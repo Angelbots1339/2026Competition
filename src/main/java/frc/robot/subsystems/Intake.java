@@ -21,7 +21,7 @@ import frc.robot.Constants.IntakeConstants;
 
 @Logged
 public class Intake extends SubsystemBase {
-	private TalonFX intakeMotor = new TalonFX(IntakeConstants.intakeMotorId);
+	private TalonFX intakeMotor = new TalonFX(IntakeConstants.intakeMotorId, "*");
 	private TalonFX deployMotor = new TalonFX(IntakeConstants.deployMotorId);
 	private Angle targetAngle = Degrees.zero();
 
@@ -44,6 +44,10 @@ public class Intake extends SubsystemBase {
 
 	public Angle getIntakeAngle() {
 		return deployMotor.getPosition().getValue();
+	}
+
+	public double getIntakeAngleDegrees() {
+		return getIntakeAngle().in(Degrees);
 	}
 
 	public boolean isAtSetpoint() {
