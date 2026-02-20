@@ -29,6 +29,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
@@ -47,7 +48,7 @@ public class RobotContainer {
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
 	private Indexer indexer = new Indexer();
-	// private Intake intake = new Intake();
+	private Intake intake = new Intake();
 	private Shooter shooter = new Shooter();
 
 	@Logged(name = "Reset Gyro")
@@ -64,8 +65,8 @@ public class RobotContainer {
 	@Logged(name = "Snake Drive")
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
 
-	// priate Trigger deployIntake = new Trigger(() ->
-	// driver.getLeftBumperButton());
+	@Logged(name = "Run Intake")
+	private Trigger runIntake = new Trigger(() -> driver.getLeftBumperButton());
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
@@ -106,14 +107,9 @@ public class RobotContainer {
 					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
-		// deployIntake.onTrue(Commands.run(() -> {
-		// intake.setWristAngle(IntakeConstants.deployedAngle);
-		// intake.setIntakeVelocity(IntakeConstants.intakeVelocity);
-		// }, intake))
-		// .onFalse(Commands.run(() -> {
-		// intake.setWristAngle(IntakeConstants.retractedAngle);
-		// intake.setIntakeVelocity(0);
-		// }, intake));
+
+		runIntake.whileTrue(intake.runIntake())
+				.onFalse(intake.stopIntake());
 	}
 
 	public void configureControllerAlerts() {
@@ -143,6 +139,7 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
+		intake.setDefaultCommand(intake.deploy());
 	}
 
 	@Logged(name = "Current auto")
@@ -151,7 +148,7 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		TuningManager.init(swerve, shooter, null, null, indexer);
+		TuningManager.init(swerve, shooter, intake, null, indexer);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
