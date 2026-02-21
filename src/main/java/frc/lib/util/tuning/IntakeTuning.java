@@ -57,21 +57,19 @@ public class IntakeTuning {
 				k -> motor.getConfigurator().apply(config.Slot0.withKS(k)));
 		DogLog.tunable(key + "/kG", config.Slot0.kG,
 				k -> motor.getConfigurator().apply(config.Slot0.withKG(k)));
-		DogLog.tunable(key + "/kA", config.MotionMagic.MotionMagicExpo_kA,
-				k -> motor.getConfigurator().apply(config.MotionMagic.withMotionMagicExpo_kA(k)));
-		DogLog.tunable(key + "/kV", config.MotionMagic.MotionMagicExpo_kV,
-				k -> motor.getConfigurator().apply(config.MotionMagic.withMotionMagicExpo_kV(k)));
+		DogLog.tunable(key + "/kV", config.Slot0.kV,
+				k -> motor.getConfigurator().apply(config.Slot0.withKV(k)));
+		DogLog.tunable(key + "/kA", config.Slot0.kA,
+				k -> motor.getConfigurator().apply(config.Slot0.withKA(k)));
 		DogLog.tunable(key + "/vel",
-				RotationsPerSecond.of(config.MotionMagic.MotionMagicCruiseVelocity)
-						.in(DegreesPerSecond),
+				config.MotionMagic.MotionMagicCruiseVelocity,
 				k -> motor.getConfigurator()
 						.apply(config.MotionMagic.withMotionMagicCruiseVelocity(
-								DegreesPerSecond.of(k))));
+								RotationsPerSecond.of(k))));
 		DogLog.tunable(key + "/acc",
-				RotationsPerSecondPerSecond.of(config.MotionMagic.MotionMagicAcceleration)
-						.in(DegreesPerSecondPerSecond),
+				config.MotionMagic.MotionMagicAcceleration,
 				k -> motor.getConfigurator()
 						.apply(config.MotionMagic.withMotionMagicAcceleration(
-								DegreesPerSecondPerSecond.of(k))));
+								RotationsPerSecondPerSecond.of(k))));
 	}
 }

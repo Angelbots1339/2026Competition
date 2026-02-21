@@ -21,7 +21,7 @@ import frc.robot.Constants.IntakeConstants;
 
 @Logged
 public class Intake extends SubsystemBase {
-	private TalonFX intakeMotor = new TalonFX(IntakeConstants.intakeMotorId, "*");
+	private TalonFX intakeMotor = new TalonFX(IntakeConstants.intakeMotorId);
 	private TalonFX deployMotor = new TalonFX(IntakeConstants.deployMotorId);
 	private Angle targetAngle = Degrees.zero();
 
