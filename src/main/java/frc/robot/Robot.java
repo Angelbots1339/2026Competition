@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import com.pathplanner.lib.commands.PathfindingCommand;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
@@ -29,6 +30,8 @@ public class Robot extends TimedRobot {
 	public Robot() {
 		m_robotContainer = new RobotContainer();
 		PathfindingCommand.warmupCommand().schedule();
+		// doglog log thread takes some time to start up so warm it up
+		DogLog.log("", "");
 
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog());
