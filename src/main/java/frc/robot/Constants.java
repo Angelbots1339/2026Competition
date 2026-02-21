@@ -200,7 +200,7 @@ public class Constants {
 		public static final int deployMotorId = 24;
 
 		public static final Angle DeployedAngle = Degrees.of(27);
-		public static final double IntakeVoltage = 5;
+		public static final double IntakeVoltage = 7;
 		public static final Angle RetractedAngle = Degrees.of(115);
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
@@ -237,7 +237,7 @@ public class Constants {
 								.withSensorToMechanismRatio(deployIntakeGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(20)
+								.withStatorCurrentLimit(40)
 								.withSupplyCurrentLimit(70)
 								.withStatorCurrentLimitEnable(true)
 								.withSupplyCurrentLimitEnable(true))

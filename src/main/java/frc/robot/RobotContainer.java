@@ -67,6 +67,8 @@ public class RobotContainer {
 	@Logged(name = "Run Intake")
 	private Trigger runIntake = new Trigger(() -> driver.getRightTriggerAxis() > 0.2);
 
+	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
+
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
 	// private Autos autos = new Autos(swerve);
@@ -88,7 +90,7 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
-		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		shoot.whileTrue(new Shoot(swerve, shooter, intake, leftY, leftX, () -> true));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
@@ -109,6 +111,8 @@ public class RobotContainer {
 
 		runIntake.whileTrue(intake.runIntake())
 				.onFalse(intake.stopIntake());
+
+		toggleIntakeDeploy.whileTrue(intake.retract());
 	}
 
 	public void configureControllerAlerts() {
