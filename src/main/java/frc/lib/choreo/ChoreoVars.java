@@ -28,7 +28,7 @@ public final class ChoreoVars {
         public static final Pose2d OutpostIntakeStart = new Pose2d(2, 0.721, Rotation2d.fromRadians(3.142));
         public static final Pose2d OutpostShoot = new Pose2d(2.615, 2.73, Rotation2d.fromRadians(0.588));
         public static final Pose2d RightTowerAlign = new Pose2d(1.079, 2.593, Rotation2d.fromRadians(-1.571));
-        public static final Pose2d SecondBumpStart = new Pose2d(5.603, 5.262, Rotation2d.fromRadians(-1.571));
+        public static final Pose2d SecondBumpStart = new Pose2d(5.603, 5.562, Rotation2d.fromRadians(-1.571));
 
         private Poses() {}
     }
