@@ -22,8 +22,10 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.commands.Shoot;
 import frc.robot.regression.ShooterRegression;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Indexer;
 
 /** Add your docs here. */
 public class RegressionTuning {
@@ -47,7 +49,7 @@ public class RegressionTuning {
 	private static double spinnerRPS = 0.0;
 	private static List<double[]> regressionData = new ArrayList<double[]>();
 
-	public static void init(Swerve swerve, Shooter shooter) {
+	public static void init(Swerve swerve, Shooter shooter, Indexer indexer) {
 		DogLog.tunable("Regression/Shooter RPS Target", 0.0, target -> shooterRPS = target);
 		DogLog.tunable("Regression/Spinner RPS Target", 0.0, target -> spinnerRPS = target);
 
@@ -58,7 +60,7 @@ public class RegressionTuning {
 			shooter.disable();
 		}));
 
-		regression.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		regression.whileTrue(new Shoot(swerve, shooter, indexer, leftY, leftX, () -> true));
 		drive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(),
 				() -> true));
 

@@ -49,7 +49,7 @@ public class ShooterTuning {
 				target -> shooterTargetRPS = target);
 		DogLog.tunable("Shooter/voltage", 0.0, target -> voltage = target);
 		DogLog.tunable("Shooter/index velocity", indexrps, target -> indexrps = target);
-		DogLog.tunable("Shooter/distance", indexrps, target -> distance = Inches.of(target));
+		DogLog.tunable("Shooter/distance", indexrps, target -> distance = Meters.of(target));
 		TuningManager.createPID("Shooter/leader", shooter.leader, ShooterConstants.ShooterConfig);
 		TuningManager.createPID("Shooter/spinner", shooter.spinner, ShooterConstants.spinnerConfig);
 		TuningManager.createPID("Shooter/Indexer", shooter.indexMotor, ShooterConstants.indexConfig);
@@ -61,7 +61,9 @@ public class ShooterTuning {
 
 		runShooter.whileTrue(Commands.run(() -> {
 			shooter.setRPS(shooterTargetRPS, spinnerTargetRPS);
-			shooter.runIndexVelocity(indexrps);
+			if (shooter.atSetpoint()) {
+				shooter.runIndexVelocity(indexrps);
+			}
 		}).handleInterrupt(() -> {
 			shooter.disable();
 		}));
@@ -69,7 +71,9 @@ public class ShooterTuning {
 		shootReg.whileTrue(Commands.run(() -> {
 			double[] speed = ShooterRegression.getRegressionRPS(distance.in(Meters));
 			shooter.setRPS(speed[0], speed[1]);
-			shooter.runIndexVelocity(indexrps);
+			if (shooter.atSetpoint()) {
+				shooter.runIndexVelocity(indexrps);
+			}
 		}).handleInterrupt(() -> {
 			shooter.disable();
 		}));

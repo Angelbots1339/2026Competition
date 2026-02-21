@@ -28,7 +28,7 @@ public class Shoot extends Command {
 		this.x = x;
 		this.y = y;
 		this.runIndex = runIndex;
-		addRequirements(shooter, swerve);
+		addRequirements(shooter, swerve, indexer);
 	}
 
 	@Override

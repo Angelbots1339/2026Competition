@@ -67,7 +67,9 @@ public class RobotContainer {
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
 
 	@Logged(name = "Run Intake")
-	private Trigger runIntake = new Trigger(() -> driver.getLeftBumperButton());
+	private Trigger runIntake = new Trigger(() -> driver.getRightTriggerAxis() > 0.2);
+
+	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
@@ -113,6 +115,8 @@ public class RobotContainer {
 				.whileTrue(intake.runIntake()
 						.alongWith(indexer.run(() -> indexer.runVoltage(IntakeConstants.IntakeVoltage))))
 				.onFalse(intake.stopIntake());
+
+		toggleIntakeDeploy.whileTrue(intake.retract());
 	}
 
 	public void configureControllerAlerts() {
