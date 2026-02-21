@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Shooter;
@@ -39,13 +40,14 @@ public class Shoot extends Command {
 
 		shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 
-		if (shooter.atSetpoint() && runIndex.get())
-			shooter.runIndexVelocity(20);
+		boolean isAngled = swerve.getRotationError().getMeasure()
+				.lte(params.maxAngleError());
 
-		// if (!runIndex.get() ||
-		// swerve.getRotationError().minus(params.angle()).getMeasure()
-		// .gt(params.maxAngleError()))
-		// shooter.disableIndex();
+		if (shooter.atSetpoint() && runIndex.get() && swerve.isRotated())
+			shooter.runIndexVelocity(ShooterConstants.IndexerRPS);
+
+		if (!runIndex.get() || !isAngled)
+			shooter.disableIndex();
 	}
 
 	@Override

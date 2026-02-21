@@ -81,7 +81,7 @@ public class ShooterRegression {
 		Translation2d lookaheadPose = pose;
 		double lookaheadDistance = distance;
 		double tof = 0;
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 3; i++) {
 			tof = timeOfFlightMap.get(lookaheadDistance);
 			lookaheadPose = pose.plus(new Translation2d(vx * tof, vy * tof));
 			lookaheadDistance = target.getDistance(lookaheadPose);
@@ -94,7 +94,9 @@ public class ShooterRegression {
 				target.minus(lookaheadPose).getAngle().getRadians());
 
 		Angle maxAngleError = Radians
-				.of(Math.abs(Math.atan2(lookaheadDistance, FieldUtil.hubRadius.in(Meters))));
+				.of(Math.abs(Math.atan2(FieldUtil.hubRadius.in(Meters), lookaheadDistance)));
+
+		DogLog.log("Regression/Max Angle Error", maxAngleError);
 
 		return new ShooterParams(angle, rps[0], rps[1], maxAngleError);
 	}

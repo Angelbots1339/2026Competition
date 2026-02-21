@@ -75,7 +75,7 @@ public class Constants {
 		public static final TrapezoidProfile.Constraints angularDriveConstraints = new TrapezoidProfile.Constraints(
 				10,
 				20);
-		public static final Angle angularDriveTolerance = Degrees.of(0.5); // Degrees
+		public static final Angle angularDriveTolerance = Degrees.of(1); // Degrees
 
 		public static final double pidToPoseKP = 2.5;
 		public static final double pidToPoseKD = 0;
@@ -135,7 +135,7 @@ public class Constants {
 		public static final int IndexPort = 36;
 
 		public static final double shootRPS = 41.5;
-		public static final double indexerRPS = 20.0;
+		public static final double IndexerRPS = 20.0;
 		public static final double rpsTolerence = 1;
 
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
