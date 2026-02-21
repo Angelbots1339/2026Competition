@@ -17,8 +17,8 @@
  "params":{
   "waypoints":[
     {"x":{"exp":"DepotShoot.x", "val":2.6148219108581543}, "y":{"exp":"DepotShoot.y", "val":5.339716911315918}, "heading":{"exp":"DepotShoot.heading", "val":-0.5880032220363305}, "intervals":52, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"Outpost.x", "val":2.0}, "y":{"exp":"Outpost.y", "val":0.7212997078895569}, "heading":{"exp":"Outpost.heading", "val":3.141592653589793}, "intervals":19, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"0.7083801031112671 m", "val":0.7083801031112671}, "y":{"exp":"0.7212997078895569 m", "val":0.7212997078895569}, "heading":{"exp":"Outpost.heading", "val":3.141592653589793}, "intervals":41, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"OutpostIntakeStart.x", "val":2.0}, "y":{"exp":"OutpostIntakeStart.y", "val":0.7212997078895569}, "heading":{"exp":"OutpostIntakeStart.heading", "val":3.141592653589793}, "intervals":19, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"OutpostIntakeEnd.x", "val":0.7083801031112671}, "y":{"exp":"OutpostIntakeEnd.y", "val":0.7212997078895569}, "heading":{"exp":"OutpostIntakeEnd.heading", "val":3.141592653589793}, "intervals":41, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"OutpostShoot.x", "val":2.528968334197998}, "y":{"exp":"OutpostShoot.y", "val":2.13130784034729}, "heading":{"exp":"OutpostShoot.heading", "val":0.6640461628266846}, "intervals":25, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":3, "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},

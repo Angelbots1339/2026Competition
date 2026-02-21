@@ -256,5 +256,5 @@
  },
  "events":[
    {"name":"IntakeStart", "from":{"target":3, "targetTimestamp":2.57248, "offset":{"exp":"-0.5 s", "val":-0.5}}, "event":null},
-   {"name":"IntakeStart", "from":{"target":4, "targetTimestamp":3.07824, "offset":{"exp":"0.5 s", "val":0.5}}, "event":null}]
+   {"name":"IntakeStop", "from":{"target":4, "targetTimestamp":3.07824, "offset":{"exp":"0.5 s", "val":0.5}}, "event":null}]
 }

@@ -145,7 +145,21 @@
      "val":1.5707963267948966
     }
    },
-   "Outpost":{
+   "OutpostIntakeEnd":{
+    "x":{
+     "exp":"0.7083801031112671 m",
+     "val":0.7083801031112671
+    },
+    "y":{
+     "exp":"OutpostIntakeStart.y",
+     "val":0.7212997078895569
+    },
+    "heading":{
+     "exp":"OutpostIntakeStart.heading",
+     "val":3.141592653589793
+    }
+   },
+   "OutpostIntakeStart":{
     "x":{
      "exp":"2 m",
      "val":2.0

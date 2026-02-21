@@ -111,6 +111,7 @@ public class Autos {
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name()).getRawTrajectory()));
 		final var rightNeutral2 = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
+		final var outpostShootOutpost = routine.trajectory(ChoreoTraj.OutpostShootOutpost.name());
 
 		routine.active().onTrue(
 				Commands.sequence(
@@ -118,6 +119,8 @@ public class Autos {
 						rightNeutralToShoot.cmd(),
 						shoot.get(),
 						rightNeutral2.cmd(),
+						shoot.get(),
+						outpostShootOutpost.cmd(),
 						shoot.get()));
 
 		return routine.cmd();
