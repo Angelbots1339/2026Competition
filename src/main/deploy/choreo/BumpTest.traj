@@ -57,7 +57,7 @@
    "cof":1.5,
    "bumper":{
     "front":0.4191,
-    "side":0.4191,
+    "side":0.41275,
     "back":0.4191
    },
    "differentialTrackWidth":0.5588
