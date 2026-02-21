@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.choreo.ChoreoTraj;
 import frc.lib.util.FieldUtil;
+import frc.robot.commands.Shoot;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 public class Autos {
@@ -19,7 +22,7 @@ public class Autos {
 
 	Supplier<Command> shoot = null;
 
-	public Autos(Swerve swerve) {
+	public Autos(Swerve swerve, Shooter shooter, Intake intake) {
 		factory = new AutoFactory(
 				swerve::getPose, // A function that returns the current field-relative Pose2d of the robot
 				swerve::resetPose, // A function that receives a field-relative Pose2d to reset the robot's
@@ -30,15 +33,11 @@ public class Autos {
 						// opposite side, while keeping the same coordinate system origin.
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 
-		/* TODO: replace with actual commands */
-		Command intakeOpen = Commands.print("intake open").andThen(Commands.waitSeconds(1));
-		Command intakeClose = Commands.print("intake close").andThen(Commands.waitSeconds(1));
-
-		shoot = () -> swerve.pointDriveCommand(() -> 0.0, () -> 0.0, () -> FieldUtil.getHubCenter(), () -> true)
+		shoot = () -> new Shoot(swerve, shooter, () -> 0.0, () -> 0.0, () -> true)
 				.withTimeout(2);
 
-		factory.bind("IntakeStart", intakeOpen);
-		factory.bind("IntakeStop", intakeClose);
+		factory.bind("IntakeStart", intake.runIntake());
+		factory.bind("IntakeStop", intake.stopIntake());
 		factory.bind("UseVision", Commands.runOnce(() -> swerve.enableVision()));
 	}
 

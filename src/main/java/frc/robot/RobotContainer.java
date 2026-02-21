@@ -69,18 +69,18 @@ public class RobotContainer {
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
-	// private Autos autos = new Autos(swerve);
+	private Autos autos = new Autos(swerve, shooter, intake);
 
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-		// autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
-		// autoChooser.addCmd("Hub Depot Outpost Tower",
-		// autos::hubDepotOutpostTowerAuto);
-		// autoChooser.addCmd("bump test", autos::bumpTest);
-		// autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
-		// autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
+		autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
+		autoChooser.addCmd("Hub Depot Outpost Tower",
+				autos::hubDepotOutpostTowerAuto);
+		autoChooser.addCmd("bump test", autos::bumpTest);
+		autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
+		autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
