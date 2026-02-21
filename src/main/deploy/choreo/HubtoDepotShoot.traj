@@ -22,7 +22,7 @@
     {"x":{"exp":"HubLeftStart.x", "val":3.565462350845337}, "y":{"exp":"HubLeftStart.y", "val":5.039737224578857}, "heading":{"exp":"HubLeftStart.heading", "val":1.5707963267948966}, "intervals":24, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"1.4060511589050293 m", "val":1.4060511589050293}, "y":{"exp":"5.109255313873291 m", "val":5.109255313873291}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":16, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"DepotIntake.x", "val":0.5}, "y":{"exp":"DepotIntake.y", "val":5.002081871032715}, "heading":{"exp":"DepotIntake.heading", "val":1.5707963267948966}, "intervals":19, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"DepotIntake.x", "val":0.5}, "y":{"exp":"6.29248571395874 m", "val":6.29248571395874}, "heading":{"exp":"DepotIntake.heading", "val":1.5707963267948966}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"DepotIntakeEnd.x", "val":0.5}, "y":{"exp":"DepotIntakeEnd.y", "val":6.29248571395874}, "heading":{"exp":"DepotIntakeEnd.heading", "val":1.5707963267948966}, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"DepotShoot.x", "val":2.6148219108581543}, "y":{"exp":"DepotShoot.y", "val":5.339716911315918}, "heading":{"exp":"DepotShoot.heading", "val":-0.5880032220363305}, "intervals":25, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false}],
   "constraints":[
     {"from":"first", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":true},

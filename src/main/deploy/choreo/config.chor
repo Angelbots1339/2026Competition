@@ -19,6 +19,20 @@
      "val":1.5707963267948966
     }
    },
+   "DepotIntakeEnd":{
+    "x":{
+     "exp":"DepotIntake.x",
+     "val":0.5
+    },
+    "y":{
+     "exp":"6.29248571395874 m",
+     "val":6.29248571395874
+    },
+    "heading":{
+     "exp":"DepotIntake.heading",
+     "val":1.5707963267948966
+    }
+   },
    "DepotShoot":{
     "x":{
      "exp":"2.6148219108581543 m",
