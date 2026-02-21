@@ -125,6 +125,26 @@ public class Autos {
 		return routine.cmd();
 	}
 
+	public Command rightOutpostNeutral() {
+		final var routine = factory.newRoutine("Right Outpost Neutral");
+		final var rightOutpost = routine.trajectory(ChoreoTraj.RightOutpostShoot.name());
+		final var rightNeutralToShoot = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name()).getRawTrajectory()));
+		final var rightNeutral2 = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
+		final var outpostShootOutpost = routine.trajectory(ChoreoTraj.OutpostShootOutpost.name());
+
+		routine.active().onTrue(
+				Commands.sequence(
+						rightOutpost.resetOdometry(),
+						rightOutpost.cmd(),
+						shoot.get(),
+						rightNeutral2.cmd(),
+						shoot.get()));
+
+		return routine.cmd();
+	}
+
 	private Trajectory<SwerveSample> flipTrajectoryX(Trajectory<SwerveSample> traj) {
 		SwerveSample[] new_samples = new SwerveSample[traj.samples().size()];
 		int i = 0;

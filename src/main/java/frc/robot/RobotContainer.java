@@ -81,6 +81,7 @@ public class RobotContainer {
 		autoChooser.addCmd("bump test", autos::bumpTest);
 		autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
 		autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
+		autoChooser.addCmd("right outpost neutral", autos::rightOutpostNeutral);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
