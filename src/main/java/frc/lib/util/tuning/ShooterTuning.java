@@ -1,6 +1,5 @@
 package frc.lib.util.tuning;
 
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Volts;
 
@@ -38,7 +37,7 @@ public class ShooterTuning {
 
 	private static double shooterTargetRPS = ShooterConstants.shootRPS;
 	private static double spinnerTargetRPS = ShooterConstants.shootRPS;
-	private static double indexrps = 20;
+	private static double indexrps = ShooterConstants.indexerRPS;
 	private static double voltage = 0;
 	private static Distance distance = Meters.zero();
 

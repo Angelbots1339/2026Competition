@@ -3,8 +3,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
@@ -145,7 +143,7 @@ public class Constants {
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.Clockwise_Positive))
-				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
+				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
 						.withKP(8)
@@ -179,7 +177,7 @@ public class Constants {
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(2))
+						.withSensorToMechanismRatio(36.0 / 18.0))
 				.withSlot0(new Slot0Configs()
 						.withKP(0.4)
 						.withKI(0)

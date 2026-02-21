@@ -1,17 +1,11 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
