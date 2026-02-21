@@ -38,7 +38,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.LimelightHelpers;
 import frc.robot.Constants.AlignConstants;
@@ -74,7 +76,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private PIDController pidToPoseYController = new PIDController(AlignConstants.pidToPoseKP, 0,
 			AlignConstants.pidToPoseKD);
 
-	private boolean useVision = true;
+	private boolean useVision = false;
 
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
@@ -84,10 +86,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		pidToPoseXController.setTolerance(AlignConstants.pidToPoseTolerance.in(Meters));
 		pidToPoseYController.setTolerance(AlignConstants.pidToPoseTolerance.in(Meters));
 
-		resetPose(Pose2d.kZero);
-		resetGyro();
-
 		configPathPlanner();
+
+		new Trigger(() -> DriverStation.isTeleopEnabled())
+				.onTrue(Commands.run(() -> this.enableVision()).ignoringDisable(true));
 
 		if (Utils.isSimulation()) {
 			startSimThread();
@@ -244,6 +246,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public void resetPose(Pose2d pose) {
 		super.resetPose(pose);
 		setYaw(pose.getRotation());
+
+		enableVision();
 	}
 
 	public ChassisSpeeds getRobotRelativeSpeeds() {
