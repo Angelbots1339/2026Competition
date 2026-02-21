@@ -237,7 +237,7 @@ public class Constants {
 								.withSensorToMechanismRatio(deployIntakeGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(120)
+								.withStatorCurrentLimit(20)
 								.withSupplyCurrentLimit(70)
 								.withStatorCurrentLimitEnable(true)
 								.withSupplyCurrentLimitEnable(true))
