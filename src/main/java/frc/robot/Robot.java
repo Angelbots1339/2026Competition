@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import com.pathplanner.lib.commands.PathfindingCommand;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
 			config.minimumImportance = Importance.DEBUG;
 		});
 		Epilogue.bind(this);
+		// DogLog.setEnabled(false);
 	}
 
 	@Override

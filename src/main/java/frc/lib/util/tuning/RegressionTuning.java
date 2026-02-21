@@ -22,6 +22,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.commands.Shoot;
 import frc.robot.regression.ShooterRegression;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
@@ -58,7 +59,7 @@ public class RegressionTuning {
 			shooter.disable();
 		}));
 
-		// regression.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		regression.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 		drive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(),
 				() -> true));
 

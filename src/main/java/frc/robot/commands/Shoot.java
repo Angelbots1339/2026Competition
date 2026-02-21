@@ -18,7 +18,6 @@ import frc.robot.subsystems.Swerve;
 public class Shoot extends Command {
 	private Swerve swerve;
 	private Shooter shooter;
-	private Intake intake;
 
 	private Supplier<Double> x;
 	private Supplier<Double> y;
@@ -26,16 +25,15 @@ public class Shoot extends Command {
 
 	private Timer intakeTimer = new Timer();
 
-	public Shoot(Swerve swerve, Shooter shooter, Intake intake, Supplier<Double> x, Supplier<Double> y,
+	public Shoot(Swerve swerve, Shooter shooter, Supplier<Double> x, Supplier<Double> y,
 			Supplier<Boolean> runIndex) {
 		this.swerve = swerve;
 		this.shooter = shooter;
-		this.intake = intake;
 
 		this.x = x;
 		this.y = y;
 		this.runIndex = runIndex;
-		addRequirements(shooter, swerve, intake);
+		addRequirements(shooter, swerve);
 	}
 
 	@Override
@@ -53,14 +51,6 @@ public class Shoot extends Command {
 		if (shooter.atSetpoint() && runIndex.get()) {
 			intakeTimer.start();
 			shooter.runIndexVelocity(20);
-			intake.setIntakeVoltage(IntakeConstants.IntakeVoltage);
-			if (intakeTimer.hasElapsed(0.25)) {
-				intake.setIntakeAngle(IntakeConstants.DeployedAngle.plus(Degrees.of(30)));
-			}
-			if (intakeTimer.hasElapsed(0.5)) {
-				intake.setIntakeAngle(IntakeConstants.DeployedAngle);
-				intakeTimer.reset();
-			}
 		}
 
 		// if (!runIndex.get() ||
