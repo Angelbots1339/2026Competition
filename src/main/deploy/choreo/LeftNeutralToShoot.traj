@@ -239,6 +239,6 @@
  },
  "events":[
    {"name":"IntakeStart", "from":{"target":2, "targetTimestamp":2.20272, "offset":{"exp":"-0.5 s", "val":-0.5}}, "event":{"type":"sequential", "data":{"commands":[]}}},
-   {"name":"IntakeStop", "from":{"target":3, "targetTimestamp":2.84261, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"sequential", "data":{"commands":[]}}},
+   {"name":"IntakeStop", "from":{"target":3, "targetTimestamp":2.84261, "offset":{"exp":"0.5 s", "val":0.5}}, "event":{"type":"sequential", "data":{"commands":[]}}},
    {"name":"UseVision", "from":{"target":0, "targetTimestamp":0.0, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }
