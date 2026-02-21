@@ -140,10 +140,8 @@ public class Constants {
 
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(30))
-						.withStatorCurrentLimit(Amps.of(80))
-						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimitEnable(true))
+						.withStatorCurrentLimit(Amps.of(100))
+						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.Clockwise_Positive))
@@ -175,10 +173,8 @@ public class Constants {
 
 		public static TalonFXConfiguration indexConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(15))
-						.withStatorCurrentLimit(Amps.of(30))
-						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimitEnable(true))
+						.withStatorCurrentLimit(Amps.of(40))
+						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.Clockwise_Positive))
@@ -189,7 +185,7 @@ public class Constants {
 						.withKI(0)
 						.withKD(0)
 						.withKS(0.4898)
-						.withKV(0.15));
+						.withKV(0.24));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(100));
@@ -200,7 +196,7 @@ public class Constants {
 		public static final int deployMotorId = 24;
 
 		public static final Angle DeployedAngle = Degrees.of(27);
-		public static final double IntakeVoltage = 5;
+		public static final double IntakeVoltage = 6;
 		public static final Angle RetractedAngle = Degrees.of(115);
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
@@ -237,7 +233,7 @@ public class Constants {
 								.withSensorToMechanismRatio(deployIntakeGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(20)
+								.withStatorCurrentLimit(40)
 								.withSupplyCurrentLimit(70)
 								.withStatorCurrentLimitEnable(true)
 								.withSupplyCurrentLimitEnable(true))

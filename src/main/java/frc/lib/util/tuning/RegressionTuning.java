@@ -22,6 +22,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.commands.Shoot;
 import frc.robot.regression.ShooterRegression;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
