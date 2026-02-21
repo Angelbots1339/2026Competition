@@ -130,10 +130,10 @@ public class Constants {
 		public static final int LeaderPort = 30;
 		public static final int FollowerPort = 32;
 		public static final int SpinnerPort = 34;
-		public static final int IndexPort = 36;
+		public static final int KickerPort = 36;
 
 		public static final double shootRPS = 41.5;
-		public static final double indexerRPS = 20.0;
+		public static final double KickerRPS = 20.0;
 		public static final double rpsTolerence = 1;
 
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
@@ -143,7 +143,8 @@ public class Constants {
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.Clockwise_Positive))
-				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 36.0))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
 						.withKP(8)
@@ -151,7 +152,7 @@ public class Constants {
 						.withKV(0)
 						.withKS(10));
 
-		public static TalonFXConfiguration spinnerConfig = new TalonFXConfiguration()
+		public static TalonFXConfiguration SpinnerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(15))
 						.withStatorCurrentLimit(Amps.of(50))
@@ -169,7 +170,7 @@ public class Constants {
 						.withKV(0)
 						.withKS(6));
 
-		public static TalonFXConfiguration indexConfig = new TalonFXConfiguration()
+		public static TalonFXConfiguration KickerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withStatorCurrentLimit(Amps.of(40))
 						.withStatorCurrentLimitEnable(true))

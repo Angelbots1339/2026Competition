@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase {
 
 	public TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
 
-	public TalonFX indexMotor = new TalonFX(ShooterConstants.IndexPort);
+	public TalonFX kicker = new TalonFX(ShooterConstants.KickerPort);
 
 	private double targetShooterRPS = 0.0;
 	private double targetSpinnerRPS = 0.0;
@@ -37,8 +37,8 @@ public class Shooter extends SubsystemBase {
 	public Shooter() {
 		leader.getConfigurator().apply(ShooterConstants.ShooterConfig);
 		follower.getConfigurator().apply(ShooterConstants.ShooterConfig);
-		spinner.getConfigurator().apply(ShooterConstants.spinnerConfig);
-		indexMotor.getConfigurator().apply(ShooterConstants.indexConfig);
+		spinner.getConfigurator().apply(ShooterConstants.SpinnerConfig);
+		kicker.getConfigurator().apply(ShooterConstants.KickerConfig);
 
 		follower.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Opposed));
 
@@ -62,8 +62,8 @@ public class Shooter extends SubsystemBase {
 		setRPS(rps, rps);
 	}
 
-	public void runIndexVelocity(double rps) {
-		indexMotor.setControl(new VelocityVoltage(rps));
+	public void setKickerVelocity(double rps) {
+		kicker.setControl(new VelocityVoltage(rps));
 	}
 
 	public double getShooterRPS() {
@@ -86,13 +86,13 @@ public class Shooter extends SubsystemBase {
 		setVoltage(Volts.of(0));
 	}
 
-	public void disableIndex() {
-		indexMotor.setControl(new NeutralOut());
+	public void disableKicker() {
+		kicker.setControl(new NeutralOut());
 	}
 
 	public void disable() {
 		disableShooter();
-		disableIndex();
+		disableKicker();
 	}
 
 	@Override

@@ -37,7 +37,7 @@ public class ShooterTuning {
 
 	private static double shooterTargetRPS = ShooterConstants.shootRPS;
 	private static double spinnerTargetRPS = ShooterConstants.shootRPS;
-	private static double indexrps = ShooterConstants.indexerRPS;
+	private static double kickerRPS = ShooterConstants.KickerRPS;
 	private static double voltage = 0;
 	private static Distance distance = Meters.zero();
 
@@ -47,21 +47,21 @@ public class ShooterTuning {
 		DogLog.tunable("Shooter/Shooter target", ShooterConstants.shootRPS,
 				target -> shooterTargetRPS = target);
 		DogLog.tunable("Shooter/voltage", 0.0, target -> voltage = target);
-		DogLog.tunable("Shooter/index velocity", indexrps, target -> indexrps = target);
-		DogLog.tunable("Shooter/distance", indexrps, target -> distance = Meters.of(target));
+		DogLog.tunable("Shooter/kicker velocity", kickerRPS, target -> kickerRPS = target);
+		DogLog.tunable("Shooter/distance", 0.0, target -> distance = Meters.of(target));
 		TuningManager.createPID("Shooter/leader", shooter.leader, ShooterConstants.ShooterConfig);
-		TuningManager.createPID("Shooter/spinner", shooter.spinner, ShooterConstants.spinnerConfig);
-		TuningManager.createPID("Shooter/Indexer", shooter.indexMotor, ShooterConstants.indexConfig);
+		TuningManager.createPID("Shooter/spinner", shooter.spinner, ShooterConstants.SpinnerConfig);
+		TuningManager.createPID("Shooter/kicker", shooter.kicker, ShooterConstants.KickerConfig);
 
 		runVoltage.whileTrue(Commands.run(() -> {
 			shooter.setVoltage(Volts.of(voltage));
-			shooter.runIndexVelocity(indexrps);
+			shooter.setKickerVelocity(kickerRPS);
 		}).handleInterrupt(() -> shooter.disable()));
 
 		runShooter.whileTrue(Commands.run(() -> {
 			shooter.setRPS(shooterTargetRPS, spinnerTargetRPS);
 			if (shooter.atSetpoint()) {
-				shooter.runIndexVelocity(indexrps);
+				shooter.setKickerVelocity(kickerRPS);
 			}
 		}).handleInterrupt(() -> {
 			shooter.disable();
@@ -71,7 +71,7 @@ public class ShooterTuning {
 			double[] speed = ShooterRegression.getRegressionRPS(distance.in(Meters));
 			shooter.setRPS(speed[0], speed[1]);
 			if (shooter.atSetpoint()) {
-				shooter.runIndexVelocity(indexrps);
+				shooter.setKickerVelocity(kickerRPS);
 			}
 		}).handleInterrupt(() -> {
 			shooter.disable();
