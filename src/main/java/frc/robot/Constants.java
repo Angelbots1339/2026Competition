@@ -323,6 +323,9 @@ public class Constants {
 
 	public class IndexerConstants {
 		public static final int IndexerMotorPort = 26;
+
+		public static final double IndexerVolts = 2;
+
 		public static final TalonFXConfiguration IndexerMotorConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withStatorCurrentLimit(80)

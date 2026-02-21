@@ -3,23 +3,27 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 public class Shoot extends Command {
 	private Swerve swerve;
 	private Shooter shooter;
+	private Indexer indexer;
 
 	private Supplier<Double> x;
 	private Supplier<Double> y;
 	private Supplier<Boolean> runIndex;
 
-	public Shoot(Swerve swerve, Shooter shooter, Supplier<Double> x, Supplier<Double> y,
+	public Shoot(Swerve swerve, Shooter shooter, Indexer indexer, Supplier<Double> x, Supplier<Double> y,
 			Supplier<Boolean> runIndex) {
 		this.swerve = swerve;
 		this.shooter = shooter;
+		this.indexer = indexer;
 
 		this.x = x;
 		this.y = y;
@@ -39,8 +43,10 @@ public class Shoot extends Command {
 
 		shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 
-		if (shooter.atSetpoint() && runIndex.get())
+		if (shooter.atSetpoint() && runIndex.get()) {
 			shooter.runIndexVelocity(20);
+			indexer.runVoltage(IndexerConstants.IndexerVolts);
+		}
 
 		// if (!runIndex.get() ||
 		// swerve.getRotationError().minus(params.angle()).getMeasure()

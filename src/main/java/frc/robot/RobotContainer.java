@@ -25,6 +25,7 @@ import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
@@ -89,7 +90,7 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
-		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		shoot.whileTrue(new Shoot(swerve, shooter, indexer, leftY, leftX, () -> true));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
@@ -108,7 +109,9 @@ public class RobotContainer {
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
 
-		runIntake.whileTrue(intake.runIntake())
+		runIntake
+				.whileTrue(intake.runIntake()
+						.alongWith(indexer.run(() -> indexer.runVoltage(IntakeConstants.IntakeVoltage))))
 				.onFalse(intake.stopIntake());
 	}
 
@@ -140,6 +143,7 @@ public class RobotContainer {
 
 	public void setDefaultCommands() {
 		intake.setDefaultCommand(intake.deploy());
+		indexer.setDefaultCommand(indexer.run(indexer::disable));
 	}
 
 	@Logged(name = "Current auto")
