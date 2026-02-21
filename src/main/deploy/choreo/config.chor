@@ -3,7 +3,15 @@
  "version":2,
  "type":"Swerve",
  "variables":{
-  "expressions":{},
+  "expressions":{
+   "FieldHeight":{
+    "dimension":"Length",
+    "var":{
+     "exp":"317.69 in",
+     "val":8.069326
+    }
+   }
+  },
   "poses":{
    "DepotIntake":{
     "x":{
@@ -175,16 +183,16 @@
    },
    "OutpostShoot":{
     "x":{
-     "exp":"2.528968334197998 m",
-     "val":2.528968334197998
+     "exp":"DepotShoot.x",
+     "val":2.6148219108581543
     },
     "y":{
-     "exp":"2.13130784034729 m",
-     "val":2.13130784034729
+     "exp":"FieldHeight - DepotShoot.y",
+     "val":2.7296090886840823
     },
     "heading":{
-     "exp":"0.6640461628266846 rad",
-     "val":0.6640461628266846
+     "exp":"-DepotShoot.heading",
+     "val":0.5880032220363305
     }
    },
    "RightTowerAlign":{

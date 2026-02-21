@@ -48,9 +48,9 @@ public record ChoreoTraj(
 	public static final ChoreoTraj DepotShootOutpostShoot = new ChoreoTraj(
 	    "DepotShootOutpostShoot",
 	    OptionalInt.empty(),
-	    3.7101,
+	    3.81805,
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588)),
-	    new Pose2d(2.529, 2.131, Rotation2d.fromRadians(0.664))
+	    new Pose2d(2.615, 2.73, Rotation2d.fromRadians(0.588))
 	);
 	public static final ChoreoTraj DepotShoottoTower = new ChoreoTraj(
 	    "DepotShoottoTower",
@@ -73,19 +73,19 @@ public record ChoreoTraj(
 	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142)),
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
 	);
-	public static final ChoreoTraj OutpostShoottoTower = new ChoreoTraj(
-	    "OutpostShoottoTower",
-	    OptionalInt.empty(),
-	    1.01385,
-	    new Pose2d(2.529, 2.131, Rotation2d.fromRadians(0.664)),
-	    new Pose2d(1.079, 2.593, Rotation2d.fromRadians(-1.571))
-	);
 	public static final ChoreoTraj OutpostShootOutpost = new ChoreoTraj(
 	    "OutpostShootOutpost",
 	    OptionalInt.empty(),
-	    2.90699,
-	    new Pose2d(2.529, 2.131, Rotation2d.fromRadians(0.664)),
-	    new Pose2d(2.529, 2.131, Rotation2d.fromRadians(0.664))
+	    3.19008,
+	    new Pose2d(2.615, 2.73, Rotation2d.fromRadians(0.588)),
+	    new Pose2d(2.615, 2.73, Rotation2d.fromRadians(0.588))
+	);
+	public static final ChoreoTraj OutpostShoottoTower = new ChoreoTraj(
+	    "OutpostShoottoTower",
+	    OptionalInt.empty(),
+	    1.0198,
+	    new Pose2d(2.615, 2.73, Rotation2d.fromRadians(0.588)),
+	    new Pose2d(1.079, 2.593, Rotation2d.fromRadians(-1.571))
 	);
 
     /**
@@ -100,8 +100,8 @@ public record ChoreoTraj(
 		Map.entry("DepotShoottoTower", DepotShoottoTower),
 		Map.entry("HubtoDepotShoot", HubtoDepotShoot),
 		Map.entry("LeftNeutralToShoot", LeftNeutralToShoot),
-		Map.entry("OutpostShoottoTower", OutpostShoottoTower),
-		Map.entry("OutpostShootOutpost", OutpostShootOutpost)
+		Map.entry("OutpostShootOutpost", OutpostShootOutpost),
+		Map.entry("OutpostShoottoTower", OutpostShoottoTower)
     );
 
     /**
