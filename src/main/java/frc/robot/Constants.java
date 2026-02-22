@@ -100,9 +100,6 @@ public class Constants {
 	}
 
 	public class TuningConstants {
-		public static final String tuningNTPrefix = "Tuning/";
-		public static final String tuningModeNTName = tuningNTPrefix + "Mode";
-
 		public static enum TuningMode {
 			Shooter,
 			Swerve,
@@ -110,20 +107,6 @@ public class Constants {
 			Intake,
 			Climber,
 		};
-
-		public class Swerve {
-			public static final String angularPIDNTName = tuningNTPrefix + "angular PID";
-		}
-
-		public class Shooter {
-			public static final String voltageNTName = tuningNTPrefix + "voltage";
-			public static final String velocityNTName = tuningNTPrefix + "velocity";
-			public static final String PNTName = tuningNTPrefix + "P";
-			public static final String INTName = tuningNTPrefix + "I";
-			public static final String DNTName = tuningNTPrefix + "D";
-			public static final String SNTName = tuningNTPrefix + "S";
-			public static final String VNTName = tuningNTPrefix + "V";
-		}
 	}
 
 	public class ShooterConstants {
