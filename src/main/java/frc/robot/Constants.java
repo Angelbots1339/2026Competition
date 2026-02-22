@@ -89,9 +89,10 @@ public class Constants {
 		public static final String LimelightName = "limelight";
 		public static final double maxUsableRange = 4.0;
 
-		// current limelight location
-		// forward = 0.016m
-		// top = 0.675m
+		// limelight location
+		// forward = 0.020m
+		// left = 0.000m
+		// top = 0.654m
 		// pitch = 12deg
 
 		public static double calcStdDev(double metersFromTarget) {
