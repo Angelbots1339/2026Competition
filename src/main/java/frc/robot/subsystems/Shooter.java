@@ -19,16 +19,17 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.ShooterConstants;
 
 @Logged
 public class Shooter extends SubsystemBase {
-	public TalonFX leader = new TalonFX(ShooterConstants.LeaderPort);
+	private TalonFX leader = new TalonFX(ShooterConstants.LeaderPort);
 	private TalonFX follower = new TalonFX(ShooterConstants.FollowerPort);
 
-	public TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
+	private TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
 
-	public TalonFX kicker = new TalonFX(ShooterConstants.KickerPort);
+	private TalonFX kicker = new TalonFX(ShooterConstants.KickerPort);
 
 	private double targetShooterRPS = 0.0;
 	private double targetSpinnerRPS = 0.0;
@@ -93,6 +94,12 @@ public class Shooter extends SubsystemBase {
 	public void disable() {
 		disableShooter();
 		disableKicker();
+	}
+
+	public void logPID() {
+		TuningManager.createPID("Shooter/leader", leader, ShooterConstants.ShooterConfig);
+		TuningManager.createPID("Shooter/spinner", spinner, ShooterConstants.SpinnerConfig);
+		TuningManager.createPID("Shooter/kicker", kicker, ShooterConstants.KickerConfig);
 	}
 
 	@Override

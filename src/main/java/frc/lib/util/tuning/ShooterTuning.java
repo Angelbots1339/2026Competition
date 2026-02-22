@@ -6,9 +6,6 @@ import static edu.wpi.first.units.Units.Volts;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -49,9 +46,7 @@ public class ShooterTuning {
 		DogLog.tunable("Shooter/voltage", 0.0, target -> voltage = target);
 		DogLog.tunable("Shooter/kicker velocity", kickerRPS, target -> kickerRPS = target);
 		DogLog.tunable("Shooter/distance", 0.0, target -> distance = Meters.of(target));
-		TuningManager.createPID("Shooter/leader", shooter.leader, ShooterConstants.ShooterConfig);
-		TuningManager.createPID("Shooter/spinner", shooter.spinner, ShooterConstants.SpinnerConfig);
-		TuningManager.createPID("Shooter/kicker", shooter.kicker, ShooterConstants.KickerConfig);
+		shooter.logPID();
 
 		runVoltage.whileTrue(Commands.run(() -> {
 			shooter.setVoltage(Volts.of(voltage));
@@ -89,20 +84,5 @@ public class ShooterTuning {
 					new double[] { shooterTargetRPS, spinnerTargetRPS });
 			DogLog.log("regression data/" + regressionData.size(), data);
 		}));
-	}
-
-	public static void createPID(String key, TalonFX motor, TalonFXConfiguration config) {
-		DogLog.tunable(key + "/kP", config.Slot0.kP,
-				newP -> motor.getConfigurator().apply(config.Slot0.withKP(newP)));
-		DogLog.tunable(key + "/kI", config.Slot0.kI,
-				newI -> motor.getConfigurator().apply(config.Slot0.withKI(newI)));
-		DogLog.tunable(key + "/kD", config.Slot0.kD,
-				newD -> motor.getConfigurator().apply(config.Slot0.withKD(newD)));
-		DogLog.tunable(key + "/kS", config.Slot0.kS,
-				newS -> motor.getConfigurator().apply(config.Slot0.withKS(newS)));
-		DogLog.tunable(key + "/kV", config.Slot0.kV,
-				newV -> motor.getConfigurator().apply(config.Slot0.withKV(newV)));
-		DogLog.tunable(key + "/kG", config.Slot0.kG,
-				newG -> motor.getConfigurator().apply(config.Slot0.withKG(newG)));
 	}
 }
