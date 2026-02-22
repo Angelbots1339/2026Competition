@@ -6,7 +6,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.lib.util.tuning.IndexerTuning;
+import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.IndexerConstants;
 
 public class Indexer extends SubsystemBase {
@@ -29,7 +29,7 @@ public class Indexer extends SubsystemBase {
 	}
 
 	public void logPID() {
-		IndexerTuning.createPID("Indexer/Indexer Velocity PID", indexerMotor,
+		TuningManager.createPID("Indexer/Indexer Velocity PID", indexerMotor,
 				IndexerConstants.IndexerMotorConfig);
 	}
 
