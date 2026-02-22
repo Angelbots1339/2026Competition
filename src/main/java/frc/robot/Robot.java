@@ -41,6 +41,7 @@ public class Robot extends TimedRobot {
 			config.minimumImportance = Importance.DEBUG;
 		});
 		Epilogue.bind(this);
+		// DogLog.setEnabled(false);
 	}
 
 	@Override
