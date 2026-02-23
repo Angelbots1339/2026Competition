@@ -74,7 +74,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private PIDController pidToPoseYController = new PIDController(AlignConstants.pidToPoseKP, 0,
 			AlignConstants.pidToPoseKD);
 
-	private boolean useVision = false;
+	private boolean useVision = true;
 
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);

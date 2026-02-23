@@ -53,7 +53,7 @@ public class RobotContainer {
 
 	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
 	@Logged(name = "Point Drive")
-	private Trigger pointDrive = new Trigger(() -> driver.getXButton());
+	private Trigger pointDrive = new Trigger(() -> driver.getRightTriggerAxis() > 0.2);
 
 	@Logged(name = "Bump Drive")
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
@@ -153,5 +153,11 @@ public class RobotContainer {
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
 	public boolean isHubActive() {
 		return FieldUtil.isHubActive();
+	}
+
+	@Logged(importance = Importance.CRITICAL, name = "Shift Time Left")
+	public int shifttimeleft() {
+		FieldUtil.getShiftOrder();
+		return FieldUtil.getShiftTimeLeft();
 	}
 }
