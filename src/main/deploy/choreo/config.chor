@@ -222,6 +222,20 @@
      "exp":"-90 deg",
      "val":-1.5707963267948966
     }
+   },
+   "SecondBumpStop":{
+    "x":{
+     "exp":"3.651370048522949 m",
+     "val":3.651370048522949
+    },
+    "y":{
+     "exp":"SecondBumpStart.y",
+     "val":5.562217998504639
+    },
+    "heading":{
+     "exp":"SecondBumpStart.heading",
+     "val":-1.5707963267948966
+    }
    }
   }
  },

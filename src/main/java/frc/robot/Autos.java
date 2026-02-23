@@ -77,12 +77,15 @@ public class Autos {
 	public AutoRoutine leftDepotNeutral() {
 		final var routine = factory.newRoutine("Left Depot Neutral");
 		final var leftDepot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
+		final var leftNeutral1 = routine.trajectory(ChoreoTraj.DepotShootNeutral1.name());
 		final var leftNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
 
 		routine.active().onTrue(
 				Commands.sequence(
 						leftDepot.resetOdometry(),
 						leftDepot.cmd(),
+						shoot.get(),
+						leftNeutral1.cmd(),
 						shoot.get(),
 						leftNeutral2.cmd(),
 						shoot.get()));
