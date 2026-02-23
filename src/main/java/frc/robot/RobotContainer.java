@@ -82,6 +82,7 @@ public class RobotContainer {
 		autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
 		autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
 		autoChooser.addCmd("right outpost neutral", autos::rightOutpostNeutral);
+		autoChooser.addRoutine("left depot neutral", autos::leftDepotNeutral);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 

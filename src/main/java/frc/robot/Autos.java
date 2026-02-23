@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -128,11 +129,8 @@ public class Autos {
 	public Command rightOutpostNeutral() {
 		final var routine = factory.newRoutine("Right Outpost Neutral");
 		final var rightOutpost = routine.trajectory(ChoreoTraj.RightOutpostShoot.name());
-		final var rightNeutralToShoot = routine.trajectory(
-				flipTrajectoryX(routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name()).getRawTrajectory()));
 		final var rightNeutral2 = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
-		final var outpostShootOutpost = routine.trajectory(ChoreoTraj.OutpostShootOutpost.name());
 
 		routine.active().onTrue(
 				Commands.sequence(
@@ -143,6 +141,22 @@ public class Autos {
 						shoot.get()));
 
 		return routine.cmd();
+	}
+
+	public AutoRoutine leftDepotNeutral() {
+		final var routine = factory.newRoutine("Left Depot Neutral");
+		final var leftDepot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
+		final var rightNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
+
+		routine.active().onTrue(
+				Commands.sequence(
+						leftDepot.resetOdometry(),
+						leftDepot.cmd(),
+						shoot.get(),
+						rightNeutral2.cmd(),
+						shoot.get()));
+
+		return routine;
 	}
 
 	private Trajectory<SwerveSample> flipTrajectoryX(Trajectory<SwerveSample> traj) {
