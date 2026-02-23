@@ -41,18 +41,6 @@ public class Autos {
 		factory.bind("IntakeStop", intake.stopIntake());
 	}
 
-	public Command bumpTest() {
-		final var routine = factory.newRoutine("bump test");
-		final var bumptest = routine.trajectory(ChoreoTraj.BumpTest.name());
-		routine.active().onTrue(
-				Commands.sequence(
-						bumptest.resetOdometry(),
-						bumptest.cmd(),
-						shoot.get()));
-
-		return routine.cmd();
-	}
-
 	public Command hubDepotTowerAuto() {
 		final var routine = factory.newRoutine("Hub Depot Tower");
 		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
@@ -69,7 +57,7 @@ public class Autos {
 	}
 
 	public Command hubDepotOutpostTowerAuto() {
-		final var routine = factory.newRoutine("Hub Depot Tower");
+		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
 		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
 		final var depotShootToOutpostShoot = routine.trajectory(ChoreoTraj.DepotShootOutpostShoot.name());
 		final var outpostShootToTower = routine.trajectory(ChoreoTraj.OutpostShoottoTower.name());
@@ -86,44 +74,20 @@ public class Autos {
 		return routine.cmd();
 	}
 
-	public Command leftNeutralAuto() {
-		final var routine = factory.newRoutine("Left Neutral");
-		final var leftNeutralToShoot = routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name());
+	public AutoRoutine leftDepotNeutral() {
+		final var routine = factory.newRoutine("Left Depot Neutral");
+		final var leftDepot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
 		final var leftNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
-		final var depotShootDepot = routine.trajectory(ChoreoTraj.DepotShootDepot.name());
 
 		routine.active().onTrue(
 				Commands.sequence(
-						leftNeutralToShoot.resetOdometry(),
-						leftNeutralToShoot.cmd(),
+						leftDepot.resetOdometry(),
+						leftDepot.cmd(),
 						shoot.get(),
 						leftNeutral2.cmd(),
-						shoot.get(),
-						depotShootDepot.cmd(),
 						shoot.get()));
 
-		return routine.cmd();
-	}
-
-	public Command rightNeutralAuto() {
-		final var routine = factory.newRoutine("Right Neutral");
-		final var rightNeutralToShoot = routine.trajectory(
-				flipTrajectoryX(routine.trajectory(ChoreoTraj.LeftNeutralToShoot.name()).getRawTrajectory()));
-		final var rightNeutral2 = routine.trajectory(
-				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
-		final var outpostShootOutpost = routine.trajectory(ChoreoTraj.OutpostShootOutpost.name());
-
-		routine.active().onTrue(
-				Commands.sequence(
-						rightNeutralToShoot.resetOdometry(),
-						rightNeutralToShoot.cmd(),
-						shoot.get(),
-						rightNeutral2.cmd(),
-						shoot.get(),
-						outpostShootOutpost.cmd(),
-						shoot.get()));
-
-		return routine.cmd();
+		return routine;
 	}
 
 	public Command rightOutpostNeutral() {
@@ -141,22 +105,6 @@ public class Autos {
 						shoot.get()));
 
 		return routine.cmd();
-	}
-
-	public AutoRoutine leftDepotNeutral() {
-		final var routine = factory.newRoutine("Left Depot Neutral");
-		final var leftDepot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
-		final var rightNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
-
-		routine.active().onTrue(
-				Commands.sequence(
-						leftDepot.resetOdometry(),
-						leftDepot.cmd(),
-						shoot.get(),
-						rightNeutral2.cmd(),
-						shoot.get()));
-
-		return routine;
 	}
 
 	private Trajectory<SwerveSample> flipTrajectoryX(Trajectory<SwerveSample> traj) {
