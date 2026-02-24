@@ -47,8 +47,13 @@ public class FieldUtil {
 		private HubShiftTime(double time) {
 			this.time = time;
 		}
-
 	}
+
+	public static String disabledColor = "#ff0000";
+	public static String enabledColor = "#00ff00";
+	public static String nextDisabledColor = "#b51b1b";
+	public static String nextEnabledColor = "#329629";
+	public static String unsureColor = "#666666";
 
 	public static Alliance allianceWithActiveHubStart = null;
 
@@ -107,6 +112,7 @@ public class FieldUtil {
 				allianceWithActiveHubStart = Alliance.Red;
 				break;
 			default:
+				allianceWithActiveHubStart = null;
 				break;
 		}
 	}
@@ -120,34 +126,80 @@ public class FieldUtil {
 	 * 25sec: Shift 4: Auto win enabled
 	 * 30sec: EndGame: both enabled
 	 */
-	public static boolean isHubActive() {
+	public static String isHubActive() {
 		double matchTime = (int) DriverStation.getMatchTime();
 
 		if (DriverStation.isAutonomous())
-			return true;
+			return enabledColor;
 
 		if (!DriverStation.isTeleop())
-			return false;
+			return disabledColor;
 
 		if (matchTime >= HubShiftTime.TRANSITION_SHIFT_END.time)
-			return true;
+			return enabledColor;
 
-		if (matchTime >= HubShiftTime.SHIFT_1_END.time)
-			return getAlliance() == allianceWithActiveHubStart;
+		if (allianceWithActiveHubStart == null) {
+			return unsureColor;
+		}
 
-		if (matchTime >= HubShiftTime.SHIFT_2_END.time)
-			return getAlliance() != allianceWithActiveHubStart;
+		if (matchTime >= HubShiftTime.SHIFT_1_END.time) {
+			shift = 1;
+			return getAlliance() == allianceWithActiveHubStart ? enabledColor : disabledColor;
+		}
 
-		if (matchTime >= HubShiftTime.SHIFT_3_END.time)
-			return getAlliance() == allianceWithActiveHubStart;
+		if (matchTime >= HubShiftTime.SHIFT_2_END.time) {
+			shift = 2;
+			return getAlliance() != allianceWithActiveHubStart ? enabledColor : disabledColor;
+		}
 
-		if (matchTime >= HubShiftTime.SHIFT_4_END.time)
-			return getAlliance() != allianceWithActiveHubStart;
+		if (matchTime >= HubShiftTime.SHIFT_3_END.time) {
+			shift = 3;
+			return getAlliance() == allianceWithActiveHubStart ? enabledColor : disabledColor;
+		}
 
-		if (matchTime <= HubShiftTime.ENDGAME_START.time)
-			return true;
+		if (matchTime >= HubShiftTime.SHIFT_4_END.time) {
+			shift = 4;
+			return getAlliance() != allianceWithActiveHubStart ? enabledColor : disabledColor;
+		}
 
-		return false;
+		if (matchTime <= HubShiftTime.ENDGAME_START.time) {
+			shift = 5;
+			return enabledColor;
+		}
+
+		return enabledColor;
+	}
+
+	public static int shift = 0;
+
+	public static String isHubActive(int shift) {
+
+		if (shift == 0)
+			return nextEnabledColor;
+
+		if (allianceWithActiveHubStart == null) {
+			return unsureColor;
+		}
+
+		if (shift == 1)
+			return getAlliance() == allianceWithActiveHubStart ? nextEnabledColor : nextDisabledColor;
+
+		if (shift == 2)
+			return getAlliance() != allianceWithActiveHubStart ? nextEnabledColor : nextDisabledColor;
+
+		if (shift == 3)
+			return getAlliance() == allianceWithActiveHubStart ? nextEnabledColor : nextDisabledColor;
+
+		if (shift == 4)
+			return getAlliance() != allianceWithActiveHubStart ? nextEnabledColor : nextDisabledColor;
+
+		if (shift == 5)
+			return nextEnabledColor;
+
+		if (shift == 6)
+			return unsureColor;
+
+		return nextEnabledColor;
 	}
 
 	public static int getShiftTimeLeft() {
@@ -164,5 +216,39 @@ public class FieldUtil {
 		matchTime -= HubShiftTime.ENDGAME_START.time;
 
 		return matchTime % 25;
+	}
+
+	public static boolean isAuto() {
+		return DriverStation.isAutonomousEnabled();
+	}
+
+	public static boolean isTransitionPeriod() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= HubShiftTime.TRANSITION_SHIFT_END.time;
+	}
+
+	public static boolean isShift1() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= HubShiftTime.SHIFT_1_END.time && matchTime < HubShiftTime.SHIFT_1_START.time;
+	}
+
+	public static boolean isShift2() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= HubShiftTime.SHIFT_2_END.time && matchTime < HubShiftTime.SHIFT_2_START.time;
+	}
+
+	public static boolean isShift3() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= HubShiftTime.SHIFT_3_END.time && matchTime < HubShiftTime.SHIFT_3_START.time;
+	}
+
+	public static boolean isShift4() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= HubShiftTime.SHIFT_4_END.time && matchTime < HubShiftTime.SHIFT_4_START.time;
+	}
+
+	public static boolean isEndGame() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= 0 && matchTime < HubShiftTime.ENDGAME_START.time;
 	}
 }
