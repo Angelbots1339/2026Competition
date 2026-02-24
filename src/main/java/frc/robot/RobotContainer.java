@@ -28,6 +28,7 @@ import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Intake;
@@ -55,7 +56,7 @@ public class RobotContainer {
 	@Logged(name = "Reset Gyro")
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
-	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
+	private Trigger pass = new Trigger(() -> driver.getBButton());
 
 	@Logged(name = "Point Drive")
 	private Trigger shoot = new Trigger(() -> driver.getXButton());
@@ -91,14 +92,14 @@ public class RobotContainer {
 	private void configureBindings() {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
-		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
-		shoot.whileTrue(Commands.either(
-				new Shoot(swerve, shooter, leftY, leftX, () -> true),
-				Commands.parallel(
-						swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
-								() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
-						shooter.run(() -> shooter.setRPS(40, 40))),
-				() -> isInAllianceZone()));
+		pass.whileTrue(Commands.parallel(
+				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
+						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
+				shooter.run(() -> {
+					shooter.setRPS(40, 40);
+					shooter.runIndexVelocity(ShooterConstants.indexerRPS);
+				})));
+		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
