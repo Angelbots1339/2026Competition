@@ -4,10 +4,8 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.Rotation;
 
 import java.util.function.Supplier;
 
@@ -23,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.lib.util.AlignUtil;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
@@ -31,6 +28,8 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
+import frc.robot.regression.ShooterRegression;
+import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -58,17 +57,20 @@ public class RobotContainer {
 
 	private Trigger pass = new Trigger(() -> driver.getBButton());
 
-	@Logged(name = "Point Drive")
-	private Trigger shoot = new Trigger(() -> driver.getXButton());
-
 	@Logged(name = "Bump Drive")
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
 
 	@Logged(name = "Snake Drive")
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
 
+	@Logged(name = "Shoot")
+	private Trigger shoot = new Trigger(() -> driver.getRightTriggerAxis() > 0.2);
+
+	@Logged(name = "Spin Up")
+	private Trigger shooterSpinup = new Trigger(() -> driver.getRightBumperButton());
+
 	@Logged(name = "Run Intake")
-	private Trigger runIntake = new Trigger(() -> driver.getRightTriggerAxis() > 0.2);
+	private Trigger runIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.2);
 
 	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
 
@@ -87,6 +89,10 @@ public class RobotContainer {
 		// autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
 		// autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
+
+		// TODO: remove this during comp
+		new Trigger(() -> !DriverStation.isTeleopEnabled())
+				.onTrue(Commands.run(() -> FieldUtil.allianceWithActiveHubStart = null).ignoringDisable(true));
 	}
 
 	private void configureBindings() {
@@ -104,12 +110,12 @@ public class RobotContainer {
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
 						swerve));
-
 		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
 				leftX, () -> {
 					ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(
 							swerve.getRobotRelativeSpeeds(),
 							swerve.getYaw());
+
 					// prevent turning when at very low speeds
 					if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
 						return swerve.getYaw();
@@ -118,10 +124,15 @@ public class RobotContainer {
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
 
+		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		shooterSpinup.whileTrue(shooter.run(() -> {
+			ShooterParams params = ShooterRegression.getShotParams(swerve);
+			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
+		}));
+
 		runIntake.whileTrue(intake.runIntake())
 				.onFalse(intake.stopIntake());
-
-		toggleIntakeDeploy.whileTrue(intake.retract());
+		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 	}
 
 	public void configureControllerAlerts() {
@@ -164,11 +175,63 @@ public class RobotContainer {
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
-	public boolean isHubActive() {
+	public String isHubActive() {
 		return FieldUtil.isHubActive();
 	}
 
-	public boolean isInAllianceZone() {
-		return FieldUtil.isInAllianceZone(swerve.getPose());
+	@Logged(importance = Importance.CRITICAL, name = "Shift Time Left")
+	public int shifttimeleft() {
+		FieldUtil.getShiftOrder();
+		return FieldUtil.getShiftTimeLeft();
+	}
+
+	@Logged(importance = Importance.CRITICAL, name = "Shift Next")
+	public String shiftNext() {
+		return FieldUtil.isHubActive(FieldUtil.shift + 1);
+	}
+
+	@Logged(importance = Importance.CRITICAL, name = "Shift Next Next")
+	public String shiftNextNext() {
+		return FieldUtil.isHubActive(FieldUtil.shift + 2);
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isAuto() {
+		return FieldUtil.isAuto();
+
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isTransitionPeriod() {
+		return FieldUtil.isTransitionPeriod();
+
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isShift1() {
+		return FieldUtil.isShift1();
+
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isShift2() {
+		return FieldUtil.isShift2();
+
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isShift3() {
+		return FieldUtil.isShift3();
+
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isShift4() {
+		return FieldUtil.isShift4();
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isEndGame() {
+		return FieldUtil.isEndGame();
 	}
 }
