@@ -35,7 +35,7 @@ public class Autos {
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 
 		shoot = () -> new Shoot(swerve, shooter, () -> 0.0, () -> 0.0, () -> true)
-				.withTimeout(2);
+				.withTimeout(4);
 
 		factory.bind("IntakeStart", intake.runIntake());
 		factory.bind("IntakeStop", intake.stopIntake());
@@ -96,6 +96,8 @@ public class Autos {
 	public Command rightOutpostNeutral() {
 		final var routine = factory.newRoutine("Right Outpost Neutral");
 		final var rightOutpost = routine.trajectory(ChoreoTraj.RightOutpostShoot.name());
+		final var rightNeutral1 = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral1.name()).getRawTrajectory()));
 		final var rightNeutral2 = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
 
@@ -103,6 +105,8 @@ public class Autos {
 				Commands.sequence(
 						rightOutpost.resetOdometry(),
 						rightOutpost.cmd(),
+						shoot.get(),
+						rightNeutral1.cmd(),
 						shoot.get(),
 						rightNeutral2.cmd(),
 						shoot.get()));

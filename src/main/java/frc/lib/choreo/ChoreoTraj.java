@@ -41,14 +41,14 @@ public record ChoreoTraj(
 	public static final ChoreoTraj DepotShootNeutral1 = new ChoreoTraj(
 	    "DepotShootNeutral1",
 	    OptionalInt.empty(),
-	    5.74866,
+	    5.78694,
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588)),
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
 	);
 	public static final ChoreoTraj DepotShootNeutral2 = new ChoreoTraj(
 	    "DepotShootNeutral2",
 	    OptionalInt.empty(),
-	    5.76506,
+	    6.66456,
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588)),
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
 	);
