@@ -28,6 +28,8 @@ import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
+import frc.robot.regression.ShooterRegression;
+import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -53,16 +55,20 @@ public class RobotContainer {
 	@Logged(name = "Reset Gyro")
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
+	@Logged(name = "PID to Pose")
 	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
-
-	@Logged(name = "Point Drive")
-	private Trigger shoot = new Trigger(() -> driver.getRightTriggerAxis() > 0.2);
 
 	@Logged(name = "Bump Drive")
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
 
 	@Logged(name = "Snake Drive")
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
+
+	@Logged(name = "Shoot")
+	private Trigger shoot = new Trigger(() -> driver.getRightTriggerAxis() > 0.2);
+
+	@Logged(name = "Spin Up")
+	private Trigger shooterSpinup = new Trigger(() -> driver.getRightBumperButton());
 
 	@Logged(name = "Run Intake")
 	private Trigger runIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.2);
@@ -94,17 +100,16 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
-		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
 						swerve));
-
 		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
 				leftX, () -> {
 					ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(
 							swerve.getRobotRelativeSpeeds(),
 							swerve.getYaw());
+
 					// prevent turning when at very low speeds
 					if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
 						return swerve.getYaw();
@@ -113,10 +118,15 @@ public class RobotContainer {
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
 
+		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		shooterSpinup.whileTrue(shooter.run(() -> {
+			ShooterParams params = ShooterRegression.getShotParams(swerve);
+			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
+		}));
+
 		runIntake.whileTrue(intake.runIntake())
 				.onFalse(intake.stopIntake());
-
-		toggleIntakeDeploy.whileTrue(intake.retract());
+		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 	}
 
 	public void configureControllerAlerts() {
