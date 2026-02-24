@@ -26,8 +26,10 @@ import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 @Logged
@@ -44,16 +46,17 @@ public class RobotContainer {
 
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
-	// private Intake intake = new Intake();
-	// private Shooter shooter = new Shooter();
-	private Climber climber = new Climber();
+	private Intake intake = new Intake();
+	private Shooter shooter = new Shooter();
+	// private Climber climber = new Climber();
 
 	@Logged(name = "Reset Gyro")
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
 	private Trigger pidtoPose = new Trigger(() -> driver.getBButton());
+
 	@Logged(name = "Point Drive")
-	private Trigger pointDrive = new Trigger(() -> driver.getRightTriggerAxis() > 0.2);
+	private Trigger shoot = new Trigger(() -> driver.getRightTriggerAxis() > 0.2);
 
 	@Logged(name = "Bump Drive")
 	private Trigger bumpDrive = new Trigger(() -> driver.getYButton());
@@ -61,23 +64,25 @@ public class RobotContainer {
 	@Logged(name = "Snake Drive")
 	private Trigger snakeDrive = new Trigger(() -> driver.getAButton());
 
-	// priate Trigger deployIntake = new Trigger(() ->
-	// driver.getLeftBumperButton());
+	@Logged(name = "Run Intake")
+	private Trigger runIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.2);
+
+	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
-	private Autos autos = new Autos(swerve);
+	// private Autos autos = new Autos(swerve);
 
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-
-		autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
-		autoChooser.addCmd("Hub Depot Outpost Tower", autos::hubDepotOutpostTowerAuto);
-		autoChooser.addCmd("bump test", autos::bumpTest);
-		autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
-		autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
+		// autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
+		// autoChooser.addCmd("Hub Depot Outpost Tower",
+		// autos::hubDepotOutpostTowerAuto);
+		// autoChooser.addCmd("bump test", autos::bumpTest);
+		// autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
+		// autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		// TODO: remove this during comp
@@ -87,17 +92,18 @@ public class RobotContainer {
 
 	private void configureBindings() {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
-
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
-		pidtoPose.whileTrue(swerve.defer(() -> AlignUtil.driveToClimbPosition(swerve)));
-		pointDrive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true));
+		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
+		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 		bumpDrive.whileTrue(
-				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(), () -> true),
+				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
+						() -> true),
 						swerve));
 
 		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
 				leftX, () -> {
-					ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
+					ChassisSpeeds speeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+							swerve.getRobotRelativeSpeeds(),
 							swerve.getYaw());
 					// prevent turning when at very low speeds
 					if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.1) {
@@ -106,14 +112,11 @@ public class RobotContainer {
 					return Rotation2d.fromRadians(Math.atan2(speeds.vyMetersPerSecond,
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
-		// deployIntake.onTrue(Commands.run(() -> {
-		// intake.setWristAngle(IntakeConstants.deployedAngle);
-		// intake.setIntakeVelocity(IntakeConstants.intakeVelocity);
-		// }, intake))
-		// .onFalse(Commands.run(() -> {
-		// intake.setWristAngle(IntakeConstants.retractedAngle);
-		// intake.setIntakeVelocity(0);
-		// }, intake));
+
+		runIntake.whileTrue(intake.runIntake())
+				.onFalse(intake.stopIntake());
+
+		toggleIntakeDeploy.whileTrue(intake.retract());
 	}
 
 	public void configureControllerAlerts() {
@@ -143,6 +146,7 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
+		intake.setDefaultCommand(intake.deploy());
 	}
 
 	@Logged(name = "Current auto")
@@ -151,7 +155,7 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		TuningManager.init(swerve, null, null, climber);
+		TuningManager.init(swerve, shooter, intake, null);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")

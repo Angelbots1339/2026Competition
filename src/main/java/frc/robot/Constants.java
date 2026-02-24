@@ -3,14 +3,19 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecondPerSecond;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -64,7 +69,8 @@ public class Constants {
 		public static final double angularDriveKD = 0;
 		public static final double angularDriveKS = 0.12;
 		public static final double angularDriveKV = 0;
-		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(angularDriveKS,
+		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(
+				angularDriveKS,
 				angularDriveKV);
 		public static final TrapezoidProfile.Constraints angularDriveConstraints = new TrapezoidProfile.Constraints(
 				10,
@@ -84,6 +90,11 @@ public class Constants {
 	public class VisionConstants {
 		public static final String LimelightName = "limelight";
 		public static final double maxUsableRange = 4.0;
+
+		// current limelight location
+		// forward = 0.016m
+		// top = 0.675m
+		// pitch = 12deg
 
 		public static double calcStdDev(double metersFromTarget) {
 			return 0.08 * Math.pow(metersFromTarget, 2);
@@ -120,72 +131,95 @@ public class Constants {
 	public class ShooterConstants {
 		public static final int LeaderPort = 30;
 		public static final int FollowerPort = 32;
-		public static final int SpinnerPort = 36;
-		public static final int IndexPort = 34;
+		public static final int SpinnerPort = 34;
+		public static final int IndexPort = 36;
 
 		public static final double shootRPS = 41.5;
+		public static final double indexerRPS = 20.0;
 		public static final double rpsTolerence = 1;
 
-		public static TalonFXConfiguration base = new TalonFXConfiguration()
+		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(70))
-						.withStatorCurrentLimit(Amps.of(120))
-						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimitEnable(true));
+						.withStatorCurrentLimit(Amps.of(100))
+						.withStatorCurrentLimitEnable(true))
+				.withMotorOutput(new MotorOutputConfigs()
+						.withNeutralMode(NeutralModeValue.Coast)
+						.withInverted(InvertedValue.Clockwise_Positive))
+				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
+				.withSlot0(new Slot0Configs()
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
+						.withKP(8)
+						.withKI(3)
+						.withKV(0)
+						.withKS(10));
 
-		public static TalonFXConfiguration config = new TalonFXConfiguration()
+		public static TalonFXConfiguration spinnerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(70))
-						.withStatorCurrentLimit(Amps.of(120))
+						.withSupplyCurrentLimit(Amps.of(15))
+						.withStatorCurrentLimit(Amps.of(50))
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.CounterClockwise_Positive))
-				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(10)
-						.withKI(6)
-						.withKV(0)
-						.withKS(10));
-
-		public static TalonFXConfiguration spinnerConfig = base.clone()
-				.withMotorOutput(new MotorOutputConfigs()
-						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.Clockwise_Positive)) // for some reason, if we extend config, this
-																			// doesn't get overridden
-				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 36.0))
-				.withSlot0(new Slot0Configs()
-						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						// TODO: actual find values
-						.withKP(9)
-						.withKI(6)
+						.withKP(7)
+						.withKI(3)
 						.withKV(0)
 						.withKS(6));
 
-		public static TalonFXConfiguration indexConfig = base.clone().withMotorOutput(new MotorOutputConfigs()
-				.withNeutralMode(NeutralModeValue.Coast).withInverted(InvertedValue.CounterClockwise_Positive))
-				.withSlot0(new Slot0Configs().withKP(0.35).withKI(0).withKD(0).withKS(0.5).withKV(0.065));
+		public static TalonFXConfiguration indexConfig = new TalonFXConfiguration()
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withStatorCurrentLimit(Amps.of(40))
+						.withStatorCurrentLimitEnable(true))
+				.withMotorOutput(new MotorOutputConfigs()
+						.withNeutralMode(NeutralModeValue.Coast)
+						.withInverted(InvertedValue.Clockwise_Positive))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(2))
+				.withSlot0(new Slot0Configs()
+						.withKP(0.4)
+						.withKI(0)
+						.withKD(0)
+						.withKS(0.4898)
+						.withKV(0.24));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(100));
 	}
 
 	public class IntakeConstants {
-		public static final int intakeMotorId = 8;
-		public static final int deployMotorId = 9;
+		public static final int intakeMotorId = 22;
+		public static final int deployMotorId = 24;
 
-		public static final double deployIntakeGearRatio = 32.0 / 16.0;
+		public static final Angle DeployedAngle = Degrees.of(27);
+		public static final double IntakeVoltage = 6;
+		public static final Angle RetractedAngle = Degrees.of(115);
 
+		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
+
+		// angle of COM in CAD
+		// public static final Angle MinAngle = Degrees.of(15.5614);
+		// public static final Angle MaxAngle = Degrees.of(115.558);
+
+		public static final Angle MinAngle = Degrees.of(27);
+		public static final Angle MaxAngle = Degrees.of(115.558);
+
+		public static final Angle IntakeAngleTolerence = Degrees.of(1);
+
+		// Recalc:
+		// https://www.reca.lc/arm?armMass=%7B%22s%22%3A5.134%2C%22u%22%3A%22lbs%22%7D&comLength=%7B%22s%22%3A10.203%2C%22u%22%3A%22in%22%7D&currentLimit=%7B%22s%22%3A70%2C%22u%22%3A%22A%22%7D&efficiency=90&endAngle=%7B%22s%22%3A115.558%2C%22u%22%3A%22deg%22%7D&iterationLimit=10000&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%22%7D&ratio=%7B%22magnitude%22%3A18%2C%22ratioType%22%3A%22Reduction%22%7D&startAngle=%7B%22s%22%3A15.5614%2C%22u%22%3A%22deg%22%7D
 		public static final Slot0Configs deploySlot0 = new Slot0Configs()
-				.withKP(0)
+				.withKP(15)
 				.withKI(0)
 				.withKD(0)
 				.withKV(0)
 				.withKA(0)
-				.withKS(0)
-				.withKG(0)
+				.withKS(0.1)
+				.withKG(0.35)
 				.withGravityType(GravityTypeValue.Arm_Cosine)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
@@ -199,19 +233,20 @@ public class Constants {
 								.withSensorToMechanismRatio(deployIntakeGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(35)
+								.withStatorCurrentLimit(40)
 								.withSupplyCurrentLimit(70)
 								.withStatorCurrentLimitEnable(true)
 								.withSupplyCurrentLimitEnable(true))
 				.withSoftwareLimitSwitch(
 						new SoftwareLimitSwitchConfigs()
-								// TODO: figure out the software limits
-								.withForwardSoftLimitEnable(false)
-								.withReverseSoftLimitEnable(false)
-								.withForwardSoftLimitThreshold(1)
-								// this may need to change as well
-								.withReverseSoftLimitThreshold(0))
-				.withSlot0(deploySlot0);
+								.withForwardSoftLimitEnable(true)
+								.withReverseSoftLimitEnable(true)
+								.withForwardSoftLimitThreshold(MaxAngle)
+								.withReverseSoftLimitThreshold(MinAngle))
+				.withSlot0(deploySlot0)
+				.withMotionMagic(new MotionMagicConfigs()
+						.withMotionMagicCruiseVelocity(RotationsPerSecond.of(12.0))
+						.withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(24.0)));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
 				.withKP(0)
@@ -222,7 +257,7 @@ public class Constants {
 				.withKS(0)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
-		public static final double intakeWheelGearRatio = 1 * 1;
+		public static final double intakeWheelGearRatio = 18.0 / 12.0;
 
 		public static final TalonFXConfiguration intakeConfigs = new TalonFXConfiguration()
 				.withMotorOutput(
@@ -240,9 +275,6 @@ public class Constants {
 								.withSupplyCurrentLimitEnable(true))
 				.withSlot0(deploySlot0);
 
-		public static final double deployedAngle = 0.0;
-		public static final double retractedAngle = 0.0;
-		public static final double intakeVelocity = 0.0;
 	}
 
 	public class ClimberConstants {
@@ -265,8 +297,9 @@ public class Constants {
 						.withInverted(InvertedValue.CounterClockwise_Positive)
 						.withNeutralMode(NeutralModeValue.Brake))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough diameter of the
-																	// climber
+						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough
+				// diameter of the
+				// climber
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))

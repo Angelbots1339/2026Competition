@@ -26,6 +26,7 @@ public class FieldUtil {
 
 	public static Distance towerWidth = Inches.of(47.00);
 	public static Distance hubRadius = Inches.of(41.7 / 2.0);
+	public static Distance hubWidth = Inches.of(47);
 
 	public static enum HubShiftTime {
 		TRANSITION_SHIFT_START(140),
