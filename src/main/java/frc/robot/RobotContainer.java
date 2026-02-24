@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotation;
 
 import java.util.function.Supplier;
 
@@ -90,7 +92,13 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pidtoPose.whileTrue(AlignUtil.driveToClimbPosition(swerve));
-		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		shoot.whileTrue(Commands.either(
+				new Shoot(swerve, shooter, leftY, leftX, () -> true),
+				Commands.parallel(
+						swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
+								() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
+						shooter.run(() -> shooter.setRPS(40, 40))),
+				() -> isInAllianceZone()));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
