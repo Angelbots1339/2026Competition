@@ -215,4 +215,38 @@ public class FieldUtil {
 
 		return matchTime % 25;
 	}
+
+	public static boolean isAuto() {
+		return DriverStation.isAutonomousEnabled();
+	}
+
+	public static boolean isTransitionPeriod() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= HubShiftTime.TRANSITION_SHIFT_END.time;
+	}
+
+	public static boolean isShift1() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= HubShiftTime.SHIFT_1_END.time && matchTime < HubShiftTime.SHIFT_1_START.time;
+	}
+
+	public static boolean isShift2() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= HubShiftTime.SHIFT_2_END.time && matchTime < HubShiftTime.SHIFT_2_START.time;
+	}
+
+	public static boolean isShift3() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= HubShiftTime.SHIFT_3_END.time && matchTime < HubShiftTime.SHIFT_3_START.time;
+	}
+
+	public static boolean isShift4() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= HubShiftTime.SHIFT_4_END.time && matchTime < HubShiftTime.SHIFT_4_START.time;
+	}
+
+	public static boolean isEndGame() {
+		double matchTime = (int) DriverStation.getMatchTime();
+		return matchTime >= 0 && matchTime < HubShiftTime.ENDGAME_START.time;
+	}
 }

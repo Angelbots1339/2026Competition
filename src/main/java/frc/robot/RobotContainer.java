@@ -79,6 +79,9 @@ public class RobotContainer {
 		autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
 		autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
+
+		new Trigger(() -> DriverStation.isDisabled())
+				.onTrue(Commands.run(() -> FieldUtil.allianceWithActiveHubStart = null).ignoringDisable(true));
 	}
 
 	private void configureBindings() {
@@ -169,5 +172,45 @@ public class RobotContainer {
 	@Logged(importance = Importance.CRITICAL, name = "Shift Next Next")
 	public String shiftNextNext() {
 		return FieldUtil.isHubActive(FieldUtil.shift + 2);
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isAuto() {
+		return FieldUtil.isAuto();
+
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isTransitionPeriod() {
+		return FieldUtil.isTransitionPeriod();
+
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isShift1() {
+		return FieldUtil.isShift1();
+
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isShift2() {
+		return FieldUtil.isShift2();
+
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isShift3() {
+		return FieldUtil.isShift3();
+
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isShift4() {
+		return FieldUtil.isShift4();
+	}
+
+	@Logged(importance = Importance.CRITICAL)
+	public boolean isEndGame() {
+		return FieldUtil.isEndGame();
 	}
 }
