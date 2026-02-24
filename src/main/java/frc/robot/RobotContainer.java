@@ -80,7 +80,8 @@ public class RobotContainer {
 		autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
-		new Trigger(() -> DriverStation.isDisabled())
+		// TODO: remove this during comp
+		new Trigger(() -> !DriverStation.isTeleopEnabled())
 				.onTrue(Commands.run(() -> FieldUtil.allianceWithActiveHubStart = null).ignoringDisable(true));
 	}
 

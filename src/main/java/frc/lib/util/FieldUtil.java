@@ -136,6 +136,7 @@ public class FieldUtil {
 
 		if (matchTime >= HubShiftTime.TRANSITION_SHIFT_END.time)
 			return enabledColor;
+
 		if (allianceWithActiveHubStart == null) {
 			return unsureColor;
 		}
