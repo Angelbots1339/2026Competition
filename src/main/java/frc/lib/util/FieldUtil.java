@@ -2,6 +2,7 @@ package frc.lib.util;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meter;
+import static edu.wpi.first.units.Units.Meters;
 
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.RobotConstants;
 
 public class FieldUtil {
 	public static Distance FieldWidth = Inches.of(651.22);
@@ -27,6 +29,7 @@ public class FieldUtil {
 	public static Distance towerWidth = Inches.of(47.00);
 	public static Distance hubRadius = Inches.of(41.7 / 2.0);
 	public static Distance hubWidth = Inches.of(47);
+	public static Distance AllianceZoneWidth = Inches.of(156.06);
 
 	public static enum HubShiftTime {
 		TRANSITION_SHIFT_START(140),
@@ -69,6 +72,15 @@ public class FieldUtil {
 		}
 
 		return isAllianceRED;
+	}
+
+	public static boolean isInAllianceZone(Pose2d pose) {
+		if (isRedAlliance()) {
+			return pose.getX() + RobotConstants.width.div(2).in(Meters) >= FieldWidth.minus(AllianceZoneWidth)
+					.in(Meters);
+		}
+
+		return pose.getX() - RobotConstants.width.div(2).in(Meters) <= AllianceZoneWidth.in(Meters);
 	}
 
 	public static Pose2d getHubCenter() {

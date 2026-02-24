@@ -158,4 +158,8 @@ public class RobotContainer {
 	public boolean isHubActive() {
 		return FieldUtil.isHubActive();
 	}
+
+	public boolean isInAllianceZone() {
+		return FieldUtil.isInAllianceZone(swerve.getPose());
+	}
 }
