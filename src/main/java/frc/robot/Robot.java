@@ -34,8 +34,8 @@ public class Robot extends TimedRobot {
 		DriverStation.startDataLog(DataLogManager.getLog());
 		Epilogue.configure(config -> {
 			config.loggingPeriod = Seconds.of(0.01);
-			// config.minimumImportance = Importance.CRITICAL;
-			config.minimumImportance = Importance.DEBUG;
+			config.minimumImportance = Importance.CRITICAL;
+			// config.minimumImportance = Importance.DEBUG;
 		});
 		Epilogue.bind(this);
 	}

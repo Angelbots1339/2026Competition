@@ -151,7 +151,7 @@ public class RobotContainer {
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
-	public boolean isHubActive() {
+	public String isHubActive() {
 		return FieldUtil.isHubActive();
 	}
 
@@ -159,5 +159,15 @@ public class RobotContainer {
 	public int shifttimeleft() {
 		FieldUtil.getShiftOrder();
 		return FieldUtil.getShiftTimeLeft();
+	}
+
+	@Logged(importance = Importance.CRITICAL, name = "Shift Next")
+	public String shiftNext() {
+		return FieldUtil.isHubActive(FieldUtil.shift + 1);
+	}
+
+	@Logged(importance = Importance.CRITICAL, name = "Shift Next Next")
+	public String shiftNextNext() {
+		return FieldUtil.isHubActive(FieldUtil.shift + 2);
 	}
 }
