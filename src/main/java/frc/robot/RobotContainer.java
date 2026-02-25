@@ -24,14 +24,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Indexer;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -81,18 +82,17 @@ public class RobotContainer {
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
-	// private Autos autos = new Autos(swerve);
+	private Autos autos = new Autos(swerve, shooter, intake, indexer);
 
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-		// autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
-		// autoChooser.addCmd("Hub Depot Outpost Tower",
-		// autos::hubDepotOutpostTowerAuto);
-		// autoChooser.addCmd("bump test", autos::bumpTest);
-		// autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
-		// autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
+		autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
+		autoChooser.addCmd("Hub Depot Outpost Tower",
+				autos::hubDepotOutpostTowerAuto);
+		autoChooser.addCmd("right outpost neutral", autos::rightOutpostNeutral);
+		autoChooser.addRoutine("left depot neutral", autos::leftDepotNeutral);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		// TODO: remove this during comp
@@ -108,7 +108,8 @@ public class RobotContainer {
 						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
 				shooter.run(() -> {
 					shooter.setRPS(40, 40);
-					shooter.runIndexVelocity(ShooterConstants.indexerRPS);
+					shooter.setKickerVelocity(ShooterConstants.KickerRPS);
+					indexer.runVoltage(IndexerConstants.IndexerVolts);
 				})));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
@@ -142,7 +143,7 @@ public class RobotContainer {
 
 		// TODO: also reverse the indexer as well
 		reverse.whileTrue(Commands.parallel(
-				shooter.run(() -> shooter.runIndexVelocity(-ShooterConstants.indexerRPS)),
+				shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
 				intake.run(() -> intake.setIntakeVoltage(-IntakeConstants.IntakeVoltage))));
 	}
 

@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Indexer;
@@ -17,18 +18,18 @@ public class Shoot extends Command {
 
 	private Supplier<Double> x;
 	private Supplier<Double> y;
-	private Supplier<Boolean> runIndex;
+	private Supplier<Boolean> runKicker;
 
 	public Shoot(Swerve swerve, Shooter shooter, Indexer indexer, Supplier<Double> x, Supplier<Double> y,
-			Supplier<Boolean> runIndex) {
+			Supplier<Boolean> runKicker) {
 		this.swerve = swerve;
 		this.shooter = shooter;
 		this.indexer = indexer;
 
 		this.x = x;
 		this.y = y;
-		this.runIndex = runIndex;
-		addRequirements(shooter, swerve, indexer);
+		this.runKicker = runKicker;
+		addRequirements(shooter, swerve);
 	}
 
 	@Override
@@ -43,20 +44,15 @@ public class Shoot extends Command {
 
 		shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 
-		if (shooter.atSetpoint() && runIndex.get()) {
-			shooter.runIndexVelocity(20);
+		if (shooter.atSetpoint() && runKicker.get()) {
+			shooter.setKickerVelocity(ShooterConstants.KickerRPS);
 			indexer.runVoltage(IndexerConstants.IndexerVolts);
 		}
-
-		// if (!runIndex.get() ||
-		// swerve.getRotationError().minus(params.angle()).getMeasure()
-		// .gt(params.maxAngleError()))
-		// shooter.disableIndex();
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		shooter.disableIndex();
+		shooter.disableKicker();
 		shooter.disableShooter();
 	}
 
