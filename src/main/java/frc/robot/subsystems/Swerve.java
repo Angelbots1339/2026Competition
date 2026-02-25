@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
@@ -167,7 +168,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void driveRobotRelative(ChassisSpeeds speeds) {
-		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds)
+		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(ChassisSpeeds.discretize(speeds, 0.02))
 				.withDriveRequestType(DriveRequestType.Velocity));
 	}
 
