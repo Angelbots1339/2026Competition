@@ -19,16 +19,17 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.ShooterConstants;
 
 @Logged
 public class Shooter extends SubsystemBase {
-	public TalonFX leader = new TalonFX(ShooterConstants.LeaderPort);
+	private TalonFX leader = new TalonFX(ShooterConstants.LeaderPort);
 	private TalonFX follower = new TalonFX(ShooterConstants.FollowerPort);
 
-	public TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
+	private TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
 
-	public TalonFX indexMotor = new TalonFX(ShooterConstants.IndexPort);
+	private TalonFX kicker = new TalonFX(ShooterConstants.KickerPort);
 
 	private double targetShooterRPS = 0.0;
 	private double targetSpinnerRPS = 0.0;
@@ -37,8 +38,8 @@ public class Shooter extends SubsystemBase {
 	public Shooter() {
 		leader.getConfigurator().apply(ShooterConstants.ShooterConfig);
 		follower.getConfigurator().apply(ShooterConstants.ShooterConfig);
-		spinner.getConfigurator().apply(ShooterConstants.spinnerConfig);
-		indexMotor.getConfigurator().apply(ShooterConstants.indexConfig);
+		spinner.getConfigurator().apply(ShooterConstants.SpinnerConfig);
+		kicker.getConfigurator().apply(ShooterConstants.KickerConfig);
 
 		follower.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Opposed));
 
@@ -62,8 +63,8 @@ public class Shooter extends SubsystemBase {
 		setRPS(rps, rps);
 	}
 
-	public void runIndexVelocity(double rps) {
-		indexMotor.setControl(new VelocityVoltage(rps));
+	public void setKickerVelocity(double rps) {
+		kicker.setControl(new VelocityVoltage(rps));
 	}
 
 	public double getShooterRPS() {
@@ -86,13 +87,19 @@ public class Shooter extends SubsystemBase {
 		setVoltage(Volts.of(0));
 	}
 
-	public void disableIndex() {
-		indexMotor.setControl(new NeutralOut());
+	public void disableKicker() {
+		kicker.setControl(new NeutralOut());
 	}
 
 	public void disable() {
 		disableShooter();
-		disableIndex();
+		disableKicker();
+	}
+
+	public void logPID() {
+		TuningManager.createPID("Shooter/leader", leader, ShooterConstants.ShooterConfig);
+		TuningManager.createPID("Shooter/spinner", spinner, ShooterConstants.SpinnerConfig);
+		TuningManager.createPID("Shooter/kicker", kicker, ShooterConstants.KickerConfig);
 	}
 
 	@Override

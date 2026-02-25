@@ -106,7 +106,7 @@ public class RobotContainer {
 						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
 				shooter.run(() -> {
 					shooter.setRPS(40, 40);
-					shooter.runIndexVelocity(ShooterConstants.indexerRPS);
+					shooter.setKickerVelocity(ShooterConstants.KickerRPS);
 				})));
 		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 		bumpDrive.whileTrue(
@@ -139,7 +139,7 @@ public class RobotContainer {
 
 		// TODO: also reverse the indexer as well
 		reverse.whileTrue(Commands.parallel(
-				shooter.run(() -> shooter.runIndexVelocity(-ShooterConstants.indexerRPS)),
+				shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
 				intake.run(() -> intake.setIntakeVoltage(-IntakeConstants.IntakeVoltage))));
 	}
 
