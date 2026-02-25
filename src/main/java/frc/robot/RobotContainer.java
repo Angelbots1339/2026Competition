@@ -137,7 +137,7 @@ public class RobotContainer {
 
 		runIntake
 				.whileTrue(intake.runIntake()
-						.alongWith(indexer.run(() -> indexer.runVoltage(IntakeConstants.IntakeVoltage))))
+						.alongWith(indexer.index()))
 				.onFalse(intake.run(intake::disable));
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 

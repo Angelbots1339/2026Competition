@@ -38,8 +38,8 @@ public class Autos {
 		shoot = () -> new Shoot(swerve, shooter, indexer, () -> 0.0, () -> 0.0, () -> true)
 				.withTimeout(4);
 
-		factory.bind("IntakeStart", intake.runIntake());
-		factory.bind("IntakeStop", intake.stopIntake());
+		factory.bind("IntakeStart", intake.runIntake().alongWith(indexer.index()));
+		factory.bind("IntakeStop", intake.stopIntake().alongWith(indexer.run(() -> indexer.disable())));
 	}
 
 	public Command hubDepotTowerAuto() {
