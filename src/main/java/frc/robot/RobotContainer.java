@@ -80,18 +80,17 @@ public class RobotContainer {
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
-	// private Autos autos = new Autos(swerve);
+	private Autos autos = new Autos(swerve, shooter, intake);
 
 	public RobotContainer() {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-		// autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
-		// autoChooser.addCmd("Hub Depot Outpost Tower",
-		// autos::hubDepotOutpostTowerAuto);
-		// autoChooser.addCmd("bump test", autos::bumpTest);
-		// autoChooser.addCmd("left neutral", autos::leftNeutralAuto);
-		// autoChooser.addCmd("right neutral", autos::rightNeutralAuto);
+		autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
+		autoChooser.addCmd("Hub Depot Outpost Tower",
+				autos::hubDepotOutpostTowerAuto);
+		autoChooser.addCmd("right outpost neutral", autos::rightOutpostNeutral);
+		autoChooser.addRoutine("left depot neutral", autos::leftDepotNeutral);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		// TODO: remove this during comp
@@ -107,7 +106,7 @@ public class RobotContainer {
 						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
 				shooter.run(() -> {
 					shooter.setRPS(40, 40);
-					shooter.runIndexVelocity(ShooterConstants.IndexerRPS);
+					shooter.setKickerVelocity(ShooterConstants.KickerRPS);
 				})));
 		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 		bumpDrive.whileTrue(
@@ -140,7 +139,7 @@ public class RobotContainer {
 
 		// TODO: also reverse the indexer as well
 		reverse.whileTrue(Commands.parallel(
-				shooter.run(() -> shooter.runIndexVelocity(-ShooterConstants.IndexerRPS)),
+				shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
 				intake.run(() -> intake.setIntakeVoltage(-IntakeConstants.IntakeVoltage))));
 	}
 

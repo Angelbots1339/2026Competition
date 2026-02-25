@@ -3,8 +3,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
@@ -92,9 +90,10 @@ public class Constants {
 		public static final String LimelightName = "limelight";
 		public static final double maxUsableRange = 4.0;
 
-		// current limelight location
-		// forward = 0.016m
-		// top = 0.675m
+		// limelight location
+		// forward = 0.020m
+		// left = 0.000m
+		// top = 0.654m
 		// pitch = 12deg
 
 		public static double calcStdDev(double metersFromTarget) {
@@ -103,9 +102,6 @@ public class Constants {
 	}
 
 	public class TuningConstants {
-		public static final String tuningNTPrefix = "Tuning/";
-		public static final String tuningModeNTName = tuningNTPrefix + "Mode";
-
 		public static enum TuningMode {
 			Shooter,
 			Swerve,
@@ -113,30 +109,16 @@ public class Constants {
 			Intake,
 			Climber,
 		};
-
-		public class Swerve {
-			public static final String angularPIDNTName = tuningNTPrefix + "angular PID";
-		}
-
-		public class Shooter {
-			public static final String voltageNTName = tuningNTPrefix + "voltage";
-			public static final String velocityNTName = tuningNTPrefix + "velocity";
-			public static final String PNTName = tuningNTPrefix + "P";
-			public static final String INTName = tuningNTPrefix + "I";
-			public static final String DNTName = tuningNTPrefix + "D";
-			public static final String SNTName = tuningNTPrefix + "S";
-			public static final String VNTName = tuningNTPrefix + "V";
-		}
 	}
 
 	public class ShooterConstants {
 		public static final int LeaderPort = 30;
 		public static final int FollowerPort = 32;
 		public static final int SpinnerPort = 34;
-		public static final int IndexPort = 36;
+		public static final int KickerPort = 36;
 
 		public static final double shootRPS = 41.5;
-		public static final double IndexerRPS = 20.0;
+		public static final double KickerRPS = 20.0;
 		public static final double rpsTolerence = 1;
 
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
@@ -146,7 +128,8 @@ public class Constants {
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.Clockwise_Positive))
-				.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(18.0 / 44.0))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
 						.withKP(8)
@@ -154,7 +137,7 @@ public class Constants {
 						.withKV(0)
 						.withKS(10));
 
-		public static TalonFXConfiguration spinnerConfig = new TalonFXConfiguration()
+		public static TalonFXConfiguration SpinnerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withSupplyCurrentLimit(Amps.of(15))
 						.withStatorCurrentLimit(Amps.of(50))
@@ -172,7 +155,7 @@ public class Constants {
 						.withKV(0)
 						.withKS(6));
 
-		public static TalonFXConfiguration indexConfig = new TalonFXConfiguration()
+		public static TalonFXConfiguration KickerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withStatorCurrentLimit(Amps.of(40))
 						.withStatorCurrentLimitEnable(true))
@@ -180,7 +163,7 @@ public class Constants {
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(2))
+						.withSensorToMechanismRatio(36.0 / 18.0))
 				.withSlot0(new Slot0Configs()
 						.withKP(0.4)
 						.withKI(0)
