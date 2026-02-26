@@ -133,10 +133,10 @@ public class Constants {
 						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(8)
-						.withKI(3)
+						.withKP(7.5)
+						.withKI(1.25)
 						.withKV(0)
-						.withKS(10));
+						.withKS(11.75));
 
 		public static TalonFXConfiguration SpinnerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
@@ -151,10 +151,10 @@ public class Constants {
 						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(7)
-						.withKI(3)
+						.withKP(6)
+						.withKI(4.5)
 						.withKV(0)
-						.withKS(6));
+						.withKS(5.5));
 
 		public static TalonFXConfiguration KickerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
@@ -166,11 +166,11 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(36.0 / 18.0))
 				.withSlot0(new Slot0Configs()
-						.withKP(0.4)
-						.withKI(0)
+						.withKP(4)
+						.withKI(2.5)
 						.withKD(0)
-						.withKS(0.4898)
-						.withKV(0.24));
+						.withKS(12.5)
+						.withKV(0));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(100));
@@ -248,7 +248,7 @@ public class Constants {
 				.withMotorOutput(
 						new MotorOutputConfigs()
 								.withNeutralMode(NeutralModeValue.Coast)
-								.withInverted(InvertedValue.CounterClockwise_Positive))
+								.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(
 						new FeedbackConfigs()
 								.withSensorToMechanismRatio(intakeWheelGearRatio))
@@ -304,7 +304,7 @@ public class Constants {
 	public class IndexerConstants {
 		public static final int IndexerMotorPort = 26;
 
-		public static final double IndexerVolts = 2;
+		public static final double IndexerVolts = 1.5;
 
 		public static final TalonFXConfiguration IndexerMotorConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
