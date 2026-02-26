@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
@@ -24,6 +25,7 @@ import frc.robot.commands.Shoot;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Indexer;
 
 /** Add your docs here. */
 public class RegressionTuning {
@@ -47,18 +49,20 @@ public class RegressionTuning {
 	private static double spinnerRPS = 0.0;
 	private static List<double[]> regressionData = new ArrayList<double[]>();
 
-	public static void init(Swerve swerve, Shooter shooter) {
+	public static void init(Swerve swerve, Shooter shooter, Indexer indexer) {
 		DogLog.tunable("Regression/Shooter RPS Target", 0.0, target -> shooterRPS = target);
 		DogLog.tunable("Regression/Spinner RPS Target", 0.0, target -> spinnerRPS = target);
 
 		pidtuneFOC.whileTrue(Commands.run(() -> {
 			shooter.setRPS(shooterRPS, spinnerRPS);
 			shooter.setKickerVelocity(ShooterConstants.KickerRPS);
+			indexer.runVoltage(IndexerConstants.IndexerVolts);
 		}).handleInterrupt(() -> {
 			shooter.disable();
+			indexer.disable();
 		}));
 
-		regression.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		regression.whileTrue(new Shoot(swerve, shooter, indexer, leftY, leftX, () -> true));
 		drive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(),
 				() -> true));
 
