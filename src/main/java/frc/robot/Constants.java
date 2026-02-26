@@ -180,7 +180,7 @@ public class Constants {
 		public static final int intakeMotorId = 22;
 		public static final int deployMotorId = 24;
 
-		public static final Angle DeployedAngle = Degrees.of(27);
+		public static final Angle DeployedAngle = Degrees.of(18);
 		public static final double IntakeVoltage = 6;
 		public static final Angle RetractedAngle = Degrees.of(115);
 
@@ -190,7 +190,7 @@ public class Constants {
 		// public static final Angle MinAngle = Degrees.of(15.5614);
 		// public static final Angle MaxAngle = Degrees.of(115.558);
 
-		public static final Angle MinAngle = Degrees.of(27);
+		public static final Angle MinAngle = Degrees.of(18);
 		public static final Angle MaxAngle = Degrees.of(115.558);
 
 		public static final Angle IntakeAngleTolerence = Degrees.of(1);
