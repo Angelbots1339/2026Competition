@@ -167,5 +167,6 @@
  },
  "events":[
    {"name":"IntakeStart", "from":{"target":2, "targetTimestamp":1.41533, "offset":{"exp":"-0.5 s", "val":-0.5}}, "event":{"type":"parallel", "data":{"commands":[]}}},
-   {"name":"IntakeStop", "from":{"target":3, "targetTimestamp":2.08177, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"parallel", "data":{"commands":[]}}}]
+   {"name":"IntakeStop", "from":{"target":3, "targetTimestamp":2.08177, "offset":{"exp":"0 s", "val":0.0}}, "event":{"type":"parallel", "data":{"commands":[]}}},
+   {"name":"RevUpShooter", "from":{"target":4, "targetTimestamp":3.37038, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }
