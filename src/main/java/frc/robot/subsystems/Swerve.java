@@ -77,8 +77,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	private PIDController pidToPoseYController = new PIDController(AlignConstants.pidToPoseKP, 0,
 			AlignConstants.pidToPoseKD);
 
-	private boolean useVision = false;
-
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
@@ -88,9 +86,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		pidToPoseYController.setTolerance(AlignConstants.pidToPoseTolerance.in(Meters));
 
 		configPathPlanner();
-
-		new Trigger(() -> DriverStation.isTeleopEnabled())
-				.onTrue(Commands.run(() -> this.enableVision()).ignoringDisable(true));
 
 		if (Utils.isSimulation()) {
 			startSimThread();
@@ -201,6 +196,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void setYaw(Rotation2d yaw) {
+		updateLimelightConfigs(yaw);
 		getPigeon2().setYaw(yaw.getDegrees());
 		resetRotation(yaw);
 		// hack to have advantage scope / pose be correct
@@ -249,10 +245,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void resetPose(Pose2d pose) {
+		updateLimelightConfigs(pose.getRotation());
 		super.resetPose(pose);
 		setYaw(pose.getRotation());
-
-		enableVision();
 	}
 
 	public ChassisSpeeds getRobotRelativeSpeeds() {
@@ -314,9 +309,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		);
 	}
 
-	public void updateVision() {
+	public void updateLimelightConfigs(Rotation2d yaw) {
 		LimelightHelpers.SetRobotOrientation(VisionConstants.LimelightName,
-				getYaw().getDegrees(), 0, 0, 0, 0, 0);
+				yaw.getDegrees(), 0, 0, 0, 0, 0);
 		LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.LimelightName,
 				new int[0]);
 		LimelightHelpers.RawFiducial[] fiducals = LimelightHelpers.getRawFiducials(VisionConstants.LimelightName);
@@ -331,6 +326,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 		LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.LimelightName, ids);
 
+	}
+
+	public void updateVision() {
+		updateLimelightConfigs(getYaw());
+
 		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers
 				.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightName);
 		if (mt2 == null)
@@ -344,14 +344,9 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		addVisionMeasurement(mt2.pose, Utils.fpgaToCurrentTime(mt2.timestampSeconds));
 	}
 
-	public void enableVision() {
-		useVision = true;
-	}
-
 	@Override
 	public void periodic() {
-		if (useVision)
-			updateVision();
+		updateVision();
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {

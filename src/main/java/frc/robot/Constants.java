@@ -108,6 +108,7 @@ public class Constants {
 			Regression,
 			Intake,
 			Climber,
+			Indexer,
 		};
 	}
 
@@ -127,7 +128,7 @@ public class Constants {
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.Clockwise_Positive))
+						.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
@@ -298,5 +299,30 @@ public class Constants {
 						.withKS(0)
 						.withKG(10)
 						.withGravityType(GravityTypeValue.Elevator_Static));
+	}
+
+	public class IndexerConstants {
+		public static final int IndexerMotorPort = 26;
+
+		public static final double IndexerVolts = 2;
+
+		public static final TalonFXConfiguration IndexerMotorConfig = new TalonFXConfiguration()
+				.withCurrentLimits(new CurrentLimitsConfigs()
+						.withStatorCurrentLimit(80)
+						.withSupplyCurrentLowerTime(50)
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(true))
+				.withFeedback(new FeedbackConfigs()
+						.withSensorToMechanismRatio(24.0 / 24.0))
+				.withMotorOutput(new MotorOutputConfigs()
+						.withInverted(InvertedValue.CounterClockwise_Positive)
+						.withNeutralMode(NeutralModeValue.Coast))
+				.withSlot0(new Slot0Configs()
+						.withKP(0)
+						.withKI(0)
+						.withKD(0)
+						.withKS(0)
+						.withKV(0)
+						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign));
 	}
 }
