@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -78,7 +79,7 @@ public class RobotContainer {
 
 	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
 
-	private Trigger reverse = new Trigger(() -> operater.getXButton());
+	private Trigger reverse = new Trigger(() -> driver.getXButton());
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
@@ -104,13 +105,16 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pass.whileTrue(Commands.parallel(
-				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
-						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
+				// swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
+				// () -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, ()
+				// -> true)),
 				shooter.run(() -> {
-					shooter.setRPS(40, 40);
-					shooter.setKickerVelocity(ShooterConstants.KickerRPS);
-					indexer.runVoltage(IndexerConstants.IndexerVolts);
-				})));
+					shooter.setRPS(20, 20);
+					if (shooter.atSetpoint()) {
+						shooter.setKickerVelocity(ShooterConstants.KickerRPS);
+					}
+				}),
+				indexer.run(() -> indexer.runVoltage(IndexerConstants.IndexerVolts)).onlyIf(shooter::atSetpoint)));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
@@ -139,7 +143,10 @@ public class RobotContainer {
 				.whileTrue(intake.runIntake()
 						.alongWith(indexer.index()))
 				.onFalse(intake.run(intake::disable));
-		toggleIntakeDeploy.toggleOnTrue(intake.retract());
+		toggleIntakeDeploy.toggleOnTrue(intake.run(() -> {
+			intake.setIntakeAngle(Degrees.of(53));
+			intake.setIntakeVoltage(IntakeConstants.IntakeVoltage);
+		}));
 
 		// TODO: also reverse the indexer as well
 		reverse.whileTrue(Commands.parallel(
@@ -174,8 +181,10 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		intake.setDefaultCommand(intake.deploy());
+		intake.setDefaultCommand(
+				intake.deploy());
 		indexer.setDefaultCommand(indexer.run(indexer::disable));
+		shooter.setDefaultCommand(shooter.run(shooter::unstuck));
 	}
 
 	@Logged(name = "Current auto")

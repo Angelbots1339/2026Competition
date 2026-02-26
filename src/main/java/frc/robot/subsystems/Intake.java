@@ -33,7 +33,10 @@ public class Intake extends SubsystemBase {
 	}
 
 	public Command deploy() {
-		return run(() -> setIntakeAngle(IntakeConstants.DeployedAngle));
+		return run(() -> {
+			setIntakeAngle(IntakeConstants.DeployedAngle);
+			setIntakeVoltage(IntakeConstants.IntakeVoltage);
+		});
 	}
 
 	public Command retract() {

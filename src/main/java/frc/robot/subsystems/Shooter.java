@@ -18,6 +18,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.ShooterConstants;
@@ -64,7 +65,7 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public void setKickerVelocity(double rps) {
-		kicker.setControl(new VelocityVoltage(rps));
+		kicker.setControl(new VelocityTorqueCurrentFOC(rps));
 	}
 
 	public double getShooterRPS() {
@@ -94,6 +95,13 @@ public class Shooter extends SubsystemBase {
 	public void disable() {
 		disableShooter();
 		disableKicker();
+	}
+
+	public Command unstuck() {
+		return run(() -> {
+			disableShooter();
+			setKickerVelocity(-ShooterConstants.KickerRPS);
+		}).withTimeout(2);
 	}
 
 	public void logPID() {

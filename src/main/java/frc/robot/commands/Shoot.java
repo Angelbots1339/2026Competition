@@ -8,6 +8,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
@@ -15,6 +16,7 @@ public class Shoot extends Command {
 	private Swerve swerve;
 	private Shooter shooter;
 	private Indexer indexer;
+	private Intake intake;
 
 	private Supplier<Double> x;
 	private Supplier<Double> y;
@@ -40,7 +42,7 @@ public class Shoot extends Command {
 	@Override
 	public void execute() {
 		ShooterParams params = ShooterRegression.getShotParams(swerve);
-		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
+		// swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
 
 		shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 
