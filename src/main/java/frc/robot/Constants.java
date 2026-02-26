@@ -181,8 +181,9 @@ public class Constants {
 		public static final int deployMotorId = 24;
 
 		public static final Angle DeployedAngle = Degrees.of(18);
-		public static final double IntakeVoltage = 6;
 		public static final Angle RetractedAngle = Degrees.of(115);
+		public static final Angle AgitationAngle = Degrees.of(53);
+		public static final double IntakeVoltage = 6;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 

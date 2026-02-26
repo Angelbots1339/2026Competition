@@ -133,7 +133,7 @@ public class RobotContainer {
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
 
-		shoot.whileTrue(new Shoot(swerve, shooter, indexer, leftY, leftX, () -> true));
+		shoot.whileTrue(new Shoot(swerve, shooter, indexer, intake, leftY, leftX, () -> true));
 		shooterSpinup.whileTrue(shooter.run(() -> {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
@@ -143,10 +143,7 @@ public class RobotContainer {
 				.whileTrue(intake.runIntake()
 						.alongWith(indexer.index()))
 				.onFalse(intake.run(intake::disable));
-		toggleIntakeDeploy.toggleOnTrue(intake.run(() -> {
-			intake.setIntakeAngle(Degrees.of(53));
-			intake.setIntakeVoltage(IntakeConstants.IntakeVoltage);
-		}));
+		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 
 		// TODO: also reverse the indexer as well
 		reverse.whileTrue(Commands.parallel(

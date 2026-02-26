@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.choreo.ChoreoTraj;
 import frc.lib.util.FieldUtil;
 import frc.robot.commands.Shoot;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
@@ -35,7 +35,7 @@ public class Autos {
 						// opposite side, while keeping the same coordinate system origin.
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 
-		shoot = () -> new Shoot(swerve, shooter, indexer, () -> 0.0, () -> 0.0, () -> true)
+		shoot = () -> new Shoot(swerve, shooter, indexer, intake, () -> 0.0, () -> 0.0, () -> true)
 				.withTimeout(4);
 
 		factory.bind("IntakeStart", intake.runIntake().alongWith(indexer.index()));
