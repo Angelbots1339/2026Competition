@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -31,6 +32,7 @@ import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -50,9 +52,9 @@ public class RobotContainer {
 
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
+	private Indexer indexer = new Indexer();
 	private Intake intake = new Intake();
 	private Shooter shooter = new Shooter();
-	// private Climber climber = new Climber();
 
 	@Logged(name = "Reset Gyro")
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
@@ -80,7 +82,7 @@ public class RobotContainer {
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
-	private Autos autos = new Autos(swerve, shooter, intake);
+	private Autos autos = new Autos(swerve, shooter, intake, indexer);
 
 	public RobotContainer() {
 		configureBindings();
@@ -106,8 +108,8 @@ public class RobotContainer {
 				shooter.run(() -> {
 					shooter.setRPS(40, 40);
 					shooter.setKickerVelocity(ShooterConstants.KickerRPS);
+					indexer.runVoltage(IndexerConstants.IndexerVolts);
 				})));
-		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
@@ -126,14 +128,16 @@ public class RobotContainer {
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
 
-		shoot.whileTrue(new Shoot(swerve, shooter, leftY, leftX, () -> true));
+		shoot.whileTrue(new Shoot(swerve, shooter, indexer, leftY, leftX, () -> true));
 		shooterSpinup.whileTrue(shooter.run(() -> {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 		}));
 
-		runIntake.whileTrue(intake.runIntake())
-				.onFalse(intake.stopIntake());
+		runIntake
+				.whileTrue(intake.runIntake()
+						.alongWith(indexer.index()))
+				.onFalse(intake.run(intake::disable));
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 
 		// TODO: also reverse the indexer as well
@@ -171,6 +175,7 @@ public class RobotContainer {
 	public void setDefaultCommands() {
 		shooter.setDefaultCommand(shooter.run(shooter::disable));
 		intake.setDefaultCommand(intake.deploy());
+		indexer.setDefaultCommand(indexer.run(indexer::disable));
 	}
 
 	@Logged(name = "Current auto")
@@ -179,7 +184,7 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		TuningManager.init(swerve, shooter, intake, null);
+		TuningManager.init(swerve, shooter, intake, null, indexer);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")

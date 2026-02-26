@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import choreo.auto.AutoFactory;
-import choreo.auto.AutoRoutine;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,6 +16,7 @@ import frc.robot.commands.Shoot;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
@@ -25,7 +25,7 @@ public class Autos {
 
 	Supplier<Command> shoot = null;
 
-	public Autos(Swerve swerve, Shooter shooter, Intake intake) {
+	public Autos(Swerve swerve, Shooter shooter, Intake intake, Indexer indexer) {
 		factory = new AutoFactory(
 				swerve::getPose, // A function that returns the current field-relative Pose2d of the robot
 				swerve::resetPose, // A function that receives a field-relative Pose2d to reset the robot's
@@ -36,11 +36,11 @@ public class Autos {
 						// opposite side, while keeping the same coordinate system origin.
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 
-		shoot = () -> new Shoot(swerve, shooter, () -> 0.0, () -> 0.0, () -> true)
+		shoot = () -> new Shoot(swerve, shooter, indexer, () -> 0.0, () -> 0.0, () -> true)
 				.withTimeout(4);
 
-		factory.bind("IntakeStart", intake.runIntake());
-		factory.bind("IntakeStop", intake.stopIntake());
+		factory.bind("IntakeStart", intake.runIntake().alongWith(indexer.index()));
+		factory.bind("IntakeStop", intake.stopIntake().alongWith(indexer.run(() -> indexer.disable())));
 		factory.bind("RevUpShooter", shooter.run(() -> {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
