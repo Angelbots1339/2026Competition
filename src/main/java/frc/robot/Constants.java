@@ -128,7 +128,7 @@ public class Constants {
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.Clockwise_Positive))
+						.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()

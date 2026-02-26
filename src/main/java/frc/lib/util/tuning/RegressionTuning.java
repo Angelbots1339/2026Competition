@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
@@ -55,8 +56,10 @@ public class RegressionTuning {
 		pidtuneFOC.whileTrue(Commands.run(() -> {
 			shooter.setRPS(shooterRPS, spinnerRPS);
 			shooter.setKickerVelocity(ShooterConstants.KickerRPS);
+			indexer.runVoltage(IndexerConstants.IndexerVolts);
 		}).handleInterrupt(() -> {
 			shooter.disable();
+			indexer.disable();
 		}));
 
 		regression.whileTrue(new Shoot(swerve, shooter, indexer, leftY, leftX, () -> true));
