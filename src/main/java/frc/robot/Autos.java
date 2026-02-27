@@ -89,6 +89,25 @@ public class Autos {
 		return routine;
 	}
 
+	public AutoRoutine leftNeutral() {
+		final var routine = factory.newRoutine("Left Neutral");
+		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral.name());
+		final var neutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
+
+		final var shoot1 = shoot.get();
+		final var shoot2 = shoot.get();
+
+		routine.active().onTrue(
+				Commands.sequence(
+						bumpToNeutral.resetOdometry(),
+						bumpToNeutral.cmd()));
+		bumpToNeutral.done().onTrue(shoot1);
+		routine.observe(shoot1::isFinished).onTrue(neutral2.cmd());
+		neutral2.done().onTrue(shoot2);
+
+		return routine;
+	}
+
 	public Command leftDepotNeutral() {
 		final var routine = factory.newRoutine("Left Depot Neutral");
 		final var leftDepot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());

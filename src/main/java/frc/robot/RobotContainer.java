@@ -92,6 +92,7 @@ public class RobotContainer {
 		autoChooser.addCmd("right outpost neutral", autos::rightOutpostNeutral);
 		autoChooser.addCmd("left depot neutral", autos::leftDepotNeutral);
 		autoChooser.addRoutine("Right Neutral", autos::rightNeutral);
+		autoChooser.addRoutine("Left Neutral", autos::leftNeutral);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		// TODO: remove this during comp
