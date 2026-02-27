@@ -108,54 +108,6 @@ public class Autos {
 		return routine;
 	}
 
-	public Command leftDepotNeutral() {
-		final var routine = factory.newRoutine("Left Depot Neutral");
-		final var leftDepot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
-		final var leftNeutral1 = routine.trajectory(ChoreoTraj.DepotShootNeutral1.name());
-		final var leftNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
-
-		final var shoot1 = shoot.get();
-		final var shoot2 = shoot.get();
-		final var shoot3 = shoot.get();
-
-		routine.active().onTrue(
-				Commands.sequence(
-						leftDepot.resetOdometry(),
-						leftDepot.cmd()));
-		leftDepot.done().onTrue(shoot1);
-		routine.observe(shoot1::isFinished).onTrue(leftNeutral1.cmd());
-		leftNeutral1.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(leftNeutral2.cmd());
-		leftNeutral2.done().onTrue(shoot3);
-
-		return routine.cmd();
-	}
-
-	public Command rightOutpostNeutral() {
-		final var routine = factory.newRoutine("Right Outpost Neutral");
-		final var rightOutpost = routine.trajectory(ChoreoTraj.RightOutpostShoot.name());
-		final var rightNeutral1 = routine.trajectory(
-				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral1.name()).getRawTrajectory()));
-		final var rightNeutral2 = routine.trajectory(
-				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
-
-		final var shoot1 = shoot.get();
-		final var shoot2 = shoot.get();
-		final var shoot3 = shoot.get();
-
-		routine.active().onTrue(
-				Commands.sequence(
-						rightOutpost.resetOdometry(),
-						rightOutpost.cmd()));
-		rightOutpost.done().onTrue(shoot1);
-		routine.observe(shoot1::isFinished).onTrue(rightNeutral1.cmd());
-		rightNeutral1.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(rightNeutral2.cmd());
-		rightNeutral2.done().onTrue(shoot3);
-
-		return routine.cmd();
-	}
-
 	private Trajectory<SwerveSample> flipTrajectoryX(Trajectory<SwerveSample> traj) {
 		SwerveSample[] new_samples = new SwerveSample[traj.samples().size()];
 		int i = 0;
