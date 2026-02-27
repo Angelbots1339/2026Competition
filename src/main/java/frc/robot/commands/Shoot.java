@@ -16,17 +16,23 @@ public class Shoot extends Command {
 	private Indexer indexer;
 	private Intake intake;
 
+	private double shooterRPS;
+	private double spinnerRPS;
+
 	private Timer intakeTimer = new Timer();
+	private Supplier<Boolean> runKicker = () -> true;
 
 	public Shoot(Shooter shooter, Indexer indexer, Intake intake) {
-		this(shooter, indexer, intake, () -> true);
+		this(shooter, indexer, intake, 0.0, 0.0, () -> true);
 	}
 
-	public Shoot(Shooter shooter, Indexer indexer, Intake intake,
+	public Shoot(Shooter shooter, Indexer indexer, Intake intake, double shooterRPS, double spinnerRPS,
 			Supplier<Boolean> runKicker) {
 		this.shooter = shooter;
 		this.indexer = indexer;
 		this.intake = intake;
+		this.shooterRPS = shooterRPS;
+		this.spinnerRPS = spinnerRPS;
 
 		addRequirements(shooter, indexer, intake);
 	}
@@ -55,6 +61,7 @@ public class Shoot extends Command {
 
 	@Override
 	public void execute() {
+		runShoot(shooterRPS, spinnerRPS, runKicker);
 	}
 
 	@Override

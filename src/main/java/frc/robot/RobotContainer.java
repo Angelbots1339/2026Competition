@@ -29,6 +29,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.RegressionShoot;
+import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
@@ -102,16 +103,9 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pass.whileTrue(Commands.parallel(
-				// swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
-				// () -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, ()
-				// -> true)),
-				shooter.run(() -> {
-					shooter.setRPS(20, 20);
-					if (shooter.atSetpoint()) {
-						shooter.setKickerVelocity(ShooterConstants.KickerRPS);
-					}
-				}),
-				indexer.run(() -> indexer.runVoltage(IndexerConstants.IndexerVolts)).onlyIf(shooter::atSetpoint)));
+				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
+						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
+				new Shoot(shooter, indexer, intake, 30, 30, swerve::atRotation)));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
