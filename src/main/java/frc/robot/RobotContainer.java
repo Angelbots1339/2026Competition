@@ -171,7 +171,7 @@ public class RobotContainer {
 	public void setDefaultCommands() {
 		intake.setDefaultCommand(intake.deploy());
 		indexer.setDefaultCommand(indexer.run(indexer::disable));
-		shooter.setDefaultCommand(shooter.run(shooter::unstuck));
+		shooter.setDefaultCommand(shooter.unstuck());
 	}
 
 	@Logged(name = "Current auto")
