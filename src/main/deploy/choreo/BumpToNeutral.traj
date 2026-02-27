@@ -295,7 +295,5 @@
   "splits":[0]
  },
  "events":[
-   {"name":"IntakeStart", "from":{"target":3, "targetTimestamp":2.30014, "offset":{"exp":"-0.5 s", "val":-0.5}}, "event":{"type":"sequential", "data":{"commands":[]}}},
-   {"name":"IntakeStop", "from":{"target":4, "targetTimestamp":2.9529, "offset":{"exp":"0.5 s", "val":0.5}}, "event":{"type":"sequential", "data":{"commands":[]}}},
    {"name":"RevUpShooter", "from":{"target":8, "targetTimestamp":5.55208, "offset":{"exp":"-1 s", "val":-1.0}}, "event":null}]
 }
