@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -67,27 +68,25 @@ public class Autos {
 		return routine.cmd();
 	}
 
-	public Command rightNeutralDepot() {
-		final var routine = factory.newRoutine("Left Depot Neutral");
-		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral.name());
-		final var leftNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
-		final var depot = routine.trajectory(ChoreoTraj.DepotShootDepot.name());
+	public AutoRoutine rightNeutral() {
+		final var routine = factory.newRoutine("Right Neutral");
+		final var bumpToNeutral = routine
+				.trajectory(flipTrajectoryX(routine.trajectory(ChoreoTraj.BumpToNeutral.name()).getRawTrajectory()));
+		final var leftNeutral2 = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
 
 		final var shoot1 = shoot.get();
 		final var shoot2 = shoot.get();
-		final var shoot3 = shoot.get();
 
 		routine.active().onTrue(
 				Commands.sequence(
 						bumpToNeutral.resetOdometry(),
 						bumpToNeutral.cmd()));
 		bumpToNeutral.done().onTrue(shoot1);
-		routine.observe(shoot1::isFinished).onTrue(depot.cmd());
-		depot.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(leftNeutral2.cmd());
-		leftNeutral2.done().onTrue(shoot3);
+		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
+		leftNeutral2.done().onTrue(shoot2);
 
-		return routine.cmd();
+		return routine;
 	}
 
 	public Command leftDepotNeutral() {
