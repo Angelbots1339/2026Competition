@@ -31,6 +31,13 @@ public record ChoreoTraj(
 	    new Pose2d(3.634, 5.909, Rotation2d.fromRadians(0)),
 	    new Pose2d(1.587, 4.022, Rotation2d.fromRadians(0))
 	);
+	public static final ChoreoTraj BumpToNeutral = new ChoreoTraj(
+	    "BumpToNeutral",
+	    OptionalInt.empty(),
+	    5.55208,
+	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142)),
+	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
+	);
 	public static final ChoreoTraj DepotShootDepot = new ChoreoTraj(
 	    "DepotShootDepot",
 	    OptionalInt.empty(),
@@ -48,7 +55,7 @@ public record ChoreoTraj(
 	public static final ChoreoTraj DepotShootNeutral2 = new ChoreoTraj(
 	    "DepotShootNeutral2",
 	    OptionalInt.empty(),
-	    6.66456,
+	    5.77712,
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588)),
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
 	);
@@ -71,13 +78,6 @@ public record ChoreoTraj(
 	    OptionalInt.empty(),
 	    3.37038,
 	    new Pose2d(3.565, 5.04, Rotation2d.fromRadians(1.571)),
-	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
-	);
-	public static final ChoreoTraj BumpToNeutral = new ChoreoTraj(
-	    "BumpToNeutral",
-	    OptionalInt.empty(),
-	    5.55208,
-	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142)),
 	    new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588))
 	);
 	public static final ChoreoTraj OutpostShootOutpost = new ChoreoTraj(
@@ -108,13 +108,13 @@ public record ChoreoTraj(
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
     	Map.entry("BumpTest", BumpTest),
+		Map.entry("BumpToNeutral", BumpToNeutral),
 		Map.entry("DepotShootDepot", DepotShootDepot),
 		Map.entry("DepotShootNeutral1", DepotShootNeutral1),
 		Map.entry("DepotShootNeutral2", DepotShootNeutral2),
 		Map.entry("DepotShootOutpostShoot", DepotShootOutpostShoot),
 		Map.entry("DepotShoottoTower", DepotShoottoTower),
 		Map.entry("HubtoDepotShoot", HubtoDepotShoot),
-		Map.entry("BumpToNeutral", BumpToNeutral),
 		Map.entry("OutpostShootOutpost", OutpostShootOutpost),
 		Map.entry("OutpostShoottoTower", OutpostShoottoTower),
 		Map.entry("RightOutpostShoot", RightOutpostShoot)
