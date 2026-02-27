@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -29,7 +28,7 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.Shoot;
+import frc.robot.commands.RegressionShoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
@@ -131,7 +130,7 @@ public class RobotContainer {
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
 
-		shoot.whileTrue(new Shoot(swerve, shooter, indexer, intake, leftY, leftX, () -> true));
+		shoot.whileTrue(new RegressionShoot(swerve, shooter, indexer, intake, leftY, leftX));
 		shooterSpinup.whileTrue(shooter.run(() -> {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());

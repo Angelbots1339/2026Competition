@@ -160,6 +160,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return pidToPoseXController.atSetpoint() && pidToPoseYController.atSetpoint() && angularDrivePID.atSetpoint();
 	}
 
+	public boolean atRotation() {
+		return angularDrivePID.atSetpoint();
+	}
+
 	public void driveRobotRelative(ChassisSpeeds speeds) {
 		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(ChassisSpeeds.discretize(speeds, 0.02))
 				.withDriveRequestType(DriveRequestType.Velocity));

@@ -21,7 +21,7 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
-import frc.robot.commands.Shoot;
+import frc.robot.commands.RegressionShoot;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -63,7 +63,7 @@ public class RegressionTuning {
 			indexer.disable();
 		}));
 
-		regression.whileTrue(new Shoot(swerve, shooter, indexer, intake, leftY, leftX, () -> true));
+		regression.whileTrue(new RegressionShoot(swerve, shooter, indexer, intake, leftY, leftX));
 		drive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(),
 				() -> true));
 
