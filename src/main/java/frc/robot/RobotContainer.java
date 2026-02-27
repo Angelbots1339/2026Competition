@@ -88,11 +88,10 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-		autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
-		autoChooser.addCmd("Hub Depot Outpost Tower",
-				autos::hubDepotOutpostTowerAuto);
+		autoChooser.addCmd("Hub Depot Outpost Tower", autos::hubDepotOutpostTowerAuto);
 		autoChooser.addCmd("right outpost neutral", autos::rightOutpostNeutral);
-		autoChooser.addRoutine("left depot neutral", autos::leftDepotNeutral);
+		autoChooser.addCmd("left depot neutral", autos::leftDepotNeutral);
+		autoChooser.addCmd("right neutral depot", autos::rightNeutralDepot);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		// TODO: remove this during comp
@@ -174,6 +173,7 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
+		shooter.setDefaultCommand(shooter.run(shooter::disable));
 		intake.setDefaultCommand(intake.deploy());
 		indexer.setDefaultCommand(indexer.run(indexer::disable));
 	}
