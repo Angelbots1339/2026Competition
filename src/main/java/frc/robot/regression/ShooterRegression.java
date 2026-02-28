@@ -1,8 +1,11 @@
 package frc.robot.regression;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -59,7 +62,7 @@ public class ShooterRegression {
 				target.minus(estimatedPose.getTranslation()).getAngle().getRadians());
 
 		Angle maxAngleError = Radians
-				.of(Math.abs(Math.atan2(distance, FieldUtil.hubRadius.in(Meters))));
+				.of(Math.abs(Math.atan2(FieldUtil.hubRadius.in(Meters), distance)));
 
 		return new ShooterParams(angle, rps[0], rps[1], maxAngleError);
 	}

@@ -130,10 +130,7 @@ public class RobotContainer {
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 		}));
 
-		runIntake
-				.whileTrue(intake.runIntake()
-						.alongWith(indexer.index()))
-				.onFalse(intake.run(intake::disable));
+		runIntake.whileTrue(intake.runIntake());
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 
 		reverse.whileTrue(Commands.parallel(
