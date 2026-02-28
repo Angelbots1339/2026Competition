@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,8 +40,6 @@ public class Autos {
 		shoot = () -> new Shoot(swerve, shooter, indexer, intake, () -> 0.0, () -> 0.0, () -> true)
 				.withTimeout(4);
 
-		factory.bind("IntakeStart", intake.runIntake().alongWith(indexer.index()));
-		factory.bind("IntakeStop", intake.stopIntake().alongWith(indexer.run(() -> indexer.disable())));
 		factory.bind("RevUpShooter", shooter.run(() -> {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
@@ -67,75 +66,46 @@ public class Autos {
 		return routine.cmd();
 	}
 
-	public Command rightNeutralDepot() {
-		final var routine = factory.newRoutine("Left Depot Neutral");
-		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral.name());
-		final var leftNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
-		final var depot = routine.trajectory(ChoreoTraj.DepotShootDepot.name());
+	public AutoRoutine rightNeutral() {
+		final var routine = factory.newRoutine("Right Neutral");
+		final var bumpToNeutral = routine
+				.trajectory(flipTrajectoryX(routine.trajectory(ChoreoTraj.BumpToNeutral.name()).getRawTrajectory()));
+		final var leftNeutral2 = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
 
 		final var shoot1 = shoot.get();
 		final var shoot2 = shoot.get();
-		final var shoot3 = shoot.get();
 
 		routine.active().onTrue(
 				Commands.sequence(
 						bumpToNeutral.resetOdometry(),
 						bumpToNeutral.cmd()));
 		bumpToNeutral.done().onTrue(shoot1);
-		routine.observe(shoot1::isFinished).onTrue(depot.cmd());
-		depot.done().onTrue(shoot2);
+		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
+		leftNeutral2.done().onTrue(shoot2);
 		routine.observe(shoot2::isFinished).onTrue(leftNeutral2.cmd());
-		leftNeutral2.done().onTrue(shoot3);
 
-		return routine.cmd();
+		return routine;
 	}
 
-	public Command leftDepotNeutral() {
-		final var routine = factory.newRoutine("Left Depot Neutral");
-		final var leftDepot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
-		final var leftNeutral1 = routine.trajectory(ChoreoTraj.DepotShootNeutral1.name());
-		final var leftNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
+	public AutoRoutine leftNeutral() {
+		final var routine = factory.newRoutine("Left Neutral");
+		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral.name());
+		final var neutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
 
 		final var shoot1 = shoot.get();
 		final var shoot2 = shoot.get();
-		final var shoot3 = shoot.get();
 
 		routine.active().onTrue(
 				Commands.sequence(
-						leftDepot.resetOdometry(),
-						leftDepot.cmd()));
-		leftDepot.done().onTrue(shoot1);
-		routine.observe(shoot1::isFinished).onTrue(leftNeutral1.cmd());
-		leftNeutral1.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(leftNeutral2.cmd());
-		leftNeutral2.done().onTrue(shoot3);
+						bumpToNeutral.resetOdometry(),
+						bumpToNeutral.cmd()));
+		bumpToNeutral.done().onTrue(shoot1);
+		routine.observe(shoot1::isFinished).onTrue(neutral2.cmd());
+		neutral2.done().onTrue(shoot2);
+		routine.observe(shoot2::isFinished).onTrue(neutral2.cmd());
 
-		return routine.cmd();
-	}
-
-	public Command rightOutpostNeutral() {
-		final var routine = factory.newRoutine("Right Outpost Neutral");
-		final var rightOutpost = routine.trajectory(ChoreoTraj.RightOutpostShoot.name());
-		final var rightNeutral1 = routine.trajectory(
-				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral1.name()).getRawTrajectory()));
-		final var rightNeutral2 = routine.trajectory(
-				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
-
-		final var shoot1 = shoot.get();
-		final var shoot2 = shoot.get();
-		final var shoot3 = shoot.get();
-
-		routine.active().onTrue(
-				Commands.sequence(
-						rightOutpost.resetOdometry(),
-						rightOutpost.cmd()));
-		rightOutpost.done().onTrue(shoot1);
-		routine.observe(shoot1::isFinished).onTrue(rightNeutral1.cmd());
-		rightNeutral1.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(rightNeutral2.cmd());
-		rightNeutral2.done().onTrue(shoot3);
-
-		return routine.cmd();
+		return routine;
 	}
 
 	private Trajectory<SwerveSample> flipTrajectoryX(Trajectory<SwerveSample> traj) {
