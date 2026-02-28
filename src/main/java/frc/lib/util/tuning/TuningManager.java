@@ -31,8 +31,8 @@ public class TuningManager {
 			SwerveTuning.init(swerve);
 		if (shooter != null)
 			ShooterTuning.init(shooter);
-		if (shooter != null && swerve != null && indexer != null)
-			RegressionTuning.init(swerve, shooter, indexer);
+		if (shooter != null && swerve != null && indexer != null && intake != null)
+			RegressionTuning.init(swerve, shooter, indexer, intake);
 		if (intake != null)
 			IntakeTuning.init(intake);
 		if (climber != null)

@@ -133,10 +133,10 @@ public class Constants {
 						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(8)
-						.withKI(3)
+						.withKP(7.5)
+						.withKI(1.25)
 						.withKV(0)
-						.withKS(10));
+						.withKS(11.75));
 
 		public static TalonFXConfiguration SpinnerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
@@ -151,10 +151,10 @@ public class Constants {
 						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(7)
-						.withKI(3)
+						.withKP(6)
+						.withKI(4.5)
 						.withKV(0)
-						.withKS(6));
+						.withKS(5.5));
 
 		public static TalonFXConfiguration KickerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
@@ -166,11 +166,11 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(36.0 / 18.0))
 				.withSlot0(new Slot0Configs()
-						.withKP(0.4)
-						.withKI(0)
+						.withKP(4)
+						.withKI(2.5)
 						.withKD(0)
-						.withKS(0.4898)
-						.withKV(0.24));
+						.withKS(12.5)
+						.withKV(0));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
 				.withUpdateFreqHz(Hertz.of(100));
@@ -180,9 +180,10 @@ public class Constants {
 		public static final int intakeMotorId = 22;
 		public static final int deployMotorId = 24;
 
-		public static final Angle DeployedAngle = Degrees.of(27);
-		public static final double IntakeVoltage = 6;
+		public static final Angle DeployedAngle = Degrees.of(18);
 		public static final Angle RetractedAngle = Degrees.of(115);
+		public static final Angle AgitationAngle = Degrees.of(53);
+		public static final double IntakeVoltage = 6;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
@@ -190,10 +191,10 @@ public class Constants {
 		// public static final Angle MinAngle = Degrees.of(15.5614);
 		// public static final Angle MaxAngle = Degrees.of(115.558);
 
-		public static final Angle MinAngle = Degrees.of(27);
+		public static final Angle MinAngle = Degrees.of(18);
 		public static final Angle MaxAngle = Degrees.of(115.558);
 
-		public static final Angle IntakeAngleTolerence = Degrees.of(1);
+		public static final Angle IntakeAngleTolerence = Degrees.of(10);
 
 		// Recalc:
 		// https://www.reca.lc/arm?armMass=%7B%22s%22%3A5.134%2C%22u%22%3A%22lbs%22%7D&comLength=%7B%22s%22%3A10.203%2C%22u%22%3A%22in%22%7D&currentLimit=%7B%22s%22%3A70%2C%22u%22%3A%22A%22%7D&efficiency=90&endAngle=%7B%22s%22%3A115.558%2C%22u%22%3A%22deg%22%7D&iterationLimit=10000&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%22%7D&ratio=%7B%22magnitude%22%3A18%2C%22ratioType%22%3A%22Reduction%22%7D&startAngle=%7B%22s%22%3A15.5614%2C%22u%22%3A%22deg%22%7D
@@ -248,7 +249,7 @@ public class Constants {
 				.withMotorOutput(
 						new MotorOutputConfigs()
 								.withNeutralMode(NeutralModeValue.Coast)
-								.withInverted(InvertedValue.CounterClockwise_Positive))
+								.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(
 						new FeedbackConfigs()
 								.withSensorToMechanismRatio(intakeWheelGearRatio))
@@ -304,7 +305,7 @@ public class Constants {
 	public class IndexerConstants {
 		public static final int IndexerMotorPort = 26;
 
-		public static final double IndexerVolts = 2;
+		public static final double IndexerVolts = 1.5;
 
 		public static final TalonFXConfiguration IndexerMotorConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
