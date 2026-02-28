@@ -24,6 +24,8 @@ public class ShooterRegression {
 			{ 2.213, 40, 15 },
 			{ 2.617, 40, 15 },
 			{ 2.96, 44, 10 },
+			{ 3.55, 44, 20 },
+			{ 4.00, 44, 23 },
 	};
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
