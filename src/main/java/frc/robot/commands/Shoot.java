@@ -1,11 +1,7 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import java.util.function.Supplier;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IndexerConstants;
@@ -51,7 +47,7 @@ public class Shoot extends Command {
 	@Override
 	public void execute() {
 		ShooterParams params = ShooterRegression.getShotParams(swerve);
-		// swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
+		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
 
 		shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 
