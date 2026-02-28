@@ -107,7 +107,7 @@ public class RobotContainer {
 						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
 				new Shoot(shooter, indexer, intake, () -> 30.0, () -> 30.0, swerve::atRotation)));
 		bumpDrive.whileTrue(
-				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
+				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosestBumpAngle(),
 						() -> true),
 						swerve));
 		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
@@ -130,10 +130,7 @@ public class RobotContainer {
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 		}));
 
-		runIntake
-				.whileTrue(intake.runIntake()
-						.alongWith(indexer.index()))
-				.onFalse(intake.run(intake::disable));
+		runIntake.whileTrue(intake.runIntake());
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 
 		reverse.whileTrue(Commands.parallel(
@@ -169,9 +166,9 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		intake.setDefaultCommand(intake.deploy());
+		intake.setDefaultCommand(intake.runOnce(intake::disable).andThen(intake.deploy()));
 		indexer.setDefaultCommand(indexer.run(indexer::disable));
-		shooter.setDefaultCommand(shooter.unstuck().andThen(shooter.run(shooter::disable)));
+		shooter.setDefaultCommand(shooter.run(shooter::disable));
 	}
 
 	@Logged(name = "Current auto")

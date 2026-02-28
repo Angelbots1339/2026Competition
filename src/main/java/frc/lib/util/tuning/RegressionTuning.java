@@ -35,6 +35,7 @@ public class RegressionTuning {
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Regression);
 	private static Trigger pidtuneFOC = baseTrigger.and(() -> tester.getRightTriggerAxis() > 0.2);
 	private static Trigger regression = baseTrigger.and(() -> tester.getRightBumperButton());
+	private static Trigger runIntake = baseTrigger.and(() -> tester.getLeftBumperButton());
 
 	private static Trigger addData = baseTrigger.and(() -> tester.getXButton());
 	private static Trigger clearData = baseTrigger.and(() -> tester.getStartButton());
@@ -61,6 +62,7 @@ public class RegressionTuning {
 
 		regression.whileTrue(new RegressionShoot(swerve, shooter, indexer, intake, leftY, leftX));
 		drive.whileTrue(swerve.driveCommand(leftY, leftX, rightX, () -> true));
+		runIntake.whileTrue(intake.runIntake());
 
 		clearData.onTrue(Commands.runOnce(() -> {
 			ShooterRegression.shotRPSMap.clear();

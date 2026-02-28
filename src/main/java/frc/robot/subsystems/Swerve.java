@@ -6,6 +6,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -153,7 +155,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public Rotation2d getRotationError() {
-		return Rotation2d.fromRadians(angularDrivePID.getError());
+		return Rotation2d.fromRadians(Math.abs(angularDrivePID.getError()));
 	}
 
 	public boolean atSetpoint() {
@@ -182,10 +184,12 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return rotation;
 	}
 
-	@Logged(name = "Closest 15")
-	public Rotation2d getClosest15() {
-		Rotation2d closest = Rotation2d.fromDegrees(15);
-		for (var angle : Arrays.asList(15, 75, 105, 165, 195, 255, 285, 345)) {
+	@Logged(name = "Bump Angle")
+	public Rotation2d getClosestBumpAngle() {
+		double closest_angle = 45;
+		Rotation2d closest = Rotation2d.fromDegrees(closest_angle);
+		for (var angle : Arrays.asList(0 + closest_angle, 0 - closest_angle, 90 - closest_angle, 90 + closest_angle,
+				180 - closest_angle, 180 + closest_angle, 270 - closest_angle, 270 + closest_angle)) {
 			if (Math.abs(Rotation2d.fromDegrees(angle).minus(getYaw()).getDegrees()) < Math
 					.abs(closest.minus(getYaw()).getDegrees())) {
 				closest = Rotation2d.fromDegrees(angle);
