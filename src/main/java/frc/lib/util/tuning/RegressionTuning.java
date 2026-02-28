@@ -8,11 +8,13 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
@@ -22,6 +24,7 @@ import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.commands.RegressionShoot;
+import frc.robot.commands.Shoot;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
@@ -45,6 +48,8 @@ public class RegressionTuning {
 			* RobotConstants.maxSpeed.in(MetersPerSecond);
 	private static Supplier<Double> leftX = () -> DriverConstants.joystickDeadband(-tester.getLeftX(), true)
 			* RobotConstants.maxSpeed.in(MetersPerSecond);
+	private static Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-tester.getRightX(), true)
+			* RobotConstants.maxSpeed.in(MetersPerSecond);
 
 	private static double shooterRPS = 0.0;
 	private static double spinnerRPS = 0.0;
@@ -54,18 +59,12 @@ public class RegressionTuning {
 		DogLog.tunable("Regression/Shooter RPS Target", 0.0, target -> shooterRPS = target);
 		DogLog.tunable("Regression/Spinner RPS Target", 0.0, target -> spinnerRPS = target);
 
-		pidtuneFOC.whileTrue(Commands.run(() -> {
-			shooter.setRPS(shooterRPS, spinnerRPS);
-			shooter.setKickerVelocity(ShooterConstants.KickerRPS);
-			indexer.runVoltage(IndexerConstants.IndexerVolts);
-		}).handleInterrupt(() -> {
-			shooter.disable();
-			indexer.disable();
-		}));
+		pidtuneFOC.whileTrue(Commands.parallel(
+				swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true),
+				new Shoot(shooter, indexer, intake, () -> shooterRPS, () -> spinnerRPS, swerve::atRotation)));
 
 		regression.whileTrue(new RegressionShoot(swerve, shooter, indexer, intake, leftY, leftX));
-		drive.whileTrue(swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(),
-				() -> true));
+		drive.whileTrue(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 
 		clearData.onTrue(Commands.runOnce(() -> {
 			ShooterRegression.shotRPSMap.clear();
