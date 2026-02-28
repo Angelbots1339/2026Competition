@@ -36,7 +36,7 @@ public class Autos {
 						// opposite side, while keeping the same coordinate system origin.
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 
-		shoot = () -> new Shoot(swerve, shooter, indexer, () -> 0.0, () -> 0.0, () -> true)
+		shoot = () -> new Shoot(swerve, shooter, indexer, intake, () -> 0.0, () -> 0.0, () -> true)
 				.withTimeout(4);
 
 		factory.bind("IntakeStart", intake.runIntake().alongWith(indexer.index()));

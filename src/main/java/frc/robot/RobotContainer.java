@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -78,7 +79,7 @@ public class RobotContainer {
 
 	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
 
-	private Trigger reverse = new Trigger(() -> operater.getXButton());
+	private Trigger reverse = new Trigger(() -> driver.getXButton());
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
@@ -103,13 +104,16 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pass.whileTrue(Commands.parallel(
-				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
-						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
+				// swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
+				// () -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, ()
+				// -> true)),
 				shooter.run(() -> {
-					shooter.setRPS(40, 40);
-					shooter.setKickerVelocity(ShooterConstants.KickerRPS);
-					indexer.runVoltage(IndexerConstants.IndexerVolts);
-				})));
+					shooter.setRPS(20, 20);
+					if (shooter.atSetpoint()) {
+						shooter.setKickerVelocity(ShooterConstants.KickerRPS);
+					}
+				}),
+				indexer.run(() -> indexer.runVoltage(IndexerConstants.IndexerVolts)).onlyIf(shooter::atSetpoint)));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
@@ -128,7 +132,7 @@ public class RobotContainer {
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
 
-		shoot.whileTrue(new Shoot(swerve, shooter, indexer, leftY, leftX, () -> true));
+		shoot.whileTrue(new Shoot(swerve, shooter, indexer, intake, leftY, leftX, () -> true));
 		shooterSpinup.whileTrue(shooter.run(() -> {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
@@ -173,9 +177,9 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		shooter.setDefaultCommand(shooter.run(shooter::disable));
 		intake.setDefaultCommand(intake.deploy());
 		indexer.setDefaultCommand(indexer.run(indexer::disable));
+		shooter.setDefaultCommand(shooter.run(shooter::unstuck));
 	}
 
 	@Logged(name = "Current auto")

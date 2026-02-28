@@ -2,12 +2,15 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
@@ -15,26 +18,30 @@ public class Shoot extends Command {
 	private Swerve swerve;
 	private Shooter shooter;
 	private Indexer indexer;
+	private Intake intake;
 
 	private Supplier<Double> x;
 	private Supplier<Double> y;
 	private Supplier<Boolean> runKicker;
 
-	public Shoot(Swerve swerve, Shooter shooter, Indexer indexer, Supplier<Double> x, Supplier<Double> y,
+	private Timer intakeTimer = new Timer();
+
+	public Shoot(Swerve swerve, Shooter shooter, Indexer indexer, Intake intake, Supplier<Double> x, Supplier<Double> y,
 			Supplier<Boolean> runKicker) {
 		this.swerve = swerve;
 		this.shooter = shooter;
 		this.indexer = indexer;
+		this.intake = intake;
 
 		this.x = x;
 		this.y = y;
 		this.runKicker = runKicker;
-		addRequirements(shooter, swerve, indexer);
+		addRequirements(shooter, swerve, indexer, intake);
 	}
 
 	@Override
 	public void initialize() {
-
+		intakeTimer.restart();
 	}
 
 	@Override
@@ -47,6 +54,14 @@ public class Shoot extends Command {
 		if (shooter.atSetpoint() && runKicker.get()) {
 			shooter.setKickerVelocity(ShooterConstants.KickerRPS);
 			indexer.runVoltage(IndexerConstants.IndexerVolts);
+		}
+		if (intakeTimer.hasElapsed(0.25)) {
+			intake.setIntakeAngle(IntakeConstants.AgitationAngle);
+		}
+
+		if (intakeTimer.hasElapsed(0.5)) {
+			intake.setIntakeAngle(IntakeConstants.DeployedAngle);
+			intakeTimer.restart();
 		}
 	}
 
