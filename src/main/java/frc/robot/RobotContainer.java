@@ -107,7 +107,7 @@ public class RobotContainer {
 						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
 				new Shoot(shooter, indexer, intake, () -> 30.0, () -> 30.0, swerve::atRotation)));
 		bumpDrive.whileTrue(
-				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
+				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosestBumpAngle(),
 						() -> true),
 						swerve));
 		snakeDrive.whileTrue(Commands.run(() -> swerve.angularDriveRequest(leftY,
