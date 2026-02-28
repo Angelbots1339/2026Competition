@@ -85,10 +85,12 @@ public class Shooter extends SubsystemBase {
 	}
 
 	public void disableShooter() {
+		targetShooterRPS = targetSpinnerRPS = 0;
 		setVoltage(Volts.of(0));
 	}
 
 	public void disableKicker() {
+
 		kicker.setControl(new NeutralOut());
 	}
 

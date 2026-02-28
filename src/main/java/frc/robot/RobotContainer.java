@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -89,11 +88,10 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-		autoChooser.addCmd("Hub Depot Tower", autos::hubDepotTowerAuto);
-		autoChooser.addCmd("Hub Depot Outpost Tower",
-				autos::hubDepotOutpostTowerAuto);
+		autoChooser.addCmd("Hub Depot Outpost Tower", autos::hubDepotOutpostTowerAuto);
 		autoChooser.addCmd("right outpost neutral", autos::rightOutpostNeutral);
-		autoChooser.addRoutine("left depot neutral", autos::leftDepotNeutral);
+		autoChooser.addCmd("left depot neutral", autos::leftDepotNeutral);
+		autoChooser.addCmd("right neutral depot", autos::rightNeutralDepot);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		// TODO: remove this during comp
@@ -178,8 +176,7 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		intake.setDefaultCommand(
-				intake.deploy());
+		intake.setDefaultCommand(intake.deploy());
 		indexer.setDefaultCommand(indexer.run(indexer::disable));
 		shooter.setDefaultCommand(shooter.run(shooter::unstuck));
 	}
