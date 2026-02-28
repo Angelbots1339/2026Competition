@@ -83,6 +83,7 @@ public class Autos {
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
 		leftNeutral2.done().onTrue(shoot2);
+		routine.observe(shoot2::isFinished).onTrue(leftNeutral2.cmd());
 
 		return routine;
 	}
@@ -102,6 +103,7 @@ public class Autos {
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(neutral2.cmd());
 		neutral2.done().onTrue(shoot2);
+		routine.observe(shoot2::isFinished).onTrue(neutral2.cmd());
 
 		return routine;
 	}
