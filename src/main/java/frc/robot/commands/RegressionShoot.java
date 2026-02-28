@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import java.util.function.Supplier;
 
 import frc.robot.regression.ShooterRegression;
@@ -30,6 +32,10 @@ public class RegressionShoot extends Shoot {
 	public void execute() {
 		ShooterParams params = ShooterRegression.getShotParams(swerve);
 		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
-		runShoot(params.shooterRPS(), params.spinnerRPS(), swerve::atRotation);
+		runShoot(params.shooterRPS(), params.spinnerRPS(),
+				() -> true);
+		// () ->
+		// swerve.getRotationError().getMeasure().isNear(params.angle().getMeasure(),
+		// params.maxAngleError()));
 	}
 }

@@ -180,9 +180,9 @@ public class Constants {
 		public static final int intakeMotorId = 22;
 		public static final int deployMotorId = 24;
 
-		public static final Angle DeployedAngle = Degrees.of(18);
+		public static final Angle DeployedAngle = Degrees.of(20);
 		public static final Angle RetractedAngle = Degrees.of(115);
-		public static final Angle AgitationAngle = Degrees.of(53);
+		public static final Angle AgitationAngle = Degrees.of(30);
 		public static final double IntakeVoltage = 6;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
@@ -191,7 +191,7 @@ public class Constants {
 		// public static final Angle MinAngle = Degrees.of(15.5614);
 		// public static final Angle MaxAngle = Degrees.of(115.558);
 
-		public static final Angle MinAngle = Degrees.of(18);
+		public static final Angle MinAngle = Degrees.of(25);
 		public static final Angle MaxAngle = Degrees.of(115.558);
 
 		public static final Angle IntakeAngleTolerence = Degrees.of(10);
@@ -199,13 +199,13 @@ public class Constants {
 		// Recalc:
 		// https://www.reca.lc/arm?armMass=%7B%22s%22%3A5.134%2C%22u%22%3A%22lbs%22%7D&comLength=%7B%22s%22%3A10.203%2C%22u%22%3A%22in%22%7D&currentLimit=%7B%22s%22%3A70%2C%22u%22%3A%22A%22%7D&efficiency=90&endAngle=%7B%22s%22%3A115.558%2C%22u%22%3A%22deg%22%7D&iterationLimit=10000&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Kraken%20X60%20%28FOC%29%22%7D&ratio=%7B%22magnitude%22%3A18%2C%22ratioType%22%3A%22Reduction%22%7D&startAngle=%7B%22s%22%3A15.5614%2C%22u%22%3A%22deg%22%7D
 		public static final Slot0Configs deploySlot0 = new Slot0Configs()
-				.withKP(15)
+				.withKP(70)
 				.withKI(0)
 				.withKD(0)
 				.withKV(0)
 				.withKA(0)
-				.withKS(0.1)
-				.withKG(0.35)
+				.withKS(0.3)
+				.withKG(0)
 				.withGravityType(GravityTypeValue.Arm_Cosine)
 				.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
@@ -219,20 +219,18 @@ public class Constants {
 								.withSensorToMechanismRatio(deployIntakeGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(40)
-								.withSupplyCurrentLimit(70)
-								.withStatorCurrentLimitEnable(true)
-								.withSupplyCurrentLimitEnable(true))
+								.withStatorCurrentLimit(60)
+								.withStatorCurrentLimitEnable(true))
 				.withSoftwareLimitSwitch(
 						new SoftwareLimitSwitchConfigs()
-								.withForwardSoftLimitEnable(true)
-								.withReverseSoftLimitEnable(true)
+								.withForwardSoftLimitEnable(false)
+								.withReverseSoftLimitEnable(false)
 								.withForwardSoftLimitThreshold(MaxAngle)
 								.withReverseSoftLimitThreshold(MinAngle))
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
-						.withMotionMagicCruiseVelocity(RotationsPerSecond.of(12.0))
-						.withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(24.0)));
+						.withMotionMagicCruiseVelocity(0.4)
+						.withMotionMagicAcceleration(2));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
 				.withKP(0)
@@ -305,7 +303,7 @@ public class Constants {
 	public class IndexerConstants {
 		public static final int IndexerMotorPort = 26;
 
-		public static final double IndexerVolts = 1.5;
+		public static final double IndexerVolts = 2.5;
 
 		public static final TalonFXConfiguration IndexerMotorConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
