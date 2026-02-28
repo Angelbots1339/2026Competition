@@ -20,13 +20,10 @@ public class ShooterRegression {
 			// distance (m), shooter rps, spinner rps
 			// -0.038 is the offset of the shooter front from center of robot
 			// original distance is the distance from front of shooter to hub wall
-			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(49)).in(Meters), 41, 23 },
-			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(60)).in(Meters), 41, 25 },
-			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(85)).in(Meters), 37, 40 },
-			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(104)).in(Meters), 40, 39 },
-			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(136)).in(Meters), 43, 43 },
-			{ -0.038 + FieldUtil.hubWidth.div(2).plus(Inches.of(170)).in(Meters), 45, 45 },
-			{ 1.48, 41, 16 },
+			{ 1.77, 40, 2 },
+			{ 2.213, 40, 15 },
+			{ 2.617, 40, 15 },
+			{ 2.96, 44, 10 },
 	};
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
