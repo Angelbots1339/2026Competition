@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -29,6 +28,7 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.RegressionShoot;
 import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.regression.ShooterRegression;
@@ -103,16 +103,9 @@ public class RobotContainer {
 		swerve.setDefaultCommand(swerve.driveCommand(leftY, leftX, rightX, () -> true));
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pass.whileTrue(Commands.parallel(
-				// swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
-				// () -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, ()
-				// -> true)),
-				shooter.run(() -> {
-					shooter.setRPS(20, 20);
-					if (shooter.atSetpoint()) {
-						shooter.setKickerVelocity(ShooterConstants.KickerRPS);
-					}
-				}),
-				indexer.run(() -> indexer.runVoltage(IndexerConstants.IndexerVolts)).onlyIf(shooter::atSetpoint)));
+				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
+						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
+				new Shoot(shooter, indexer, intake, 30, 30, swerve::atRotation)));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosest15(),
 						() -> true),
@@ -131,7 +124,7 @@ public class RobotContainer {
 							speeds.vxMetersPerSecond));
 				}, () -> true), swerve));
 
-		shoot.whileTrue(new Shoot(swerve, shooter, indexer, intake, leftY, leftX, () -> true));
+		shoot.whileTrue(new RegressionShoot(swerve, shooter, indexer, intake, leftY, leftX));
 		shooterSpinup.whileTrue(shooter.run(() -> {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
@@ -143,9 +136,9 @@ public class RobotContainer {
 				.onFalse(intake.run(intake::disable));
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 
-		// TODO: also reverse the indexer as well
 		reverse.whileTrue(Commands.parallel(
 				shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
+				indexer.run(() -> indexer.runVelocity(-IndexerConstants.IndexerVolts)),
 				intake.run(() -> intake.setIntakeVoltage(-IntakeConstants.IntakeVoltage))));
 	}
 
@@ -178,7 +171,7 @@ public class RobotContainer {
 	public void setDefaultCommands() {
 		intake.setDefaultCommand(intake.deploy());
 		indexer.setDefaultCommand(indexer.run(indexer::disable));
-		shooter.setDefaultCommand(shooter.run(shooter::unstuck));
+		shooter.setDefaultCommand(shooter.unstuck().andThen(shooter.run(shooter::disable)));
 	}
 
 	@Logged(name = "Current auto")

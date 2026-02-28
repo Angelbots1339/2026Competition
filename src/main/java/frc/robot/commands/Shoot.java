@@ -7,36 +7,34 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.regression.ShooterRegression;
-import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Swerve;
 
 public class Shoot extends Command {
-	private Swerve swerve;
 	private Shooter shooter;
 	private Indexer indexer;
 	private Intake intake;
 
-	private Supplier<Double> x;
-	private Supplier<Double> y;
-	private Supplier<Boolean> runKicker;
+	private double shooterRPS;
+	private double spinnerRPS;
 
 	private Timer intakeTimer = new Timer();
+	private Supplier<Boolean> runKicker = () -> true;
 
-	public Shoot(Swerve swerve, Shooter shooter, Indexer indexer, Intake intake, Supplier<Double> x, Supplier<Double> y,
+	public Shoot(Shooter shooter, Indexer indexer, Intake intake) {
+		this(shooter, indexer, intake, 0.0, 0.0, () -> true);
+	}
+
+	public Shoot(Shooter shooter, Indexer indexer, Intake intake, double shooterRPS, double spinnerRPS,
 			Supplier<Boolean> runKicker) {
-		this.swerve = swerve;
 		this.shooter = shooter;
 		this.indexer = indexer;
 		this.intake = intake;
+		this.shooterRPS = shooterRPS;
+		this.spinnerRPS = spinnerRPS;
 
-		this.x = x;
-		this.y = y;
-		this.runKicker = runKicker;
-		addRequirements(shooter, swerve, indexer, intake);
+		addRequirements(shooter, indexer, intake);
 	}
 
 	@Override
@@ -44,12 +42,8 @@ public class Shoot extends Command {
 		intakeTimer.restart();
 	}
 
-	@Override
-	public void execute() {
-		ShooterParams params = ShooterRegression.getShotParams(swerve);
-		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
-
-		shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
+	public void runShoot(double shooterRPS, double spinnerRPS, Supplier<Boolean> runKicker) {
+		shooter.setRPS(shooterRPS, spinnerRPS);
 
 		if (shooter.atSetpoint() && runKicker.get()) {
 			shooter.setKickerVelocity(ShooterConstants.KickerRPS);
@@ -63,6 +57,11 @@ public class Shoot extends Command {
 			intake.setIntakeAngle(IntakeConstants.DeployedAngle);
 			intakeTimer.restart();
 		}
+	}
+
+	@Override
+	public void execute() {
+		runShoot(shooterRPS, spinnerRPS, runKicker);
 	}
 
 	@Override
