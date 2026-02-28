@@ -136,9 +136,9 @@ public class RobotContainer {
 				.onFalse(intake.run(intake::disable));
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 
-		// TODO: also reverse the indexer as well
 		reverse.whileTrue(Commands.parallel(
 				shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
+				indexer.run(() -> indexer.runVelocity(-IndexerConstants.IndexerVolts)),
 				intake.run(() -> intake.setIntakeVoltage(-IntakeConstants.IntakeVoltage))));
 	}
 
