@@ -8,28 +8,24 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.commands.RegressionShoot;
 import frc.robot.commands.Shoot;
 import frc.robot.regression.ShooterRegression;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Swerve;
 
 /** Add your docs here. */
 public class RegressionTuning {
@@ -37,12 +33,12 @@ public class RegressionTuning {
 
 	private static Trigger baseTrigger = new Trigger(
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Regression);
-	private static Trigger pidtuneFOC = baseTrigger.and(() -> tester.getXButton());
-	private static Trigger regression = baseTrigger.and(() -> tester.getYButton());
+	private static Trigger pidtuneFOC = baseTrigger.and(() -> tester.getRightTriggerAxis() > 0.2);
+	private static Trigger regression = baseTrigger.and(() -> tester.getRightBumperButton());
 
-	private static Trigger addData = baseTrigger.and(() -> tester.getBButton());
+	private static Trigger addData = baseTrigger.and(() -> tester.getXButton());
 	private static Trigger clearData = baseTrigger.and(() -> tester.getStartButton());
-	private static Trigger drive = baseTrigger.and(() -> tester.getRightTriggerAxis() > 0.2);
+	private static Trigger drive = baseTrigger.and(() -> tester.getLeftTriggerAxis() > 0.2);
 
 	private static Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-tester.getLeftY(), true)
 			* RobotConstants.maxSpeed.in(MetersPerSecond);
