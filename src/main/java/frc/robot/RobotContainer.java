@@ -196,17 +196,6 @@ public class RobotContainer {
 		return FieldUtil.isHubActive(FieldUtil.shift + 1);
 	}
 
-	@Logged(importance = Importance.CRITICAL, name = "Shift Next Next")
-	public String shiftNextNext() {
-		return FieldUtil.isHubActive(FieldUtil.shift + 2);
-	}
-
-	@Logged(importance = Importance.CRITICAL)
-	public boolean isAuto() {
-		return FieldUtil.isAuto();
-
-	}
-
 	@Logged(importance = Importance.CRITICAL)
 	public boolean isTransitionPeriod() {
 		return FieldUtil.isTransitionPeriod();
@@ -222,7 +211,6 @@ public class RobotContainer {
 	@Logged(importance = Importance.CRITICAL)
 	public boolean isShift2() {
 		return FieldUtil.isShift2();
-
 	}
 
 	@Logged(importance = Importance.CRITICAL)
