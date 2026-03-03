@@ -30,6 +30,7 @@ public class ShooterRegression {
 			{ 2.96, 44, 10 },
 			{ 3.55, 44, 20 },
 			{ 4.00, 44, 23 },
+			{ 4.62, 45.5, 26 },
 	};
 
 	public static final double[][] tofData = {

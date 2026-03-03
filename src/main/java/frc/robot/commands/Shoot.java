@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -19,6 +20,8 @@ public class Shoot extends Command {
 	private Supplier<Double> spinnerRPS;
 
 	private Supplier<Boolean> runKicker = () -> true;
+
+	private Timer reverseTimer = new Timer();
 
 	public Shoot(Shooter shooter, Indexer indexer, Intake intake) {
 		this(shooter, indexer, intake, () -> 0.0, () -> 0.0, () -> true);
@@ -38,6 +41,9 @@ public class Shoot extends Command {
 
 	@Override
 	public void initialize() {
+		reverseTimer.restart();
+		shooter.setKickerVelocity(-ShooterConstants.KickerRPS);
+		indexer.runVoltage(-IndexerConstants.IndexerVolts);
 	}
 
 	public void runShoot(double shooterRPS, double spinnerRPS, Supplier<Boolean> runKicker) {
