@@ -44,6 +44,8 @@ public class Autos {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 		}));
+		factory.bind("IntakeStart", intake.runIntake());
+		factory.bind("IntakeStop", intake.stopIntake());
 	}
 
 	public Command hubDepotOutpostTowerAuto() {

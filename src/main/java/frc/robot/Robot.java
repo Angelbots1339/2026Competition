@@ -30,6 +30,8 @@ public class Robot extends TimedRobot {
 	public Robot() {
 		m_robotContainer = new RobotContainer();
 		PathfindingCommand.warmupCommand().schedule();
+		// doglog log thread takes some time to start up so warm it up
+		DogLog.log("", "");
 
 		DataLogManager.start();
 		DriverStation.startDataLog(DataLogManager.getLog());

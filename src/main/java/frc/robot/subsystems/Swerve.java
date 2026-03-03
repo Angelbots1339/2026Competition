@@ -47,6 +47,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.LimelightHelpers;
 import frc.robot.Constants.AlignConstants;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.VisionConstants;
 
 @Logged
@@ -158,6 +159,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return Rotation2d.fromRadians(Math.abs(angularDrivePID.getError()));
 	}
 
+	public boolean isRotated() {
+		return angularDrivePID.atSetpoint();
+	}
+
 	public boolean atSetpoint() {
 		return pidToPoseXController.atSetpoint() && pidToPoseYController.atSetpoint() && angularDrivePID.atSetpoint();
 	}
@@ -262,7 +267,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public Consumer<SwerveSample> followChoreoPath() {
 		final PIDController xController = new PIDController(10.0, 0.0, 0.0);
 		final PIDController yController = new PIDController(10.0, 0.0, 0.0);
-		final PIDController headingController = new PIDController(7.5, 0.0, 0.0);
+		final PIDController headingController = new PIDController(5.0, 0.0, 0.0);
 		headingController.enableContinuousInput(-Math.PI, Math.PI);
 		return (sample) -> {
 			Pose2d pose = getPose();

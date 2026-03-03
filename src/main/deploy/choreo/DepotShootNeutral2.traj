@@ -319,5 +319,7 @@
   "splits":[0]
  },
  "events":[
-   {"name":"RevUpShooter", "from":{"target":9, "targetTimestamp":5.89898, "offset":{"exp":"-1 s", "val":-1.0}}, "event":null}]
+   {"name":"RevUpShooter", "from":{"target":9, "targetTimestamp":5.89898, "offset":{"exp":"-1 s", "val":-1.0}}, "event":null},
+   {"name":"IntakeStart", "from":{"target":3, "targetTimestamp":1.87543, "offset":{"exp":"-0.5 s", "val":-0.5}}, "event":null},
+   {"name":"IntakeStop", "from":{"target":8, "targetTimestamp":5.24148, "offset":{"exp":"0 s", "val":0.0}}, "event":null}]
 }
