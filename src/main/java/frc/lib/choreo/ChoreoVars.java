@@ -14,8 +14,8 @@ public final class ChoreoVars {
     public static final Distance FieldHeight = Units.Meters.of(8.069);
 
     public static final class Poses {
-        public static final Pose2d DepotIntake = new Pose2d(0.5, 5.002, Rotation2d.fromRadians(1.571));
-        public static final Pose2d DepotIntakeEnd = new Pose2d(0.5, 6.292, Rotation2d.fromRadians(1.571));
+        public static final Pose2d DepotIntake = new Pose2d(0.4, 5.002, Rotation2d.fromRadians(1.571));
+        public static final Pose2d DepotIntakeEnd = new Pose2d(0.4, 6.292, Rotation2d.fromRadians(1.571));
         public static final Pose2d DepotShoot = new Pose2d(2.615, 5.34, Rotation2d.fromRadians(-0.588));
         public static final Pose2d FirstBumpStart = new Pose2d(3.74, 5.822, Rotation2d.fromRadians(-1.571));
         public static final Pose2d HubLeftStart = new Pose2d(3.565, 5.04, Rotation2d.fromRadians(1.571));

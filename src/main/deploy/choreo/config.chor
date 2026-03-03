@@ -15,8 +15,8 @@
   "poses":{
    "DepotIntake":{
     "x":{
-     "exp":"0.5 m",
-     "val":0.5
+     "exp":"0.4 m",
+     "val":0.4
     },
     "y":{
      "exp":"5.002081871032715 m",
@@ -30,7 +30,7 @@
    "DepotIntakeEnd":{
     "x":{
      "exp":"DepotIntake.x",
-     "val":0.5
+     "val":0.4
     },
     "y":{
      "exp":"6.29248571395874 m",
