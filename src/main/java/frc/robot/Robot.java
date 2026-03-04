@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Seconds;
-
-import com.pathplanner.lib.commands.PathfindingCommand;
-
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.epilogue.Epilogue;
@@ -17,7 +13,6 @@ import edu.wpi.first.epilogue.logging.FileBackend;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,7 +27,7 @@ public class Robot extends TimedRobot {
 
 	public Robot() {
 		m_robotContainer = new RobotContainer();
-		PathfindingCommand.warmupCommand().schedule();
+		// PathfindingCommand.warmupCommand().schedule();
 		DogLog.setOptions(new DogLogOptions().withNtPublish(false));
 		// doglog log thread takes some time to start up so warm it up
 		DogLog.log("", "");
