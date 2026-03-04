@@ -71,6 +71,8 @@ public class RobotContainer {
 	@Logged(name = "Shoot")
 	private Trigger shoot = new Trigger(() -> driver.getRightTriggerAxis() > 0.2);
 
+	private Trigger trenchShot = new Trigger(() -> driver.getXButton());
+
 	@Logged(name = "Spin Up")
 	private Trigger shooterSpinup = new Trigger(() -> driver.getRightBumperButton());
 
@@ -79,7 +81,7 @@ public class RobotContainer {
 
 	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
 
-	private Trigger reverse = new Trigger(() -> driver.getXButton());
+	private Trigger reverse = new Trigger(() -> operater.getXButton());
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
@@ -129,6 +131,7 @@ public class RobotContainer {
 
 		runIntake.whileTrue(intake.runIntake());
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
+		trenchShot.whileTrue(new Shoot(shooter, indexer, intake, () -> 45.0, () -> 12.6, () -> true));
 
 		reverse.whileTrue(Commands.parallel(
 				shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
