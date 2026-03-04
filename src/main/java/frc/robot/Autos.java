@@ -38,7 +38,7 @@ public class Autos {
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 
 		shoot = () -> new RegressionShoot(swerve, shooter, indexer, intake, () -> 0.0, () -> 0.0)
-				.withTimeout(4);
+				.withTimeout(5);
 
 		factory.bind("RevUpShooter", shooter.run(() -> {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);

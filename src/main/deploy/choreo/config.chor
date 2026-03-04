@@ -15,8 +15,8 @@
   "poses":{
    "DepotIntake":{
     "x":{
-     "exp":"0.8 m",
-     "val":0.8
+     "exp":"0.75 m",
+     "val":0.75
     },
     "y":{
      "exp":"5.002081871032715 m",
@@ -30,11 +30,11 @@
    "DepotIntakeEnd":{
     "x":{
      "exp":"DepotIntake.x",
-     "val":0.8
+     "val":0.75
     },
     "y":{
-     "exp":"6.29248571395874 m",
-     "val":6.29248571395874
+     "exp":"6.71 m",
+     "val":6.71
     },
     "heading":{
      "exp":"DepotIntake.heading",
@@ -43,12 +43,12 @@
    },
    "DepotShoot":{
     "x":{
-     "exp":"2.6148219108581543 m",
-     "val":2.6148219108581543
+     "exp":"2.28219108581545 m",
+     "val":2.28219108581545
     },
     "y":{
-     "exp":"5.339716911315918 m",
-     "val":5.339716911315918
+     "exp":"5.79716911315918 m",
+     "val":5.79716911315918
     },
     "heading":{
      "exp":"-0.5880032220363305 rad",
@@ -184,11 +184,11 @@
    "OutpostShoot":{
     "x":{
      "exp":"DepotShoot.x",
-     "val":2.6148219108581543
+     "val":2.28219108581545
     },
     "y":{
      "exp":"FieldHeight - DepotShoot.y",
-     "val":2.7296090886840823
+     "val":2.27215688684082
     },
     "heading":{
      "exp":"-DepotShoot.heading",
