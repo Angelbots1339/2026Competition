@@ -89,14 +89,11 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-		autoChooser.addCmd("Hub Depot Outpost Tower", autos::hubDepotOutpostTowerAuto);
+		autoChooser.addCmd("Hub Depot Outpost Tower", autos::hubDepotOutpostAuto);
+		autoChooser.addCmd("Hub Depot", autos::hubDepotAuto);
 		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
 		autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
-
-		// TODO: remove this during comp
-		new Trigger(() -> !DriverStation.isTeleopEnabled())
-				.onTrue(Commands.run(() -> FieldUtil.allianceWithActiveHubStart = null).ignoringDisable(true));
 	}
 
 	private void configureBindings() {
@@ -135,7 +132,7 @@ public class RobotContainer {
 
 		reverse.whileTrue(Commands.parallel(
 				shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
-				indexer.run(() -> indexer.runVelocity(-IndexerConstants.IndexerVolts)),
+				indexer.run(() -> indexer.runVoltage(-IndexerConstants.IndexerVolts)),
 				intake.run(() -> intake.setIntakeVoltage(-IntakeConstants.IntakeVoltage))));
 	}
 

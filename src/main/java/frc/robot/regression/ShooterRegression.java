@@ -24,13 +24,20 @@ public class ShooterRegression {
 			// distance (m), shooter rps, spinner rps
 			// -0.038 is the offset of the shooter front from center of robot
 			// original distance is the distance from front of shooter to hub wall
-			{ 1.77, 40, 2 },
-			{ 2.213, 40, 15 },
-			{ 2.617, 40, 15 },
-			{ 2.96, 44, 10 },
-			{ 3.55, 44, 20 },
-			{ 4.00, 44, 23 },
-			{ 4.62, 45.5, 26 },
+			{ 1.828, 43, 2 },
+			{ 2.310, 43, 7 },
+			{ 2.582, 43, 10 },
+			{ 2.915, 44, 11.5 },
+			{ 3.33, 46, 13 },
+			{ 3.61, 47, 14.5 },
+			{ 3.95, 48, 17 },
+			// { 1.77, 40, 2 },
+			// { 2.213, 40, 15 },
+			// { 2.617, 40, 15 },
+			// { 2.96, 44, 10 },
+			// { 3.55, 44, 20 },
+			// { 4.00, 44, 23 },
+			// { 4.62, 45.5, 26 },
 	};
 
 	public static final double[][] tofData = {
@@ -86,11 +93,11 @@ public class ShooterRegression {
 		Translation2d lookaheadPose = pose;
 		double lookaheadDistance = distance;
 		double tof = 0;
-		for (int i = 0; i < 3; i++) {
-			tof = timeOfFlightMap.get(lookaheadDistance);
-			lookaheadPose = pose.plus(new Translation2d(vx * tof, vy * tof));
-			lookaheadDistance = target.getDistance(lookaheadPose);
-		}
+		// for (int i = 0; i < 3; i++) {
+		// tof = timeOfFlightMap.get(lookaheadDistance);
+		// lookaheadPose = pose.plus(new Translation2d(vx * tof, vy * tof));
+		// lookaheadDistance = target.getDistance(lookaheadPose);
+		// }
 		DogLog.log("Regression/Lookahead Pose", new Pose2d(lookaheadPose, swerve.getYaw()));
 
 		double[] rps = shotRPSMap.get(lookaheadDistance);

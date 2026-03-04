@@ -74,7 +74,7 @@ public class Constants {
 		public static final TrapezoidProfile.Constraints angularDriveConstraints = new TrapezoidProfile.Constraints(
 				10,
 				20);
-		public static final Angle angularDriveTolerance = Degrees.of(1); // Degrees
+		public static final Angle angularDriveTolerance = Degrees.of(3); // Degrees
 
 		public static final double pidToPoseKP = 2.5;
 		public static final double pidToPoseKD = 0;
@@ -119,7 +119,7 @@ public class Constants {
 		public static final int KickerPort = 36;
 
 		public static final double shootRPS = 41.5;
-		public static final double KickerRPS = 20.0;
+		public static final double KickerRPS = 30.0;
 		public static final double rpsTolerence = 1;
 
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
@@ -158,7 +158,7 @@ public class Constants {
 
 		public static TalonFXConfiguration KickerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(Amps.of(40))
+						.withStatorCurrentLimit(Amps.of(60))
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
@@ -166,10 +166,10 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(36.0 / 18.0))
 				.withSlot0(new Slot0Configs()
-						.withKP(4)
-						.withKI(2.5)
+						.withKP(8)
+						.withKI(0)
 						.withKD(0)
-						.withKS(12.5)
+						.withKS(18)
 						.withKV(0));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
@@ -182,8 +182,8 @@ public class Constants {
 
 		public static final Angle DeployedAngle = Degrees.of(20);
 		public static final Angle RetractedAngle = Degrees.of(115);
-		public static final Angle AgitationAngle = Degrees.of(30);
-		public static final double IntakeVoltage = 6;
+		public static final Angle AgitationAngle = Degrees.of(40);
+		public static final double IntakeVoltage = 7;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
@@ -253,7 +253,7 @@ public class Constants {
 								.withSensorToMechanismRatio(intakeWheelGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(35)
+								.withStatorCurrentLimit(50)
 								.withSupplyCurrentLimit(70)
 								.withStatorCurrentLimitEnable(true)
 								.withSupplyCurrentLimitEnable(true))
@@ -303,7 +303,7 @@ public class Constants {
 	public class IndexerConstants {
 		public static final int IndexerMotorPort = 26;
 
-		public static final double IndexerVolts = 2.5;
+		public static final double IndexerVolts = 3.5;
 
 		public static final TalonFXConfiguration IndexerMotorConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
