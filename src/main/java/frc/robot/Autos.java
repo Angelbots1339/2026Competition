@@ -48,7 +48,22 @@ public class Autos {
 		factory.bind("IntakeStop", intake.stopIntake());
 	}
 
-	public Command hubDepotOutpostTowerAuto() {
+	public Command hubDepotAuto() {
+		final var routine = factory.newRoutine("Hub Depot");
+		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
+
+		final var shoot1 = shoot.get();
+
+		routine.active().onTrue(
+				Commands.sequence(
+						hubToDepotShoot.resetOdometry(),
+						hubToDepotShoot.cmd()));
+		hubToDepotShoot.done().onTrue(shoot1);
+
+		return routine.cmd();
+	}
+
+	public Command hubDepotOutpostAuto() {
 		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
 		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
 		final var depotShootToOutpostShoot = routine.trajectory(ChoreoTraj.DepotShootOutpostShoot.name());
