@@ -37,8 +37,7 @@ public class Autos {
 						// opposite side, while keeping the same coordinate system origin.
 				swerve); // The drive Subsystem to require for AutoTrajectory Commands.
 
-		shoot = () -> new RegressionShoot(swerve, shooter, indexer, intake, () -> 0.0, () -> 0.0)
-				.withTimeout(5);
+		shoot = () -> new RegressionShoot(swerve, shooter, indexer, intake, () -> 0.0, () -> 0.0);
 
 		factory.bind("RevUpShooter", shooter.run(() -> {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);
@@ -52,7 +51,7 @@ public class Autos {
 		final var routine = factory.newRoutine("Hub Depot");
 		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
 
-		final var shoot1 = shoot.get();
+		final var shoot1 = shoot.get().withTimeout(5);
 
 		routine.active().onTrue(
 				Commands.sequence(
@@ -68,8 +67,8 @@ public class Autos {
 		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
 		final var depotShootToOutpostShoot = routine.trajectory(ChoreoTraj.DepotShootOutpostShoot.name());
 
-		final var shoot1 = shoot.get();
-		final var shoot2 = shoot.get();
+		final var shoot1 = shoot.get().withTimeout(5);
+		final var shoot2 = shoot.get().withTimeout(5);
 
 		routine.active().onTrue(
 				Commands.sequence(
@@ -90,8 +89,8 @@ public class Autos {
 		final var leftNeutral2 = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
 
-		final var shoot1 = shoot.get();
-		final var shoot2 = shoot.get();
+		final var shoot1 = shoot.get().withTimeout(3.5);
+		final var shoot2 = shoot.get().withTimeout(3.5);
 
 		routine.active().onTrue(
 				Commands.sequence(
@@ -110,8 +109,8 @@ public class Autos {
 		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral.name());
 		final var neutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
 
-		final var shoot1 = shoot.get();
-		final var shoot2 = shoot.get();
+		final var shoot1 = shoot.get().withTimeout(3.5);
+		final var shoot2 = shoot.get().withTimeout(3.5);
 
 		routine.active().onTrue(
 				Commands.sequence(
