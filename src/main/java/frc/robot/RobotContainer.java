@@ -93,10 +93,6 @@ public class RobotContainer {
 		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
 		autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
-
-		// TODO: remove this during comp
-		new Trigger(() -> !DriverStation.isTeleopEnabled())
-				.onTrue(Commands.run(() -> FieldUtil.allianceWithActiveHubStart = null).ignoringDisable(true));
 	}
 
 	private void configureBindings() {

@@ -42,8 +42,6 @@ public class Shoot extends Command {
 	@Override
 	public void initialize() {
 		reverseTimer.restart();
-		shooter.setKickerVelocity(-ShooterConstants.KickerRPS);
-		indexer.runVoltage(-IndexerConstants.IndexerVolts);
 	}
 
 	public void runShoot(double shooterRPS, double spinnerRPS, Supplier<Boolean> runKicker) {
