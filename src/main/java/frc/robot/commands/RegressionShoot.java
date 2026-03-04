@@ -34,8 +34,5 @@ public class RegressionShoot extends Shoot {
 		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
 		runShoot(params.shooterRPS(), params.spinnerRPS(),
 				() -> true);
-		// () ->
-		// swerve.getRotationError().getMeasure().isNear(params.angle().getMeasure(),
-		// params.maxAngleError()));
 	}
 }

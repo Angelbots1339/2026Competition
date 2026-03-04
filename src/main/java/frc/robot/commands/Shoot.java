@@ -51,6 +51,13 @@ public class Shoot extends Command {
 			shooter.setKickerVelocity(ShooterConstants.KickerRPS);
 			indexer.runVoltage(IndexerConstants.IndexerVolts);
 			intake.setIntakeVoltage(IntakeConstants.IntakeVoltage);
+			if (reverseTimer.hasElapsed(0.25)) {
+				intake.setIntakeAngle(IntakeConstants.AgitationAngle);
+			}
+			if (reverseTimer.hasElapsed(0.5)) {
+				intake.setIntakeAngle(IntakeConstants.DeployedAngle);
+				reverseTimer.restart();
+			}
 		}
 	}
 
