@@ -4,14 +4,12 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Seconds;
-
-import com.pathplanner.lib.commands.PathfindingCommand;
-
 import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
+import edu.wpi.first.epilogue.logging.FileBackend;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -29,7 +27,8 @@ public class Robot extends TimedRobot {
 
 	public Robot() {
 		m_robotContainer = new RobotContainer();
-		PathfindingCommand.warmupCommand().schedule();
+		// PathfindingCommand.warmupCommand().schedule();
+		DogLog.setOptions(new DogLogOptions().withNtPublish(false));
 		// doglog log thread takes some time to start up so warm it up
 		DogLog.log("", "");
 
@@ -38,9 +37,19 @@ public class Robot extends TimedRobot {
 		Epilogue.configure(config -> {
 			// config.minimumImportance = Importance.CRITICAL;
 			config.minimumImportance = Importance.DEBUG;
+			config.backend = new FileBackend(DataLogManager.getLog());
 		});
 		Epilogue.bind(this);
 		// DogLog.setEnabled(false);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Shift Time Left", m_robotContainer.shifttimeleft()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Hub Active", m_robotContainer.isHubActive()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Hub Next Active", m_robotContainer.shiftNext()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Transition", m_robotContainer.isTransitionPeriod()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 1", m_robotContainer.isShift1()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 2", m_robotContainer.isShift2()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 3", m_robotContainer.isShift3()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 4", m_robotContainer.isShift4()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Endgame", m_robotContainer.isEndGame()), 0.5);
 	}
 
 	@Override
