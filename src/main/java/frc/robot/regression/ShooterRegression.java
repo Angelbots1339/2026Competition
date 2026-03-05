@@ -51,6 +51,8 @@ public class ShooterRegression {
 			{ 3.741, 35.0 / 29.97 },
 
 	};
+	public static final LinearFilter xfilter = LinearFilter.movingAverage(5);
+	public static final LinearFilter yfilter = LinearFilter.movingAverage(5);
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
 
@@ -82,8 +84,8 @@ public class ShooterRegression {
 
 		ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
 				swerve.getYaw());
-		double vx = fieldSpeeds.vxMetersPerSecond;
-		double vy = fieldSpeeds.vyMetersPerSecond;
+		double vx = xfilter.calculate(fieldSpeeds.vxMetersPerSecond);
+		double vy = yfilter.calculate(fieldSpeeds.vyMetersPerSecond);
 
 		// When shooting, we are assuming the TOF of the ball being the same as when
 		// leaving the current pose.

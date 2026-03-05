@@ -28,7 +28,7 @@ public class Robot extends TimedRobot {
 	public Robot() {
 		m_robotContainer = new RobotContainer();
 		// PathfindingCommand.warmupCommand().schedule();
-		DogLog.setOptions(new DogLogOptions().withNtPublish(false));
+		// DogLog.setOptions(new DogLogOptions().withNtPublish(false));
 		// doglog log thread takes some time to start up so warm it up
 		DogLog.log("", "");
 
@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
 		Epilogue.configure(config -> {
 			// config.minimumImportance = Importance.CRITICAL;
 			config.minimumImportance = Importance.DEBUG;
-			config.backend = new FileBackend(DataLogManager.getLog());
+			// config.backend = new FileBackend(DataLogManager.getLog());
 		});
 		Epilogue.bind(this);
 		// DogLog.setEnabled(false);
