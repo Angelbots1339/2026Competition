@@ -304,6 +304,7 @@ public class Constants {
 		public static final int IndexerMotorPort = 26;
 
 		public static final double IndexerVolts = 3.5;
+		public static final double IntakeIndexerVoltage = 2;
 
 		public static final TalonFXConfiguration IndexerMotorConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
@@ -323,5 +324,6 @@ public class Constants {
 						.withKS(0)
 						.withKV(0)
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign));
+
 	}
 }
