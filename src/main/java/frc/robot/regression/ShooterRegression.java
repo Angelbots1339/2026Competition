@@ -96,11 +96,11 @@ public class ShooterRegression {
 		Translation2d lookaheadPose = pose;
 		double lookaheadDistance = distance;
 		double tof = 0;
-		for (int i = 0; i < 3; i++) {
-			tof = timeOfFlightMap.get(lookaheadDistance);
-			lookaheadPose = pose.plus(new Translation2d(vx * tof, vy * tof));
-			lookaheadDistance = target.getDistance(lookaheadPose);
-		}
+		// for (int i = 0; i < 3; i++) {
+		// tof = timeOfFlightMap.get(lookaheadDistance);
+		// lookaheadPose = pose.plus(new Translation2d(vx * tof, vy * tof));
+		// lookaheadDistance = target.getDistance(lookaheadPose);
+		// }
 		DogLog.log("Regression/Lookahead Pose", new Pose2d(lookaheadPose, swerve.getYaw()));
 
 		double[] rps = shotRPSMap.get(lookaheadDistance);
