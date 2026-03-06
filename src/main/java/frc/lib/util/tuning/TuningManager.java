@@ -2,6 +2,7 @@ package frc.lib.util.tuning;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.sun.org.apache.xalan.internal.templates.Constants;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -42,7 +43,9 @@ public class TuningManager {
 	}
 
 	public static void changeMode() {
-		tuningMode = tuningModeChooser.getSelected();
+		if (frc.robot.Constants.useTesting) {
+			tuningMode = tuningModeChooser.getSelected();
+		}
 	}
 
 	public static void createPID(String key, TalonFX motor, TalonFXConfiguration config) {

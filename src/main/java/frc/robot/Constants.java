@@ -34,6 +34,8 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 
 public class Constants {
+	public static final boolean useTesting = false;
+
 	public class DriverConstants {
 		public static final int DriverPort = 0;
 		public static final int OperatorPort = 1;

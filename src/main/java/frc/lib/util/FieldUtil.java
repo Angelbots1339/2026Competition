@@ -105,6 +105,9 @@ public class FieldUtil {
 	}
 
 	public static void getShiftOrder() {
+		if (allianceWithActiveHubStart != null)
+			return;
+
 		String gameData = DriverStation.getGameSpecificMessage();
 		if (gameData.length() <= 0)
 			return;
