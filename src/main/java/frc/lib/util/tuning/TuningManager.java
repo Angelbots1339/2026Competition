@@ -2,7 +2,6 @@ package frc.lib.util.tuning;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.sun.org.apache.xalan.internal.templates.Constants;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
