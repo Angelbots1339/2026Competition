@@ -91,7 +91,6 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-		autoChooser.addCmd("Hub Depot Outpost Tower", autos::hubDepotOutpostAuto);
 		autoChooser.addCmd("Hub Depot", autos::hubDepotAuto);
 		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
 		autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
