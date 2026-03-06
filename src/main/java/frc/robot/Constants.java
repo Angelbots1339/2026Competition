@@ -182,7 +182,7 @@ public class Constants {
 
 		public static final Angle DeployedAngle = Degrees.of(20);
 		public static final Angle RetractedAngle = Degrees.of(115);
-		public static final Angle AgitationAngle = Degrees.of(40);
+		public static final Angle AgitationAngle = Degrees.of(50);
 		public static final double IntakeVoltage = 7;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
