@@ -67,7 +67,7 @@ public class Autos {
 		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
 		final var DepotShootNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
 
-		final var shoot1 = shoot.get().withTimeout(5);
+		final var shoot1 = shoot.get().withTimeout(4.5);
 		final var shoot2 = shoot.get().withTimeout(5);
 
 		routine.active().onTrue(
