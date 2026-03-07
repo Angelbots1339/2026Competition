@@ -53,7 +53,7 @@ public class Shoot extends Command {
 		if (shooter.atSetpoint() && runKicker.get()) {
 			shooter.setKickerVelocity(ShooterConstants.KickerRPS);
 			indexer.runVoltage(IndexerConstants.IndexerVolts);
-			intake.setIntakeVoltage(IntakeConstants.IntakeVoltage);
+			intake.setIntakeVoltage(IntakeConstants.IntakeVoltage / 2.0);
 
 			if (!cycleTimer.isRunning())
 				cycleTimer.restart();
