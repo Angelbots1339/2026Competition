@@ -12,6 +12,7 @@ import edu.wpi.first.units.measure.*;
  */
 public final class ChoreoVars {
     public static final Distance FieldHeight = Units.Meters.of(8.069);
+    public static final LinearVelocity BumpPassVel = Units.MetersPerSecond.of(2);
 
     public static final class Poses {
         public static final Pose2d DepotIntake = new Pose2d(0.75, 5.002, Rotation2d.fromRadians(2.234));
@@ -20,7 +21,7 @@ public final class ChoreoVars {
         public static final Pose2d FirstBumpStart = new Pose2d(3.74, 5.822, Rotation2d.fromRadians(-1.571));
         public static final Pose2d HubLeftStart = new Pose2d(3.565, 5.04, Rotation2d.fromRadians(1.571));
         public static final Pose2d LeftBumpStart = new Pose2d(3.634, 5.909, Rotation2d.kZero);
-        public static final Pose2d LeftNeutralFarmStop = new Pose2d(7.764, 4.81, Rotation2d.fromRadians(-1.571));
+        public static final Pose2d LeftNeutralFarmStop = new Pose2d(7.764, 5.01, Rotation2d.fromRadians(-1.571));
         public static final Pose2d LeftNeutralStart = new Pose2d(7.764, 6.841, Rotation2d.fromRadians(-1.571));
         public static final Pose2d LeftNeutralStop = new Pose2d(7.764, 5.531, Rotation2d.fromRadians(-1.571));
         public static final Pose2d LeftStart = new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142));

@@ -4,6 +4,13 @@
  "type":"Swerve",
  "variables":{
   "expressions":{
+   "BumpPassVel":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2 m / s",
+     "val":2.0
+    }
+   },
    "FieldHeight":{
     "dimension":"Length",
     "var":{
@@ -103,8 +110,8 @@
      "val":7.763760089874268
     },
     "y":{
-     "exp":"4.80969619750977 m",
-     "val":4.80969619750977
+     "exp":"5.00969619750977 m",
+     "val":5.00969619750977
     },
     "heading":{
      "exp":"LeftNeutralStart.heading",
