@@ -25,9 +25,7 @@ import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.IndexerConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.RegressionShoot;
 import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
@@ -42,7 +40,8 @@ import frc.robot.subsystems.Swerve;
 public class RobotContainer {
 	@Logged(name = "Driver Controller")
 	private XboxController driver = new XboxController(DriverConstants.DriverPort);
-	private XboxController operater = new XboxController(DriverConstants.OperatorPort);
+	// private XboxController operater = new
+	// XboxController(DriverConstants.OperatorPort);
 
 	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
 			* RobotConstants.maxSpeed.in(MetersPerSecond);
@@ -81,7 +80,7 @@ public class RobotContainer {
 
 	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
 
-	private Trigger reverse = new Trigger(() -> operater.getXButton());
+	// private Trigger reverse = new Trigger(() -> operater.getXButton());
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
@@ -136,10 +135,10 @@ public class RobotContainer {
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 		trenchShot.whileTrue(new Shoot(shooter, indexer, intake, () -> 45.0, () -> 12.6, () -> true));
 
-		reverse.whileTrue(Commands.parallel(
-				shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
-				indexer.run(() -> indexer.runVoltage(-IndexerConstants.IndexerVolts)),
-				intake.run(() -> intake.setIntakeVoltage(-IntakeConstants.IntakeVoltage))));
+		// reverse.whileTrue(Commands.parallel(
+		// shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
+		// indexer.run(() -> indexer.runVoltage(-IndexerConstants.IndexerVolts)),
+		// intake.run(() -> intake.setIntakeVoltage(-IntakeConstants.IntakeVoltage))));
 	}
 
 	public void configureControllerAlerts() {
