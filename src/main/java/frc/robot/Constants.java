@@ -140,10 +140,10 @@ public class Constants {
 
 		public static TalonFXConfiguration SpinnerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(15))
 						.withStatorCurrentLimit(Amps.of(50))
-						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimitEnable(true))
+						.withSupplyCurrentLimit(Amps.of(30))
+						.withSupplyCurrentLimitEnable(true)
+						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.CounterClockwise_Positive))
@@ -254,9 +254,7 @@ public class Constants {
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
 								.withStatorCurrentLimit(50)
-								.withSupplyCurrentLimit(70)
-								.withStatorCurrentLimitEnable(true)
-								.withSupplyCurrentLimitEnable(true))
+								.withStatorCurrentLimitEnable(true))
 				.withSlot0(deploySlot0);
 
 	}
@@ -285,10 +283,8 @@ public class Constants {
 				// diameter of the
 				// climber
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))
-						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimitEnable(true))
+						.withStatorCurrentLimitEnable(true))
 				.withSlot0(new Slot0Configs()
 						// TODO do motion magic later
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
