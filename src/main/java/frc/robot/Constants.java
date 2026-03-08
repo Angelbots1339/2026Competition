@@ -133,7 +133,7 @@ public class Constants {
 						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(7.5)
+						.withKP(8.5)
 						.withKI(1.25)
 						.withKV(0)
 						.withKS(11.75));
