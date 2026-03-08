@@ -80,7 +80,7 @@ public class RobotContainer {
 			* (runIntake.getAsBoolean() ? RobotConstants.maxSpeed.in(MetersPerSecond) * 0.6
 					: RobotConstants.maxSpeed.in(MetersPerSecond));
 	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
-			* (runIntake.getAsBoolean() ? RobotConstants.maxSpeed.in(MetersPerSecond) * 0.6
+			* (runIntake.getAsBoolean() ? RobotConstants.maxSpeed.in(MetersPerSecond) * 0.8
 					: RobotConstants.maxRot.in(RadiansPerSecond));
 
 	// private Trigger reverse = new Trigger(() -> operater.getXButton());
