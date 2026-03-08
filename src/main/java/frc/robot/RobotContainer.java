@@ -43,13 +43,6 @@ public class RobotContainer {
 	// private XboxController operater = new
 	// XboxController(DriverConstants.OperatorPort);
 
-	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
-			* RobotConstants.maxSpeed.in(MetersPerSecond);
-	private Supplier<Double> leftX = () -> DriverConstants.joystickDeadband(-driver.getLeftX(), true)
-			* RobotConstants.maxSpeed.in(MetersPerSecond);
-	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
-			* RobotConstants.maxRot.in(RadiansPerSecond);
-
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
 	private Indexer indexer = new Indexer();
@@ -79,6 +72,16 @@ public class RobotContainer {
 	private Trigger runIntake = new Trigger(() -> driver.getLeftTriggerAxis() > 0.2);
 
 	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
+
+	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
+			* (runIntake.getAsBoolean() ? RobotConstants.maxSpeed.in(MetersPerSecond) * 0.6
+					: RobotConstants.maxSpeed.in(MetersPerSecond));
+	private Supplier<Double> leftX = () -> DriverConstants.joystickDeadband(-driver.getLeftX(), true)
+			* (runIntake.getAsBoolean() ? RobotConstants.maxSpeed.in(MetersPerSecond) * 0.6
+					: RobotConstants.maxSpeed.in(MetersPerSecond));
+	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
+			* (runIntake.getAsBoolean() ? RobotConstants.maxSpeed.in(MetersPerSecond) * 0.6
+					: RobotConstants.maxRot.in(RadiansPerSecond));
 
 	// private Trigger reverse = new Trigger(() -> operater.getXButton());
 
