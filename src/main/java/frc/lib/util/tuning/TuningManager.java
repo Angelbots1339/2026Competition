@@ -42,7 +42,9 @@ public class TuningManager {
 	}
 
 	public static void changeMode() {
-		tuningMode = tuningModeChooser.getSelected();
+		if (frc.robot.Constants.useTesting) {
+			tuningMode = tuningModeChooser.getSelected();
+		}
 	}
 
 	public static void createPID(String key, TalonFX motor, TalonFXConfiguration config) {

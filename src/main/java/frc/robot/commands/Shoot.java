@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IndexerConstants;
@@ -21,7 +23,7 @@ public class Shoot extends Command {
 
 	private Supplier<Boolean> runKicker = () -> true;
 
-	private Timer reverseTimer = new Timer();
+	private Timer cycleTimer = new Timer();
 
 	public Shoot(Shooter shooter, Indexer indexer, Intake intake) {
 		this(shooter, indexer, intake, () -> 0.0, () -> 0.0, () -> true);
@@ -35,13 +37,14 @@ public class Shoot extends Command {
 		this.intake = intake;
 		this.shooterRPS = shooterRPS;
 		this.spinnerRPS = spinnerRPS;
+		this.runKicker = runKicker;
 
 		addRequirements(shooter, indexer, intake);
 	}
 
 	@Override
 	public void initialize() {
-		reverseTimer.restart();
+		cycleTimer.reset();
 	}
 
 	public void runShoot(double shooterRPS, double spinnerRPS, Supplier<Boolean> runKicker) {
@@ -50,13 +53,19 @@ public class Shoot extends Command {
 		if (shooter.atSetpoint() && runKicker.get()) {
 			shooter.setKickerVelocity(ShooterConstants.KickerRPS);
 			indexer.runVoltage(IndexerConstants.IndexerVolts);
-			intake.setIntakeVoltage(IntakeConstants.IntakeVoltage);
-			if (reverseTimer.hasElapsed(0.25)) {
+			intake.setIntakeVoltage(IntakeConstants.IntakeVoltage / 2.0);
+
+			if (!cycleTimer.isRunning())
+				cycleTimer.restart();
+
+			if (cycleTimer.hasElapsed(0.5)) {
+				intake.setIntakeAngle(IntakeConstants.AgitationAngle2);
+			}
+			if (cycleTimer.hasElapsed(1.5)) {
 				intake.setIntakeAngle(IntakeConstants.DeployedAngle);
 			}
-			if (reverseTimer.hasElapsed(0.5)) {
-				intake.setIntakeAngle(IntakeConstants.AgitationAngle);
-				reverseTimer.restart();
+			if (cycleTimer.hasElapsed(2.0)) {
+				cycleTimer.restart();
 			}
 		}
 	}

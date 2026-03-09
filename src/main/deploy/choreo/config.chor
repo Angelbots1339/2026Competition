@@ -4,6 +4,13 @@
  "type":"Swerve",
  "variables":{
   "expressions":{
+   "BumpPassVel":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2 m / s",
+     "val":2.0
+    }
+   },
    "FieldHeight":{
     "dimension":"Length",
     "var":{
@@ -95,6 +102,20 @@
     "heading":{
      "exp":"0 deg",
      "val":0.0
+    }
+   },
+   "LeftNeutralFarmStop":{
+    "x":{
+     "exp":"LeftNeutralStart.x",
+     "val":7.763760089874268
+    },
+    "y":{
+     "exp":"5.00969619750977 m",
+     "val":5.00969619750977
+    },
+    "heading":{
+     "exp":"LeftNeutralStart.heading",
+     "val":-1.5707963267948966
     }
    },
    "LeftNeutralStart":{

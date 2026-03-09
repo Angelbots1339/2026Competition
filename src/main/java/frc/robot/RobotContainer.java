@@ -25,9 +25,7 @@ import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.IndexerConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.RegressionShoot;
 import frc.robot.commands.Shoot;
 import frc.robot.generated.TunerConstants;
@@ -42,14 +40,8 @@ import frc.robot.subsystems.Swerve;
 public class RobotContainer {
 	@Logged(name = "Driver Controller")
 	private XboxController driver = new XboxController(DriverConstants.DriverPort);
-	private XboxController operater = new XboxController(DriverConstants.OperatorPort);
-
-	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
-			* RobotConstants.maxSpeed.in(MetersPerSecond);
-	private Supplier<Double> leftX = () -> DriverConstants.joystickDeadband(-driver.getLeftX(), true)
-			* RobotConstants.maxSpeed.in(MetersPerSecond);
-	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
-			* RobotConstants.maxRot.in(RadiansPerSecond);
+	// private XboxController operater = new
+	// XboxController(DriverConstants.OperatorPort);
 
 	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
@@ -81,7 +73,17 @@ public class RobotContainer {
 
 	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
 
-	private Trigger reverse = new Trigger(() -> operater.getXButton());
+	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
+			* (runIntake.getAsBoolean() ? RobotConstants.maxSpeed.in(MetersPerSecond) * 0.6
+					: RobotConstants.maxSpeed.in(MetersPerSecond));
+	private Supplier<Double> leftX = () -> DriverConstants.joystickDeadband(-driver.getLeftX(), true)
+			* (runIntake.getAsBoolean() ? RobotConstants.maxSpeed.in(MetersPerSecond) * 0.6
+					: RobotConstants.maxSpeed.in(MetersPerSecond));
+	private Supplier<Double> rightX = () -> DriverConstants.joystickDeadband(-driver.getRightX(), true)
+			* (runIntake.getAsBoolean() ? RobotConstants.maxSpeed.in(MetersPerSecond) * 0.8
+					: RobotConstants.maxRot.in(RadiansPerSecond));
+
+	// private Trigger reverse = new Trigger(() -> operater.getXButton());
 
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
@@ -91,10 +93,12 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
-		autoChooser.addCmd("Hub Depot Outpost Tower", autos::hubDepotOutpostAuto);
 		autoChooser.addCmd("Hub Depot", autos::hubDepotAuto);
+		autoChooser.addCmd("Hub Depot Neutral", autos::hubDepotNeutralAuto);
 		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
 		autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
+		autoChooser.addRoutine("Right 2x Neutral Farm", autos::rightNeutralFarm);
+		autoChooser.addRoutine("Left 2x Neutral Fam", autos::leftNeutralFarm);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
@@ -104,7 +108,7 @@ public class RobotContainer {
 		pass.whileTrue(Commands.parallel(
 				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
 						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
-				new Shoot(shooter, indexer, intake, () -> 30.0, () -> 30.0, swerve::atRotation)));
+				new Shoot(shooter, indexer, intake, () -> 45.0, () -> 45.0, swerve::atRotation)));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosestBumpAngle(),
 						() -> true),
@@ -129,14 +133,15 @@ public class RobotContainer {
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 		}));
 
-		runIntake.whileTrue(intake.runIntake());
+		runIntake.whileTrue(intake.runIntake()
+				.alongWith(indexer.run(() -> indexer.runVoltage(IndexerConstants.IntakeIndexerVoltage))));
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 		trenchShot.whileTrue(new Shoot(shooter, indexer, intake, () -> 45.0, () -> 12.6, () -> true));
 
-		reverse.whileTrue(Commands.parallel(
-				shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
-				indexer.run(() -> indexer.runVoltage(-IndexerConstants.IndexerVolts)),
-				intake.run(() -> intake.setIntakeVoltage(-IntakeConstants.IntakeVoltage))));
+		// reverse.whileTrue(Commands.parallel(
+		// shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),
+		// indexer.run(() -> indexer.runVoltage(-IndexerConstants.IndexerVolts)),
+		// intake.run(() -> intake.setIntakeVoltage(-IntakeConstants.IntakeVoltage))));
 	}
 
 	public void configureControllerAlerts() {
@@ -177,7 +182,8 @@ public class RobotContainer {
 	}
 
 	public void testingInit() {
-		TuningManager.init(swerve, shooter, intake, null, indexer);
+		if (Constants.useTesting)
+			TuningManager.init(swerve, shooter, intake, null, indexer);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")

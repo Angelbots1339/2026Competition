@@ -34,6 +34,8 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 
 public class Constants {
+	public static final boolean useTesting = false;
+
 	public class DriverConstants {
 		public static final int DriverPort = 0;
 		public static final int OperatorPort = 1;
@@ -131,17 +133,17 @@ public class Constants {
 						.withSensorToMechanismRatio(18.0 / 36.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(7.5)
+						.withKP(8.5)
 						.withKI(1.25)
 						.withKV(0)
 						.withKS(11.75));
 
 		public static TalonFXConfiguration SpinnerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(15))
 						.withStatorCurrentLimit(Amps.of(50))
-						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimitEnable(true))
+						.withSupplyCurrentLimit(Amps.of(30))
+						.withSupplyCurrentLimitEnable(true)
+						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.CounterClockwise_Positive))
@@ -180,7 +182,8 @@ public class Constants {
 
 		public static final Angle DeployedAngle = Degrees.of(20);
 		public static final Angle RetractedAngle = Degrees.of(115);
-		public static final Angle AgitationAngle = Degrees.of(40);
+		public static final Angle AgitationAngle = Degrees.of(50);
+		public static final Angle AgitationAngle2 = Degrees.of(70);
 		public static final double IntakeVoltage = 7;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
@@ -252,9 +255,7 @@ public class Constants {
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
 								.withStatorCurrentLimit(50)
-								.withSupplyCurrentLimit(70)
-								.withStatorCurrentLimitEnable(true)
-								.withSupplyCurrentLimitEnable(true))
+								.withStatorCurrentLimitEnable(true))
 				.withSlot0(deploySlot0);
 
 	}
@@ -283,10 +284,8 @@ public class Constants {
 				// diameter of the
 				// climber
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withSupplyCurrentLimit(Amps.of(70))
 						.withStatorCurrentLimit(Amps.of(120))
-						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimitEnable(true))
+						.withStatorCurrentLimitEnable(true))
 				.withSlot0(new Slot0Configs()
 						// TODO do motion magic later
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
@@ -302,6 +301,7 @@ public class Constants {
 		public static final int IndexerMotorPort = 26;
 
 		public static final double IndexerVolts = 3.5;
+		public static final double IntakeIndexerVoltage = 2;
 
 		public static final TalonFXConfiguration IndexerMotorConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
@@ -321,5 +321,6 @@ public class Constants {
 						.withKS(0)
 						.withKV(0)
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign));
+
 	}
 }
