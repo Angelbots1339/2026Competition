@@ -37,7 +37,8 @@ public class Robot extends TimedRobot {
 		Epilogue.configure(config -> {
 			// config.minimumImportance = Importance.CRITICAL;
 			config.minimumImportance = Importance.DEBUG;
-			config.backend = new FileBackend(DataLogManager.getLog());
+			if (DriverStation.isFMSAttached())
+				config.backend = new FileBackend(DataLogManager.getLog());
 		});
 		Epilogue.bind(this);
 		// DogLog.setEnabled(false);
