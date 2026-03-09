@@ -24,14 +24,7 @@ public record ChoreoTraj(
     Pose2d initialPoseBlue,
     Pose2d endPoseBlue
 ) {
-    public static final ChoreoTraj BumpTest = new ChoreoTraj(
-	    "BumpTest",
-	    OptionalInt.empty(),
-	    4.41559,
-	    new Pose2d(3.634, 5.909, Rotation2d.fromRadians(0)),
-	    new Pose2d(1.587, 4.022, Rotation2d.fromRadians(0))
-	);
-	public static final ChoreoTraj BumpToNeutral = new ChoreoTraj(
+    public static final ChoreoTraj BumpToNeutral = new ChoreoTraj(
 	    "BumpToNeutral",
 	    OptionalInt.empty(),
 	    6.04088,
@@ -45,40 +38,12 @@ public record ChoreoTraj(
 	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142)),
 	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588))
 	);
-	public static final ChoreoTraj DepotShootDepot = new ChoreoTraj(
-	    "DepotShootDepot",
-	    OptionalInt.empty(),
-	    3.14777,
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588)),
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588))
-	);
-	public static final ChoreoTraj DepotShootNeutral1 = new ChoreoTraj(
-	    "DepotShootNeutral1",
-	    OptionalInt.empty(),
-	    5.93221,
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588)),
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588))
-	);
 	public static final ChoreoTraj DepotShootNeutral2 = new ChoreoTraj(
 	    "DepotShootNeutral2",
 	    OptionalInt.empty(),
 	    7.23023,
 	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588)),
 	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588))
-	);
-	public static final ChoreoTraj DepotShootOutpostShoot = new ChoreoTraj(
-	    "DepotShootOutpostShoot",
-	    OptionalInt.empty(),
-	    3.78317,
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588)),
-	    new Pose2d(2.322, 2.672, Rotation2d.fromRadians(0.588))
-	);
-	public static final ChoreoTraj DepotShoottoTower = new ChoreoTraj(
-	    "DepotShoottoTower",
-	    OptionalInt.empty(),
-	    5.67486,
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588)),
-	    new Pose2d(1.07, 4.916, Rotation2d.fromRadians(1.571))
 	);
 	public static final ChoreoTraj HubtoDepotShoot = new ChoreoTraj(
 	    "HubtoDepotShoot",
@@ -87,45 +52,16 @@ public record ChoreoTraj(
 	    new Pose2d(3.565, 5.04, Rotation2d.fromRadians(1.571)),
 	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.748))
 	);
-	public static final ChoreoTraj OutpostShootOutpost = new ChoreoTraj(
-	    "OutpostShootOutpost",
-	    OptionalInt.empty(),
-	    3.13621,
-	    new Pose2d(2.322, 2.672, Rotation2d.fromRadians(0.588)),
-	    new Pose2d(2.322, 2.672, Rotation2d.fromRadians(0.588))
-	);
-	public static final ChoreoTraj OutpostShoottoTower = new ChoreoTraj(
-	    "OutpostShoottoTower",
-	    OptionalInt.empty(),
-	    0.92052,
-	    new Pose2d(2.322, 2.672, Rotation2d.fromRadians(0.588)),
-	    new Pose2d(1.079, 2.593, Rotation2d.fromRadians(-1.571))
-	);
-	public static final ChoreoTraj RightOutpostShoot = new ChoreoTraj(
-	    "RightOutpostShoot",
-	    OptionalInt.empty(),
-	    2.85924,
-	    new Pose2d(3.643, 2.007, Rotation2d.fromRadians(-3.142)),
-	    new Pose2d(2.322, 2.672, Rotation2d.fromRadians(0.588))
-	);
 
     /**
      * A map between trajectory names and their corresponding data.
      * This allows for trajectory data to be looked up with strings during runtime.
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
-    	Map.entry("BumpTest", BumpTest),
-		Map.entry("BumpToNeutral", BumpToNeutral),
+    	Map.entry("BumpToNeutral", BumpToNeutral),
 		Map.entry("BumpToNeutralFarm", BumpToNeutralFarm),
-		Map.entry("DepotShootDepot", DepotShootDepot),
-		Map.entry("DepotShootNeutral1", DepotShootNeutral1),
 		Map.entry("DepotShootNeutral2", DepotShootNeutral2),
-		Map.entry("DepotShootOutpostShoot", DepotShootOutpostShoot),
-		Map.entry("DepotShoottoTower", DepotShoottoTower),
-		Map.entry("HubtoDepotShoot", HubtoDepotShoot),
-		Map.entry("OutpostShootOutpost", OutpostShootOutpost),
-		Map.entry("OutpostShoottoTower", OutpostShoottoTower),
-		Map.entry("RightOutpostShoot", RightOutpostShoot)
+		Map.entry("HubtoDepotShoot", HubtoDepotShoot)
     );
 
     /**
