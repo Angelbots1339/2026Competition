@@ -1,9 +1,10 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import dev.doglog.DogLog;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Indexer;
@@ -34,5 +35,12 @@ public class RegressionShoot extends Shoot {
 		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
 		runShoot(params.shooterRPS(), params.spinnerRPS(),
 				swerve::atRotation);
+
+		// keep x configuration so long as we won't theoretically miss half our shots
+		// from our angle
+		if (Math.hypot(x.get(), y.get()) < 0.1 &&
+				swerve.getRotationError().getMeasure().isNear(params.angle().getMeasure(), params.maxAngleError())) {
+			swerve.setControl(new SwerveRequest.SwerveDriveBrake());
+		}
 	}
 }
