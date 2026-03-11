@@ -3,6 +3,7 @@ package frc.robot.regression;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -107,6 +108,7 @@ public class ShooterRegression {
 
 		Angle maxAngleError = Radians
 				.of(Math.abs(Math.atan2(FieldUtil.hubRadius.in(Meters), distance)));
+		DogLog.log("Regression/Max Angle Error", maxAngleError);
 
 		return new ShooterParams(angle, rps[0], rps[1], maxAngleError);
 	}

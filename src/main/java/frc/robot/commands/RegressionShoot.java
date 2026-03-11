@@ -32,15 +32,16 @@ public class RegressionShoot extends Shoot {
 	@Override
 	public void execute() {
 		ShooterParams params = ShooterRegression.getShotParams(swerve);
-		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
-		runShoot(params.shooterRPS(), params.spinnerRPS(),
-				swerve::atRotation);
-
 		// keep x configuration so long as we won't theoretically miss half our shots
 		// from our angle
 		if (Math.hypot(x.get(), y.get()) < 0.1 &&
-				swerve.getRotationError().getMeasure().isNear(params.angle().getMeasure(), params.maxAngleError())) {
+				swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(), params.maxAngleError())) {
 			swerve.setControl(new SwerveRequest.SwerveDriveBrake());
+		} else {
+			swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
 		}
+		runShoot(params.shooterRPS(), params.spinnerRPS(),
+				swerve::atRotation);
+
 	}
 }
