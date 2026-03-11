@@ -2,8 +2,8 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import dev.doglog.DogLog;
-import edu.wpi.first.epilogue.Logged;
+import static edu.wpi.first.units.Units.Degrees;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IndexerConstants;
@@ -59,14 +59,21 @@ public class Shoot extends Command {
 				cycleTimer.restart();
 
 			if (cycleTimer.hasElapsed(0.5)) {
-				intake.setIntakeAngle(IntakeConstants.AgitationAngle2);
+				intake.setIntakeAngle(Degrees.of(
+						MathUtil.interpolate(IntakeConstants.DeployedAngle.in(Degrees),
+								IntakeConstants.RetractedAngle.in(Degrees),
+								0.25 * (cycleTimer.get() - 0.5))));
 			}
-			if (cycleTimer.hasElapsed(1.5)) {
-				intake.setIntakeAngle(IntakeConstants.DeployedAngle);
-			}
-			if (cycleTimer.hasElapsed(2.0)) {
-				cycleTimer.restart();
-			}
+
+			// if (cycleTimer.hasElapsed(0.5)) {
+			// intake.setIntakeAngle(IntakeConstants.AgitationAngle2);
+			// }
+			// if (cycleTimer.hasElapsed(1.5)) {
+			// intake.setIntakeAngle(IntakeConstants.DeployedAngle);
+			// }
+			// if (cycleTimer.hasElapsed(2.0)) {
+			// cycleTimer.restart();
+			// }
 		}
 	}
 
