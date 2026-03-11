@@ -3,12 +3,15 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Seconds;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.ShootingConstants;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -62,7 +65,7 @@ public class Shoot extends Command {
 				intake.setIntakeAngle(Degrees.of(
 						MathUtil.interpolate(IntakeConstants.DeployedAngle.in(Degrees),
 								IntakeConstants.RetractedAngle.in(Degrees),
-								0.25 * (cycleTimer.get() - 0.5))));
+								ShootingConstants.IntakeRetractTime.in(Seconds) * (cycleTimer.get() - 0.5))));
 			}
 
 			// if (cycleTimer.hasElapsed(0.5)) {

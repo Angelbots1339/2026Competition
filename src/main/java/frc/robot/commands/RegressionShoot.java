@@ -37,6 +37,7 @@ public class RegressionShoot extends Shoot {
 		boolean usingSticks = Math.hypot(x.get(), y.get()) > 0.1;
 		boolean isWithinHub = swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(),
 				params.maxAngleError());
+
 		if (!aligned) {
 			swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
 		} else {
