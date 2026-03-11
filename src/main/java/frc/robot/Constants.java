@@ -32,9 +32,10 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class Constants {
-	public static final boolean useTesting = false;
+	public static final boolean useTesting = !DriverStation.isFMSAttached();
 
 	public class DriverConstants {
 		public static final int DriverPort = 0;
