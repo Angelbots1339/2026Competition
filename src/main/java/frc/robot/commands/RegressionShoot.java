@@ -34,6 +34,9 @@ public class RegressionShoot extends Shoot {
 	@Override
 	public void execute() {
 		ShooterParams params = ShooterRegression.getShotParams(swerve);
+		runShoot(params.shooterRPS(), params.spinnerRPS(),
+				swerve::atRotation);
+
 		boolean usingSticks = Math.hypot(x.get(), y.get()) > 0.1;
 		boolean isWithinHub = swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(),
 				params.maxAngleError());
@@ -52,9 +55,6 @@ public class RegressionShoot extends Shoot {
 		if (swerve.atRotation()) {
 			aligned = true;
 		}
-
-		runShoot(params.shooterRPS(), params.spinnerRPS(),
-				swerve::atRotation);
 
 	}
 }
