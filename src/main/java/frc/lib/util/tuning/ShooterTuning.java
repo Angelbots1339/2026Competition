@@ -32,16 +32,16 @@ public class ShooterTuning {
 
 	private static List<double[]> regressionData = new ArrayList<double[]>();
 
-	private static double shooterTargetRPS = ShooterConstants.shootRPS;
-	private static double spinnerTargetRPS = ShooterConstants.shootRPS;
+	private static double shooterTargetRPS = 0.0;
+	private static double spinnerTargetRPS = 0.0;
 	private static double kickerRPS = ShooterConstants.KickerRPS;
 	private static double voltage = 0;
 	private static Distance distance = Meters.zero();
 
 	public static void init(Shooter shooter) {
-		DogLog.tunable("Shooter/Spinner target", ShooterConstants.shootRPS,
+		DogLog.tunable("Shooter/Spinner target", 0.0,
 				target -> spinnerTargetRPS = target);
-		DogLog.tunable("Shooter/Shooter target", ShooterConstants.shootRPS,
+		DogLog.tunable("Shooter/Shooter target", 0.0,
 				target -> shooterTargetRPS = target);
 		DogLog.tunable("Shooter/voltage", 0.0, target -> voltage = target);
 		DogLog.tunable("Shooter/kicker velocity", kickerRPS, target -> kickerRPS = target);
