@@ -65,7 +65,7 @@ public class Shoot extends Command {
 				intake.setIntakeAngle(Degrees.of(
 						MathUtil.interpolate(IntakeConstants.DeployedAngle.in(Degrees),
 								IntakeConstants.RetractedAngle.in(Degrees),
-								ShootingConstants.IntakeRetractTime.in(Seconds) * (cycleTimer.get() - 0.5))));
+								(1.0 / ShootingConstants.IntakeRetractTime.in(Seconds)) * (cycleTimer.get() - 0.5))));
 			}
 
 			// if (cycleTimer.hasElapsed(0.5)) {
@@ -74,9 +74,9 @@ public class Shoot extends Command {
 			// if (cycleTimer.hasElapsed(1.5)) {
 			// intake.setIntakeAngle(IntakeConstants.DeployedAngle);
 			// }
-			// if (cycleTimer.hasElapsed(2.0)) {
-			// cycleTimer.restart();
-			// }
+			if (cycleTimer.hasElapsed(ShootingConstants.IntakeRetractTime.in(Seconds))) {
+				cycleTimer.restart();
+			}
 		}
 	}
 
