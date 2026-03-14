@@ -81,26 +81,6 @@ public class Autos {
 		return routine.cmd();
 	}
 
-	public Command hubDepotOutpostAuto() {
-		final var routine = factory.newRoutine("Hub Depot Outpost Tower");
-		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
-		final var depotShootToOutpostShoot = routine.trajectory(ChoreoTraj.DepotShootOutpostShoot.name());
-
-		final var shoot1 = shoot.get().withTimeout(5);
-		final var shoot2 = shoot.get().withTimeout(5);
-
-		routine.active().onTrue(
-				Commands.sequence(
-						hubToDepotShoot.resetOdometry(),
-						hubToDepotShoot.cmd()));
-		hubToDepotShoot.done().onTrue(shoot1);
-
-		routine.observe(shoot1::isFinished).onTrue(depotShootToOutpostShoot.cmd());
-		depotShootToOutpostShoot.done().onTrue(shoot2);
-
-		return routine.cmd();
-	}
-
 	public AutoRoutine rightNeutral() {
 		final var routine = factory.newRoutine("Right Neutral");
 		final var bumpToNeutral = routine

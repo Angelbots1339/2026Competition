@@ -1,13 +1,13 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -25,16 +25,17 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class Constants {
-	public static final boolean useTesting = false;
+	public static final boolean useTesting = !DriverStation.isFMSAttached();
 
 	public class DriverConstants {
 		public static final int DriverPort = 0;
@@ -49,14 +50,16 @@ public class Constants {
 		}
 	}
 
+	public class ShootingConstants {
+		public static final Time IntakeRetractTime = Seconds.of(1);
+		public static final Time IntakeRetractOffsetTime = Seconds.of(0.5);
+	}
+
 	public class RobotConstants {
 		public static final LinearVelocity maxSpeed = MetersPerSecond.of(5);
 		public static final AngularVelocity maxRot = RadiansPerSecond.of(Math.PI * 2);
 		public static final Distance length = Inches.of(32.25);
 		public static final Distance width = Inches.of(32.25);
-
-		public static final Translation2d climberOffset = new Translation2d(Inches.of(-12.046), Meters.zero());
-
 	}
 
 	public class AlignConstants {
@@ -74,7 +77,7 @@ public class Constants {
 		public static final TrapezoidProfile.Constraints angularDriveConstraints = new TrapezoidProfile.Constraints(
 				10,
 				20);
-		public static final Angle angularDriveTolerance = Degrees.of(3); // Degrees
+		public static final Angle angularDriveTolerance = Degrees.of(5); // Degrees
 
 		public static final double pidToPoseKP = 2.5;
 		public static final double pidToPoseKD = 0;
@@ -107,7 +110,6 @@ public class Constants {
 			Swerve,
 			Regression,
 			Intake,
-			Climber,
 			Indexer,
 		};
 	}
@@ -125,24 +127,25 @@ public class Constants {
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withStatorCurrentLimit(Amps.of(100))
+						.withSupplyCurrentLimitEnable(false)
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(18.0 / 36.0))
+						.withSensorToMechanismRatio(24.0 / 30.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(8.5)
-						.withKI(1.25)
-						.withKV(0)
-						.withKS(11.75));
+						.withKP(13)
+						.withKI(0)
+						.withKV(0.049)
+						.withKS(6.3));
 
 		public static TalonFXConfiguration SpinnerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withStatorCurrentLimit(Amps.of(50))
 						.withSupplyCurrentLimit(Amps.of(30))
-						.withSupplyCurrentLimitEnable(true)
+						.withSupplyCurrentLimitEnable(false)
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
@@ -230,7 +233,7 @@ public class Constants {
 								.withReverseSoftLimitThreshold(MinAngle))
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
-						.withMotionMagicCruiseVelocity(0.4)
+						.withMotionMagicCruiseVelocity(0.6)
 						.withMotionMagicAcceleration(2));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
@@ -258,43 +261,6 @@ public class Constants {
 								.withStatorCurrentLimitEnable(true))
 				.withSlot0(deploySlot0);
 
-	}
-
-	public class ClimberConstants {
-		public static final int ClimberMotorPort = 28;
-		public static final Distance PitchDiameter = Inches.of(0.5);
-		public static final Distance MaxDistance = Centimeters.of(17);
-
-		public static final Distance ClimbPosition = Centimeters.of(0);
-		public static final Distance HomePosition = Inches.of(10);
-
-		public static final TalonFXConfiguration ClimberMotorConfig = new TalonFXConfiguration()
-				.withSoftwareLimitSwitch(
-						new SoftwareLimitSwitchConfigs()
-								.withForwardSoftLimitThreshold(MaxDistance.in(Meters))
-								.withReverseSoftLimitThreshold(0)
-								.withForwardSoftLimitEnable(true)
-								.withReverseSoftLimitEnable(true))
-				.withMotorOutput(new MotorOutputConfigs()
-						// Driving the hook down = positive
-						.withInverted(InvertedValue.CounterClockwise_Positive)
-						.withNeutralMode(NeutralModeValue.Brake))
-				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough
-				// diameter of the
-				// climber
-				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(Amps.of(120))
-						.withStatorCurrentLimitEnable(true))
-				.withSlot0(new Slot0Configs()
-						// TODO do motion magic later
-						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-						.withKP(120)
-						.withKI(0)
-						.withKD(0)
-						.withKS(0)
-						.withKG(10)
-						.withGravityType(GravityTypeValue.Elevator_Static));
 	}
 
 	public class IndexerConstants {

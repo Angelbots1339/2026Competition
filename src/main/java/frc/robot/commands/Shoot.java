@@ -2,13 +2,16 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 
-import dev.doglog.DogLog;
-import edu.wpi.first.epilogue.Logged;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Seconds;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.ShootingConstants;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -58,13 +61,14 @@ public class Shoot extends Command {
 			if (!cycleTimer.isRunning())
 				cycleTimer.restart();
 
-			if (cycleTimer.hasElapsed(0.5)) {
-				intake.setIntakeAngle(IntakeConstants.AgitationAngle2);
-			}
-			if (cycleTimer.hasElapsed(1.5)) {
-				intake.setIntakeAngle(IntakeConstants.DeployedAngle);
-			}
-			if (cycleTimer.hasElapsed(2.0)) {
+			intake.setIntakeAngle(Degrees.of(
+					MathUtil.interpolate(IntakeConstants.DeployedAngle.in(Degrees),
+							IntakeConstants.RetractedAngle.in(Degrees),
+							(1.0 / ShootingConstants.IntakeRetractTime.in(Seconds))
+									* (cycleTimer.get() - ShootingConstants.IntakeRetractOffsetTime.in(Seconds)))));
+
+			if (cycleTimer.hasElapsed(
+					ShootingConstants.IntakeRetractTime.plus(ShootingConstants.IntakeRetractOffsetTime).in(Seconds))) {
 				cycleTimer.restart();
 			}
 		}

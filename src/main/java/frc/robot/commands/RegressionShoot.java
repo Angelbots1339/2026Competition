@@ -1,8 +1,8 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import java.util.function.Supplier;
+
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
@@ -17,22 +17,46 @@ public class RegressionShoot extends Shoot {
 	private Supplier<Double> x;
 	private Supplier<Double> y;
 
+	private boolean aligned = false;
+
 	public RegressionShoot(Swerve swerve, Shooter shooter, Indexer indexer, Intake intake, Supplier<Double> x,
 			Supplier<Double> y) {
 		super(shooter, indexer, intake);
 
 		this.swerve = swerve;
-		this.x = x;
-		this.y = y;
+		this.x = () -> x.get() / 5.0;
+		this.y = () -> y.get() / 5.0;
 
 		addRequirements(swerve);
 	}
 
 	@Override
+	public void initialize() {
+		aligned = false;
+	}
+
+	@Override
 	public void execute() {
 		ShooterParams params = ShooterRegression.getShotParams(swerve);
-		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
+		boolean isAngledTowardsHub = !swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(),
+				params.maxAngleError());
+		boolean areSticksMoving = Math.hypot(x.get(), y.get()) > 0;
+
 		runShoot(params.shooterRPS(), params.spinnerRPS(),
 				swerve::atRotation);
+
+		if (aligned == false) {
+			swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
+		} else {
+			swerve.setControl(new SwerveRequest.SwerveDriveBrake());
+		}
+
+		if (swerve.atRotation()) {
+			aligned = true;
+		}
+
+		if (!isAngledTowardsHub || areSticksMoving) {
+			aligned = false;
+		}
 	}
 }

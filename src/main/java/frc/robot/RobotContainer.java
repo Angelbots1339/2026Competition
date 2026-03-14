@@ -98,7 +98,7 @@ public class RobotContainer {
 		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
 		autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
 		autoChooser.addRoutine("Right 2x Neutral Farm", autos::rightNeutralFarm);
-		autoChooser.addRoutine("Left 2x Neutral Fam", autos::leftNeutralFarm);
+		autoChooser.addRoutine("Left 2x Neutral Farm", autos::leftNeutralFarm);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
@@ -183,7 +183,7 @@ public class RobotContainer {
 
 	public void testingInit() {
 		if (Constants.useTesting)
-			TuningManager.init(swerve, shooter, intake, null, indexer);
+			TuningManager.init(swerve, shooter, intake, indexer);
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")

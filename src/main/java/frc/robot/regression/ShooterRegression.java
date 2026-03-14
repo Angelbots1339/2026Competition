@@ -3,14 +3,17 @@ package frc.robot.regression;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.Radians;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import frc.lib.util.FieldUtil;
 import frc.robot.subsystems.Swerve;
@@ -18,36 +21,21 @@ import frc.robot.subsystems.Swerve;
 public class ShooterRegression {
 	public static final double[][] shotRPSData = {
 			// distance (m), shooter rps, spinner rps
-			// -0.038 is the offset of the shooter front from center of robot
-			// original distance is the distance from front of shooter to hub wall
-			{ 1.828, 43, 2 },
-			{ 2.310, 43, 7 },
-			{ 2.582, 43.3, 10 },
-			{ 2.915, 44.3, 11.5 },
-			{ 3.33, 46, 13 },
-			{ 3.61, 47, 14.5 },
-			{ 3.95, 48, 17 },
-			// { 1.77, 40, 2 },
-			// { 2.213, 40, 15 },
-			// { 2.617, 40, 15 },
-			// { 2.96, 44, 10 },
-			// { 3.55, 44, 20 },
-			// { 4.00, 44, 23 },
-			// { 4.62, 45.5, 26 },
+			{ 1.828, 41, 3 },
+			{ 2.315, 43, 7 },
+			{ 2.614, 43, 10 },
+			{ 2.953, 45, 10 },
+			{ 3.317, 45.5, 12 },
+			{ 3.550, 46, 13 },
+			{ 3.90, 47, 15 },
 	};
 
 	public static final double[][] tofData = {
 			// distance, tof from ball leaving the shooter to the hub
-			{ 2.187, 28.0 / 29.97 },
-			{ 2.949, 31.0 / 29.97 },
-			{ 3.060, 31.0 / 29.97 },
-			{ 3.447, 33.0 / 29.97 },
-			{ 3.61, 36.0 / 29.97 },
-			{ 3.741, 35.0 / 29.97 },
-
+			{ 1.816, 24.0 / 29.949 },
+			{ 2.820, 29.0 / 29.949 },
+			{ 3.90, 35.0 / 29.949 },
 	};
-	public static final LinearFilter xfilter = LinearFilter.movingAverage(5);
-	public static final LinearFilter yfilter = LinearFilter.movingAverage(5);
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
 
@@ -77,11 +65,10 @@ public class ShooterRegression {
 		Translation2d pose = swerve.getPose().getTranslation();
 		double distance = target.getDistance(pose);
 
-		// ChassisSpeeds fieldSpeeds =
-		// ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
-		// swerve.getYaw());
-		// double vx = xfilter.calculate(fieldSpeeds.vxMetersPerSecond);
-		// double vy = yfilter.calculate(fieldSpeeds.vyMetersPerSecond);
+		ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
+				swerve.getYaw());
+		double vx = fieldSpeeds.vxMetersPerSecond;
+		double vy = fieldSpeeds.vyMetersPerSecond;
 
 		// When shooting, we are assuming the TOF of the ball being the same as when
 		// leaving the current pose.
@@ -91,14 +78,12 @@ public class ShooterRegression {
 		// lookahead pose
 		Translation2d lookaheadPose = pose;
 		double lookaheadDistance = distance;
-		// double tof = 0;
-		// for (int i = 0; i < 3; i++) {
-		// tof = timeOfFlightMap.get(lookaheadDistance);
-		// lookaheadPose = pose.plus(new Translation2d(vx * tof, vy * tof));
-		// lookaheadDistance = target.getDistance(lookaheadPose);
-		// }
-		// DogLog.log("Regression/Lookahead Pose", new Pose2d(lookaheadPose,
-		// swerve.getYaw()));
+		double tof = 0;
+		for (int i = 0; i < 3; i++) {
+			tof = timeOfFlightMap.get(lookaheadDistance);
+			lookaheadPose = pose.plus(new Translation2d(vx * tof, vy * tof));
+			lookaheadDistance = target.getDistance(lookaheadPose);
+		}
 
 		double[] rps = shotRPSMap.get(lookaheadDistance);
 
@@ -107,6 +92,12 @@ public class ShooterRegression {
 
 		Angle maxAngleError = Radians
 				.of(Math.abs(Math.atan2(FieldUtil.hubRadius.in(Meters), distance)));
+
+		DogLog.log("Regression/Lookahead Pose", new Pose2d(lookaheadPose, angle));
+		DogLog.log("Regression/Max Angle Error", maxAngleError);
+		DogLog.log("Regression/Angle", angle);
+		DogLog.log("Regression/Shooter RPS", rps[0]);
+		DogLog.log("Regression/Spinner RPS", rps[1]);
 
 		return new ShooterParams(angle, rps[0], rps[1], maxAngleError);
 	}
