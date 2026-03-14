@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TuningConstants.TuningMode;
 import frc.robot.regression.ShooterRegression;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 
 public class ShooterTuning {
@@ -38,7 +40,7 @@ public class ShooterTuning {
 	private static double voltage = 0;
 	private static Distance distance = Meters.zero();
 
-	public static void init(Shooter shooter) {
+	public static void init(Shooter shooter, Indexer indexer) {
 		DogLog.tunable("Shooter/Spinner target", 0.0,
 				target -> spinnerTargetRPS = target);
 		DogLog.tunable("Shooter/Shooter target", 0.0,
@@ -57,6 +59,7 @@ public class ShooterTuning {
 			shooter.setRPS(shooterTargetRPS, spinnerTargetRPS);
 			if (shooter.atSetpoint()) {
 				shooter.setKickerVelocity(kickerRPS);
+				indexer.runVoltage(IndexerConstants.IndexerVolts);
 			}
 		}).handleInterrupt(() -> {
 			shooter.disable();
