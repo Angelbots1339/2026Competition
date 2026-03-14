@@ -6,12 +6,14 @@ import static edu.wpi.first.units.Units.Radians;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import frc.lib.util.FieldUtil;
 import frc.robot.subsystems.Swerve;
@@ -47,8 +49,6 @@ public class ShooterRegression {
 			{ 3.741, 35.0 / 29.97 },
 
 	};
-	public static final LinearFilter xfilter = LinearFilter.movingAverage(5);
-	public static final LinearFilter yfilter = LinearFilter.movingAverage(5);
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
 
@@ -78,11 +78,10 @@ public class ShooterRegression {
 		Translation2d pose = swerve.getPose().getTranslation();
 		double distance = target.getDistance(pose);
 
-		// ChassisSpeeds fieldSpeeds =
-		// ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
-		// swerve.getYaw());
-		// double vx = xfilter.calculate(fieldSpeeds.vxMetersPerSecond);
-		// double vy = yfilter.calculate(fieldSpeeds.vyMetersPerSecond);
+		ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getRobotRelativeSpeeds(),
+				swerve.getYaw());
+		double vx = fieldSpeeds.vxMetersPerSecond;
+		double vy = fieldSpeeds.vyMetersPerSecond;
 
 		// When shooting, we are assuming the TOF of the ball being the same as when
 		// leaving the current pose.
@@ -92,14 +91,12 @@ public class ShooterRegression {
 		// lookahead pose
 		Translation2d lookaheadPose = pose;
 		double lookaheadDistance = distance;
-		// double tof = 0;
-		// for (int i = 0; i < 3; i++) {
-		// tof = timeOfFlightMap.get(lookaheadDistance);
-		// lookaheadPose = pose.plus(new Translation2d(vx * tof, vy * tof));
-		// lookaheadDistance = target.getDistance(lookaheadPose);
-		// }
-		// DogLog.log("Regression/Lookahead Pose", new Pose2d(lookaheadPose,
-		// swerve.getYaw()));
+		double tof = 0;
+		for (int i = 0; i < 3; i++) {
+			tof = timeOfFlightMap.get(lookaheadDistance);
+			lookaheadPose = pose.plus(new Translation2d(vx * tof, vy * tof));
+			lookaheadDistance = target.getDistance(lookaheadPose);
+		}
 
 		double[] rps = shotRPSMap.get(lookaheadDistance);
 
@@ -108,7 +105,12 @@ public class ShooterRegression {
 
 		Angle maxAngleError = Radians
 				.of(Math.abs(Math.atan2(FieldUtil.hubRadius.in(Meters), distance)));
+
+		DogLog.log("Regression/Lookahead Pose", new Pose2d(lookaheadPose, angle));
 		DogLog.log("Regression/Max Angle Error", maxAngleError);
+		DogLog.log("Regression/Angle", angle);
+		DogLog.log("Regression/Shooter RPS", rps[0]);
+		DogLog.log("Regression/Spinner RPS", rps[1]);
 
 		return new ShooterParams(angle, rps[0], rps[1], maxAngleError);
 	}

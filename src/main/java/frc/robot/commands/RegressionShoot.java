@@ -24,8 +24,8 @@ public class RegressionShoot extends Shoot {
 		super(shooter, indexer, intake);
 
 		this.swerve = swerve;
-		this.x = x;
-		this.y = y;
+		this.x = () -> x.get() / 5.0;
+		this.y = () -> y.get() / 5.0;
 
 		addRequirements(swerve);
 	}
