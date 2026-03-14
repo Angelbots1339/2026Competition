@@ -48,12 +48,12 @@ public class ShooterTuning {
 		DogLog.tunable("Shooter/distance", 0.0, target -> distance = Meters.of(target));
 		shooter.logPID();
 
-		runVoltage.whileTrue(Commands.run(() -> {
+		runVoltage.whileTrue(shooter.run(() -> {
 			shooter.setVoltage(Volts.of(voltage));
 			shooter.setKickerVelocity(kickerRPS);
 		}).handleInterrupt(() -> shooter.disable()));
 
-		runShooter.whileTrue(Commands.run(() -> {
+		runShooter.whileTrue(shooter.run(() -> {
 			shooter.setRPS(shooterTargetRPS, spinnerTargetRPS);
 			if (shooter.atSetpoint()) {
 				shooter.setKickerVelocity(kickerRPS);
