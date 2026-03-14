@@ -37,24 +37,25 @@ public class RegressionShoot extends Shoot {
 		runShoot(params.shooterRPS(), params.spinnerRPS(),
 				swerve::atRotation);
 
-		boolean usingSticks = Math.hypot(x.get(), y.get()) > 0.1;
-		boolean isWithinHub = swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(),
-				params.maxAngleError());
+		// boolean usingSticks = Math.hypot(x.get(), y.get()) > 0.1;
+		// boolean isWithinHub =
+		// swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(),
+		// params.maxAngleError());
 
-		if (!aligned) {
-			swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
-		} else {
-			swerve.setControl(new SwerveRequest.SwerveDriveBrake());
-		}
+		// if (!aligned) {
+		swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
+		// } else {
+		// swerve.setControl(new SwerveRequest.SwerveDriveBrake());
+		// }
 		// keep x configuration so long as we won't theoretically miss half our shots
 		// from our angle
-		if (usingSticks || !isWithinHub) {
-			aligned = false;
-		}
-
-		if (swerve.atRotation()) {
-			aligned = true;
-		}
+		// if (usingSticks || !isWithinHub) {
+		// aligned = false;
+		// }
+		//
+		// if (swerve.atRotation()) {
+		// aligned = true;
+		// }
 
 	}
 }
