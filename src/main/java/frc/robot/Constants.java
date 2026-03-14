@@ -53,7 +53,7 @@ public class Constants {
 	}
 
 	public class ShootingConstants {
-		public static final Time IntakeRetractTime = Seconds.of(1.5);
+		public static final Time IntakeRetractTime = Seconds.of(1);
 	}
 
 	public class RobotConstants {
@@ -141,7 +141,7 @@ public class Constants {
 						.withSensorToMechanismRatio(24.0 / 30.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(5)
+						.withKP(13)
 						.withKI(0)
 						.withKV(0.049)
 						.withKS(6.3));
@@ -238,7 +238,7 @@ public class Constants {
 								.withReverseSoftLimitThreshold(MinAngle))
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
-						.withMotionMagicCruiseVelocity(0.4)
+						.withMotionMagicCruiseVelocity(0.6)
 						.withMotionMagicAcceleration(2));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
