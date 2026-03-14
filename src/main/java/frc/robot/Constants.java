@@ -1,7 +1,6 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
-import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Hertz;
 import static edu.wpi.first.units.Units.Inches;
@@ -26,7 +25,6 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -61,9 +59,6 @@ public class Constants {
 		public static final AngularVelocity maxRot = RadiansPerSecond.of(Math.PI * 2);
 		public static final Distance length = Inches.of(32.25);
 		public static final Distance width = Inches.of(32.25);
-
-		public static final Translation2d climberOffset = new Translation2d(Inches.of(-12.046), Meters.zero());
-
 	}
 
 	public class AlignConstants {
@@ -114,7 +109,6 @@ public class Constants {
 			Swerve,
 			Regression,
 			Intake,
-			Climber,
 			Indexer,
 		};
 	}
@@ -266,43 +260,6 @@ public class Constants {
 								.withStatorCurrentLimitEnable(true))
 				.withSlot0(deploySlot0);
 
-	}
-
-	public class ClimberConstants {
-		public static final int ClimberMotorPort = 28;
-		public static final Distance PitchDiameter = Inches.of(0.5);
-		public static final Distance MaxDistance = Centimeters.of(17);
-
-		public static final Distance ClimbPosition = Centimeters.of(0);
-		public static final Distance HomePosition = Inches.of(10);
-
-		public static final TalonFXConfiguration ClimberMotorConfig = new TalonFXConfiguration()
-				.withSoftwareLimitSwitch(
-						new SoftwareLimitSwitchConfigs()
-								.withForwardSoftLimitThreshold(MaxDistance.in(Meters))
-								.withReverseSoftLimitThreshold(0)
-								.withForwardSoftLimitEnable(true)
-								.withReverseSoftLimitEnable(true))
-				.withMotorOutput(new MotorOutputConfigs()
-						// Driving the hook down = positive
-						.withInverted(InvertedValue.CounterClockwise_Positive)
-						.withNeutralMode(NeutralModeValue.Brake))
-				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(3 * 5 * 20.0)) // 1/20 is a tested roough
-				// diameter of the
-				// climber
-				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(Amps.of(120))
-						.withStatorCurrentLimitEnable(true))
-				.withSlot0(new Slot0Configs()
-						// TODO do motion magic later
-						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign)
-						.withKP(120)
-						.withKI(0)
-						.withKD(0)
-						.withKS(0)
-						.withKG(10)
-						.withGravityType(GravityTypeValue.Elevator_Static));
 	}
 
 	public class IndexerConstants {
