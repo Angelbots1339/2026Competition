@@ -53,7 +53,7 @@ public class Constants {
 	}
 
 	public class ShootingConstants {
-		public static final Time IntakeRetractTime = Seconds.of(3);
+		public static final Time IntakeRetractTime = Seconds.of(1.5);
 	}
 
 	public class RobotConstants {
