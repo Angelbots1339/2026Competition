@@ -21,24 +21,20 @@ import frc.robot.subsystems.Swerve;
 public class ShooterRegression {
 	public static final double[][] shotRPSData = {
 			// distance (m), shooter rps, spinner rps
-			{ 1.828, 43, 2 },
-			{ 2.310, 43, 7 },
-			{ 2.582, 43.3, 10 },
-			{ 2.915, 44.3, 11.5 },
-			{ 3.33, 46, 13 },
-			{ 3.61, 47, 14.5 },
-			{ 3.95, 48, 17 },
+			{ 1.828, 41, 3 },
+			{ 2.315, 43, 7 },
+			{ 2.614, 43, 10 },
+			{ 2.953, 45, 10 },
+			{ 3.317, 45.5, 12 },
+			{ 3.550, 46, 13 },
+			{ 3.90, 47, 15 },
 	};
 
 	public static final double[][] tofData = {
 			// distance, tof from ball leaving the shooter to the hub
-			{ 2.187, 28.0 / 29.97 },
-			{ 2.949, 31.0 / 29.97 },
-			{ 3.060, 31.0 / 29.97 },
-			{ 3.447, 33.0 / 29.97 },
-			{ 3.61, 36.0 / 29.97 },
-			{ 3.741, 35.0 / 29.97 },
-
+			{ 1.816, 24.0 / 29.949 },
+			{ 2.820, 29.0 / 29.949 },
+			{ 3.90, 35.0 / 29.949 },
 	};
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
