@@ -55,7 +55,7 @@ public record ChoreoTraj(
 	public static final ChoreoTraj BumpToNeutral_new = new ChoreoTraj(
 	    "BumpToNeutral_new",
 	    OptionalInt.empty(),
-	    5.27413,
+	    4.94287,
 	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(0)),
 	    new Pose2d(3.485, 5.458, Rotation2d.fromRadians(2.237))
 	);
