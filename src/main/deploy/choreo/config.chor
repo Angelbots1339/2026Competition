@@ -90,20 +90,6 @@
      "val":1.5707963267948966
     }
    },
-   "LeftBumpStart":{
-    "x":{
-     "exp":"3.6341423988342285 m",
-     "val":3.634142398834229
-    },
-    "y":{
-     "exp":"5.908682346343994 m",
-     "val":5.908682346343994
-    },
-    "heading":{
-     "exp":"0 deg",
-     "val":0.0
-    }
-   },
    "LeftNeutralFarmStop":{
     "x":{
      "exp":"LeftNeutralStart.x",
@@ -158,76 +144,6 @@
     "heading":{
      "exp":"-180 deg",
      "val":-3.141592653589793
-    }
-   },
-   "LeftTowerAlign":{
-    "x":{
-     "exp":"1.0696555376052856 m",
-     "val":1.0696555376052856
-    },
-    "y":{
-     "exp":"4.915959358215332 m",
-     "val":4.915959358215332
-    },
-    "heading":{
-     "exp":"90 deg",
-     "val":1.5707963267948966
-    }
-   },
-   "OutpostIntakeEnd":{
-    "x":{
-     "exp":"0.7083801031112671 m",
-     "val":0.7083801031112671
-    },
-    "y":{
-     "exp":"OutpostIntakeStart.y",
-     "val":0.7212997078895569
-    },
-    "heading":{
-     "exp":"OutpostIntakeStart.heading",
-     "val":3.141592653589793
-    }
-   },
-   "OutpostIntakeStart":{
-    "x":{
-     "exp":"2 m",
-     "val":2.0
-    },
-    "y":{
-     "exp":"0.7212997078895569 m",
-     "val":0.7212997078895569
-    },
-    "heading":{
-     "exp":"180 deg",
-     "val":3.141592653589793
-    }
-   },
-   "OutpostShoot":{
-    "x":{
-     "exp":"DepotShoot.x",
-     "val":2.3219108581545
-    },
-    "y":{
-     "exp":"FieldHeight - DepotShoot.y",
-     "val":2.6721568868408205
-    },
-    "heading":{
-     "exp":"-DepotShoot.heading",
-     "val":0.5880032220363305
-    }
-   },
-   "RightTowerAlign":{
-    "x":{
-     "exp":"1.0787103176116943 m",
-     "val":1.0787103176116943
-    },
-    "y":{
-     "exp":"2.5927536487579346 m",
-     "val":2.5927536487579346
-    },
-    "heading":{
-     "exp":"-90 deg",
-     "val":-1.5707963267948966
     }
    },
    "SecondBumpStart":{

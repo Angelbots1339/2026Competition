@@ -20,16 +20,10 @@ public final class ChoreoVars {
         public static final Pose2d DepotShoot = new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588));
         public static final Pose2d FirstBumpStart = new Pose2d(3.74, 5.822, Rotation2d.fromRadians(-1.571));
         public static final Pose2d HubLeftStart = new Pose2d(3.565, 5.04, Rotation2d.fromRadians(1.571));
-        public static final Pose2d LeftBumpStart = new Pose2d(3.634, 5.909, Rotation2d.kZero);
         public static final Pose2d LeftNeutralFarmStop = new Pose2d(7.764, 5.01, Rotation2d.fromRadians(-1.571));
         public static final Pose2d LeftNeutralStart = new Pose2d(7.764, 6.841, Rotation2d.fromRadians(-1.571));
         public static final Pose2d LeftNeutralStop = new Pose2d(7.764, 5.531, Rotation2d.fromRadians(-1.571));
         public static final Pose2d LeftStart = new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142));
-        public static final Pose2d LeftTowerAlign = new Pose2d(1.07, 4.916, Rotation2d.fromRadians(1.571));
-        public static final Pose2d OutpostIntakeEnd = new Pose2d(0.708, 0.721, Rotation2d.fromRadians(3.142));
-        public static final Pose2d OutpostIntakeStart = new Pose2d(2, 0.721, Rotation2d.fromRadians(3.142));
-        public static final Pose2d OutpostShoot = new Pose2d(2.322, 2.672, Rotation2d.fromRadians(0.588));
-        public static final Pose2d RightTowerAlign = new Pose2d(1.079, 2.593, Rotation2d.fromRadians(-1.571));
         public static final Pose2d SecondBumpStart = new Pose2d(5.603, 5.562, Rotation2d.fromRadians(-1.571));
         public static final Pose2d SecondBumpStop = new Pose2d(3.651, 5.562, Rotation2d.fromRadians(-1.571));
 
