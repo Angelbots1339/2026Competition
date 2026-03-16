@@ -52,6 +52,20 @@ public record ChoreoTraj(
 	    new Pose2d(3.565, 5.04, Rotation2d.fromRadians(1.571)),
 	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.748))
 	);
+	public static final ChoreoTraj BumpToNeutral_new = new ChoreoTraj(
+	    "BumpToNeutral_new",
+	    OptionalInt.empty(),
+	    5.27413,
+	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(0)),
+	    new Pose2d(3.485, 5.458, Rotation2d.fromRadians(2.237))
+	);
+	public static final ChoreoTraj DepotShootNeutral2_new = new ChoreoTraj(
+	    "DepotShootNeutral2_new",
+	    OptionalInt.empty(),
+	    6.52346,
+	    new Pose2d(3.485, 5.458, Rotation2d.fromRadians(2.237)),
+	    new Pose2d(3.485, 5.458, Rotation2d.fromRadians(2.237))
+	);
 
     /**
      * A map between trajectory names and their corresponding data.
@@ -61,7 +75,9 @@ public record ChoreoTraj(
     	Map.entry("BumpToNeutral", BumpToNeutral),
 		Map.entry("BumpToNeutralFarm", BumpToNeutralFarm),
 		Map.entry("DepotShootNeutral2", DepotShootNeutral2),
-		Map.entry("HubtoDepotShoot", HubtoDepotShoot)
+		Map.entry("HubtoDepotShoot", HubtoDepotShoot),
+		Map.entry("BumpToNeutral_new", BumpToNeutral_new),
+		Map.entry("DepotShootNeutral2_new", DepotShootNeutral2_new)
     );
 
     /**
