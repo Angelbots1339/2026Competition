@@ -64,11 +64,11 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
+		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 	}
 
 	@Override
 	public void disabledExit() {
-		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 	}
 
 	@Override

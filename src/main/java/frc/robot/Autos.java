@@ -10,6 +10,7 @@ import choreo.auto.AutoRoutine;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.choreo.ChoreoTraj;
 import frc.lib.util.FieldUtil;
@@ -45,6 +46,7 @@ public class Autos {
 		}));
 		factory.bind("IntakeStart", intake.runIntake());
 		factory.bind("IntakeStop", intake.stopIntake());
+		CommandScheduler.getInstance().schedule(factory.trajectoryCmd("").ignoringDisable(true));
 	}
 
 	public Command hubDepotAuto() {
