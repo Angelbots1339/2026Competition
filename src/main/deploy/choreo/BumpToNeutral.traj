@@ -29,9 +29,9 @@
  },
  "params":{
   "waypoints":[
-    {"x":{"exp":"LeftStart.x", "val":3.642922401428222}, "y":{"exp":"LeftStart.y", "val":6.062326431274414}, "heading":{"exp":"LeftStart.heading", "val":-3.141592653589793}, "intervals":14, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"LeftBumpStart.x", "val":3.642922401428222}, "y":{"exp":"LeftBumpStart.y", "val":6.062326431274414}, "heading":{"exp":"LeftBumpStart.heading", "val":-3.141592653589793}, "intervals":14, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"3.5820722579956055 m", "val":3.5820722579956055}, "y":{"exp":"FirstBumpStart.y", "val":5.821613311767578}, "heading":{"exp":"-165 deg", "val":-2.8797932657906435}, "intervals":30, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
-    {"x":{"exp":"5.899216651916504 m", "val":5.899216651916504}, "y":{"exp":"LeftStart.y", "val":6.062326431274414}, "heading":{"exp":"LeftStart.heading + 15 deg", "val":-2.8797932657906435}, "intervals":24, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"5.899216651916504 m", "val":5.899216651916504}, "y":{"exp":"LeftBumpStart.y", "val":6.062326431274414}, "heading":{"exp":"LeftBumpStart.heading + 15 deg", "val":-2.8797932657906435}, "intervals":24, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"6.678816795349121 m", "val":6.678816795349121}, "y":{"exp":"6.476263523101807 m", "val":6.476263523101807}, "heading":{"exp":"2.710453549398694 rad", "val":2.710453549398694}, "intervals":32, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"LeftNeutralStart.x", "val":7.763760089874268}, "y":{"exp":"LeftNeutralStart.y", "val":6.841159820556641}, "heading":{"exp":"LeftNeutralStart.heading", "val":-1.5707963267948966}, "intervals":19, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"LeftNeutralStop.x", "val":7.763760089874268}, "y":{"exp":"LeftNeutralStop.y", "val":5.530969619750977}, "heading":{"exp":"LeftNeutralStop.heading", "val":-1.5707963267948966}, "intervals":26, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
