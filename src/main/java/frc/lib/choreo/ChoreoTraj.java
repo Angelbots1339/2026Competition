@@ -24,14 +24,7 @@ public record ChoreoTraj(
     Pose2d initialPoseBlue,
     Pose2d endPoseBlue
 ) {
-    public static final ChoreoTraj BumpToNeutralFarm = new ChoreoTraj(
-	    "BumpToNeutralFarm",
-	    OptionalInt.empty(),
-	    7.21151,
-	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142)),
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588))
-	);
-	public static final ChoreoTraj BumpToNeutral = new ChoreoTraj(
+    public static final ChoreoTraj BumpToNeutral = new ChoreoTraj(
 	    "BumpToNeutral",
 	    OptionalInt.empty(),
 	    6.55335,
@@ -58,8 +51,7 @@ public record ChoreoTraj(
      * This allows for trajectory data to be looked up with strings during runtime.
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
-    	Map.entry("BumpToNeutralFarm", BumpToNeutralFarm),
-		Map.entry("BumpToNeutral", BumpToNeutral),
+    	Map.entry("BumpToNeutral", BumpToNeutral),
 		Map.entry("DepotShootNeutral2", DepotShootNeutral2),
 		Map.entry("HubtoDepotShoot", HubtoDepotShoot)
     );
