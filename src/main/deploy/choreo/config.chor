@@ -17,6 +17,13 @@
      "exp":"317.69 in",
      "val":8.069326
     }
+   },
+   "IntakeVelocity":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"1 m / s",
+     "val":1.0
+    }
    }
   },
   "poses":{

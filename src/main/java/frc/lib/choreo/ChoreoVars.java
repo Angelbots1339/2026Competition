@@ -13,6 +13,7 @@ import edu.wpi.first.units.measure.*;
 public final class ChoreoVars {
     public static final LinearVelocity BumpPassVel = Units.MetersPerSecond.of(2);
     public static final Distance FieldHeight = Units.Meters.of(8.069);
+    public static final LinearVelocity IntakeVelocity = Units.MetersPerSecond.of(1);
 
     public static final class Poses {
         public static final Pose2d DepotIntake = new Pose2d(0.75, 5.002, Rotation2d.fromRadians(2.234));
