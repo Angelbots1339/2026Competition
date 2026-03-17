@@ -91,9 +91,9 @@ public class Autos {
 		// flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
 		final var bumpToNeutral = routine
 				.trajectory(
-						flipTrajectoryX(routine.trajectory(ChoreoTraj.BumpToNeutral_new.name()).getRawTrajectory()));
+						flipTrajectoryX(routine.trajectory(ChoreoTraj.BumpToNeutral.name()).getRawTrajectory()));
 		final var leftNeutral2 = routine.trajectory(
-				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2_new.name()).getRawTrajectory()));
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
@@ -139,8 +139,8 @@ public class Autos {
 		// routine.trajectory(ChoreoTraj.BumpToNeutral.name());
 		// final var neutral2 =
 		// routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
-		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral_new.name());
-		final var neutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2_new.name());
+		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral.name());
+		final var neutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
