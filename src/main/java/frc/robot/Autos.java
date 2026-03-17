@@ -85,10 +85,6 @@ public class Autos {
 
 	public AutoRoutine rightNeutral() {
 		final var routine = factory.newRoutine("Right Neutral");
-		// final var bumpToNeutral = routine
-		// .trajectory(flipTrajectoryX(routine.trajectory(ChoreoTraj.BumpToNeutral.name()).getRawTrajectory()));
-		// final var leftNeutral2 = routine.trajectory(
-		// flipTrajectoryX(routine.trajectory(ChoreoTraj.NeutralShootNeutral2.name()).getRawTrajectory()));
 		final var bumpToNeutral = routine
 				.trajectory(
 						flipTrajectoryX(routine.trajectory(ChoreoTraj.BumpToNeutral.name()).getRawTrajectory()));
@@ -112,10 +108,6 @@ public class Autos {
 
 	public AutoRoutine leftNeutral() {
 		final var routine = factory.newRoutine("Left Neutral");
-		// final var bumpToNeutral =
-		// routine.trajectory(ChoreoTraj.BumpToNeutral.name());
-		// final var neutral2 =
-		// routine.trajectory(ChoreoTraj.NeutralShootNeutral2.name());
 		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral.name());
 		final var neutral2 = routine.trajectory(ChoreoTraj.NeutralShootToNeutral2.name());
 
