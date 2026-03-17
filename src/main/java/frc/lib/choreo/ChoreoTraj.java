@@ -27,22 +27,22 @@ public record ChoreoTraj(
     public static final ChoreoTraj BumpToNeutral = new ChoreoTraj(
 	    "BumpToNeutral",
 	    OptionalInt.empty(),
-	    6.55335,
+	    6.73389,
 	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(0)),
-	    new Pose2d(3.485, 5.458, Rotation2d.fromRadians(2.237))
-	);
-	public static final ChoreoTraj NeutralShootToNeutral2 = new ChoreoTraj(
-	    "NeutralShootToNeutral2",
-	    OptionalInt.empty(),
-	    4.51494,
-	    new Pose2d(3.485, 5.458, Rotation2d.fromRadians(2.237)),
 	    new Pose2d(3.485, 5.458, Rotation2d.fromRadians(2.237))
 	);
 	public static final ChoreoTraj HubtoNeutralShoot = new ChoreoTraj(
 	    "HubtoNeutralShoot",
 	    OptionalInt.empty(),
-	    5.09142,
+	    5.01517,
 	    new Pose2d(3.565, 5.04, Rotation2d.fromRadians(1.571)),
+	    new Pose2d(3.485, 5.458, Rotation2d.fromRadians(2.237))
+	);
+	public static final ChoreoTraj NeutralShootToNeutral2 = new ChoreoTraj(
+	    "NeutralShootToNeutral2",
+	    OptionalInt.empty(),
+	    4.74205,
+	    new Pose2d(3.485, 5.458, Rotation2d.fromRadians(2.237)),
 	    new Pose2d(3.485, 5.458, Rotation2d.fromRadians(2.237))
 	);
 
@@ -52,8 +52,8 @@ public record ChoreoTraj(
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
     	Map.entry("BumpToNeutral", BumpToNeutral),
-		Map.entry("NeutralShootToNeutral2", NeutralShootToNeutral2),
-		Map.entry("HubtoNeutralShoot", HubtoNeutralShoot)
+		Map.entry("HubtoNeutralShoot", HubtoNeutralShoot),
+		Map.entry("NeutralShootToNeutral2", NeutralShootToNeutral2)
     );
 
     /**
