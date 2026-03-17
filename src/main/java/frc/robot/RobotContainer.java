@@ -107,7 +107,7 @@ public class RobotContainer {
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pass.whileTrue(Commands.parallel(
 				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
-						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
+						() -> FieldUtil.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero, () -> true)),
 				new Shoot(shooter, indexer, intake, () -> 45.0, () -> 45.0, swerve::atRotation)));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosestBumpAngle(),

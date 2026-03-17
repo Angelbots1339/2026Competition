@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Radians;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -91,7 +90,7 @@ public class ShooterRegression {
 		double[] rps = shotRPSMap.get(lookaheadDistance);
 
 		Rotation2d angle = Rotation2d.fromRadians(
-				target.minus(lookaheadPose).getAngle().getRadians());
+				target.minus(lookaheadPose).getAngle().plus(Rotation2d.k180deg).getRadians());
 
 		Angle maxAngleError = Radians
 				.of(Math.abs(Math.atan2(FieldUtil.hubRadius.in(Meters), distance)));
