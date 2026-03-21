@@ -93,6 +93,7 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 		autoChooser.addCmd("Hub Depot", autos::hubDepotAuto);
 		autoChooser.addCmd("Hub Depot Neutral", autos::hubDepotNeutralAuto);
 		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
@@ -100,7 +101,7 @@ public class RobotContainer {
 		autoChooser.addRoutine("Right Neutral Sweep", autos::rightNeutralSweep);
 		autoChooser.addRoutine("Left Neutral Sweep", autos::leftNeutralSweep);
 		autoChooser.addRoutine("Custom Auto", autos::customAuto);
-		SmartDashboard.putData("Auto Chooser", autoChooser);
+		autoChooser.select("Nothing");
 	}
 
 	private void configureBindings() {

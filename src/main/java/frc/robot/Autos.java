@@ -31,12 +31,10 @@ public class Autos {
 	private AutoFactory factory;
 
 	String[] startPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
-		.filter(traj -> traj.startsWith("Bump") || traj.startsWith("Hub")).toArray(String[]::new);
+			.filter(traj -> traj.startsWith("Bump") || traj.startsWith("Hub")).toArray(String[]::new);
 
 	String[] secondPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
-		.filter(traj -> !(traj.startsWith("Bump") || traj.startsWith("Hub"))).toArray(String[]::new);
-
-
+			.filter(traj -> !(traj.startsWith("Bump") || traj.startsWith("Hub"))).toArray(String[]::new);
 
 	Supplier<Command> shoot = null;
 
@@ -81,11 +79,15 @@ public class Autos {
 		final var routine = factory.newRoutine("Custom Auto");
 		AutoTrajectory startTraj = routine.trajectory("");
 		AutoTrajectory secondTraj = routine.trajectory("");
+		boolean needsFlip = SmartDashboard.getBoolean("Auto/Side/" + "Right", false);
 
 		for (String path : startPaths) {
 			boolean usePath = SmartDashboard.getBoolean("Auto/Start Path/" + path, false);
 			if (usePath) {
-				startTraj = routine.trajectory(path);
+				if (needsFlip)
+					startTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(path).getRawTrajectory()));
+				else
+					startTraj = routine.trajectory(path);
 				break;
 			}
 		}
@@ -93,7 +95,10 @@ public class Autos {
 		for (String path : secondPaths) {
 			boolean usePath = SmartDashboard.getBoolean("Auto/Second Path/" + path, false);
 			if (usePath) {
-				secondTraj = routine.trajectory(path);
+				if (needsFlip)
+					secondTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(path).getRawTrajectory()));
+				else
+					secondTraj = routine.trajectory(path);
 				break;
 			}
 		}
@@ -200,7 +205,6 @@ public class Autos {
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
-
 
 		routine.active().onTrue(
 				Commands.sequence(
