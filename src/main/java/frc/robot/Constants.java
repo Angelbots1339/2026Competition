@@ -133,7 +133,7 @@ public class Constants {
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(24.0 / 30.0))
+						.withSensorToMechanismRatio(1.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
 						.withKP(13)
@@ -149,9 +149,9 @@ public class Constants {
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.CounterClockwise_Positive))
+						.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(18.0 / 36.0))
+						.withSensorToMechanismRatio(24.0 / 12.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
 						.withKP(6)
@@ -165,7 +165,7 @@ public class Constants {
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.Clockwise_Positive))
+						.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(36.0 / 18.0))
 				.withSlot0(new Slot0Configs()
@@ -276,7 +276,7 @@ public class Constants {
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimitEnable(true))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(24.0 / 24.0))
+						.withSensorToMechanismRatio(16.0 / 16.0))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withInverted(InvertedValue.CounterClockwise_Positive)
 						.withNeutralMode(NeutralModeValue.Coast))
@@ -287,6 +287,5 @@ public class Constants {
 						.withKS(0)
 						.withKV(0)
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign));
-
 	}
 }
