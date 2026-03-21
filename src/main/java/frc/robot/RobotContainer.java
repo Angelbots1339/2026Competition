@@ -97,6 +97,8 @@ public class RobotContainer {
 		autoChooser.addCmd("Hub Depot Neutral", autos::hubDepotNeutralAuto);
 		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
 		autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
+		autoChooser.addRoutine("Right Neutral Sweep", autos::rightNeutralSweep);
+		autoChooser.addRoutine("Left Neutral Sweep", autos::leftNeutralSweep);
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 

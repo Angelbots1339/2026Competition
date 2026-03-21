@@ -106,10 +106,53 @@ public class Autos {
 		return routine;
 	}
 
+	public AutoRoutine rightNeutralSweep() {
+		final var routine = factory.newRoutine("Right Neutral Sweep");
+		final var bumpToNeutral = routine
+				.trajectory(
+						flipTrajectoryX(routine.trajectory(ChoreoTraj.BumpToNeutral.name()).getRawTrajectory()));
+		final var leftNeutral2 = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.NeutralShootHubSweep.name()).getRawTrajectory()));
+
+		final var shoot1 = shoot.get().withTimeout(3.5);
+		final var shoot2 = shoot.get().withTimeout(3.5);
+
+		routine.active().onTrue(
+				Commands.sequence(
+						bumpToNeutral.resetOdometry(),
+						bumpToNeutral.cmd()));
+		bumpToNeutral.done().onTrue(shoot1);
+		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
+		leftNeutral2.done().onTrue(shoot2);
+		routine.observe(shoot2::isFinished).onTrue(leftNeutral2.cmd());
+
+		return routine;
+	}
+
 	public AutoRoutine leftNeutral() {
 		final var routine = factory.newRoutine("Left Neutral");
 		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral.name());
 		final var neutral2 = routine.trajectory(ChoreoTraj.NeutralShootToNeutral2.name());
+
+		final var shoot1 = shoot.get().withTimeout(3.5);
+		final var shoot2 = shoot.get().withTimeout(3.5);
+
+		routine.active().onTrue(
+				Commands.sequence(
+						bumpToNeutral.resetOdometry(),
+						bumpToNeutral.cmd()));
+		bumpToNeutral.done().onTrue(shoot1);
+		routine.observe(shoot1::isFinished).onTrue(neutral2.cmd());
+		neutral2.done().onTrue(shoot2);
+		routine.observe(shoot2::isFinished).onTrue(neutral2.cmd());
+
+		return routine;
+	}
+
+	public AutoRoutine leftNeutralSweep() {
+		final var routine = factory.newRoutine("Left Neutral Sweep");
+		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral.name());
+		final var neutral2 = routine.trajectory(ChoreoTraj.NeutralShootHubSweep.name());
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
