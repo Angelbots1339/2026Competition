@@ -4,11 +4,16 @@ import static edu.wpi.first.units.Units.Meters;
 
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
+import dev.doglog.DogLog;
+import dev.doglog.internal.DogLogForceNt;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -24,6 +29,14 @@ import frc.robot.subsystems.Swerve;
 
 public class Autos {
 	private AutoFactory factory;
+
+	String[] startPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
+		.filter(traj -> traj.startsWith("Bump") || traj.startsWith("Hub")).toArray(String[]::new);
+
+	String[] secondPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
+		.filter(traj -> !(traj.startsWith("Bump") || traj.startsWith("Hub"))).toArray(String[]::new);
+
+
 
 	Supplier<Command> shoot = null;
 
@@ -47,6 +60,57 @@ public class Autos {
 		factory.bind("IntakeStart", intake.runIntake());
 		factory.bind("IntakeStop", intake.stopIntake());
 		CommandScheduler.getInstance().schedule(factory.trajectoryCmd("").ignoringDisable(true));
+
+		publishAutoPaths();
+	}
+
+	public void publishAutoPaths() {
+		for (String path : startPaths) {
+			SmartDashboard.putBoolean("Auto/Start Path/" + path, false);
+		}
+
+		for (String path : secondPaths) {
+			SmartDashboard.putBoolean("Auto/Second Path/" + path, false);
+		}
+
+		SmartDashboard.putBoolean("Auto/Side/" + "Left", true);
+		SmartDashboard.putBoolean("Auto/Side/" + "Right", false);
+	}
+
+	public AutoRoutine customAuto() {
+		final var routine = factory.newRoutine("Custom Auto");
+		AutoTrajectory startTraj = routine.trajectory("");
+		AutoTrajectory secondTraj = routine.trajectory("");
+
+		for (String path : startPaths) {
+			boolean usePath = SmartDashboard.getBoolean("Auto/Start Path/" + path, false);
+			if (usePath) {
+				startTraj = routine.trajectory(path);
+				break;
+			}
+		}
+
+		for (String path : secondPaths) {
+			boolean usePath = SmartDashboard.getBoolean("Auto/Second Path/" + path, false);
+			if (usePath) {
+				secondTraj = routine.trajectory(path);
+				break;
+			}
+		}
+
+		final var shoot1 = shoot.get().withTimeout(3.5);
+		final var shoot2 = shoot.get().withTimeout(3.5);
+
+		routine.active().onTrue(
+				Commands.sequence(
+						startTraj.resetOdometry(),
+						startTraj.cmd()));
+		startTraj.done().onTrue(shoot1);
+		routine.observe(shoot1::isFinished).onTrue(secondTraj.cmd());
+		secondTraj.done().onTrue(shoot2);
+		routine.observe(shoot2::isFinished).onTrue(secondTraj.cmd());
+
+		return routine;
 	}
 
 	public Command hubDepotAuto() {
@@ -136,6 +200,7 @@ public class Autos {
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
+
 
 		routine.active().onTrue(
 				Commands.sequence(
