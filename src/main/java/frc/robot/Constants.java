@@ -94,10 +94,11 @@ public class Constants {
 		public static final double maxUsableRange = 4.0;
 
 		// limelight location
-		// forward = 0.020m
+		// forward = -0.077m
 		// left = 0.000m
-		// top = 0.654m
-		// pitch = 12deg
+		// top = 0.657m
+		// pitch = 15deg
+		// roll = 180deg
 
 		public static double calcStdDev(double metersFromTarget) {
 			return 0.08 * Math.pow(metersFromTarget, 2);
