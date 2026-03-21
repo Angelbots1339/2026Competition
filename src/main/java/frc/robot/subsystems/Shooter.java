@@ -26,7 +26,7 @@ import frc.robot.Constants.ShooterConstants;
 public class Shooter extends SubsystemBase {
 	private TalonFX leader = new TalonFX(ShooterConstants.Shooter1Port);
 	private TalonFX follower = new TalonFX(ShooterConstants.Shooter2Port);
-	private TalonFX follower2 = new TalonFX(ShooterConstants.Follower2Port);
+	private TalonFX follower2 = new TalonFX(ShooterConstants.Shooter3Port);
 
 	private TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
 

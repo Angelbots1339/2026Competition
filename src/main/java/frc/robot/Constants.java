@@ -118,7 +118,7 @@ public class Constants {
 	public class ShooterConstants {
 		public static final int Shooter1Port = 30;
 		public static final int Shooter2Port = 32;
-		public static final int Follower2Port = 38;
+		public static final int Shooter3Port = 38;
 		public static final int SpinnerPort = 34;
 		public static final int KickerPort = 36;
 
