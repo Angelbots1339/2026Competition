@@ -24,8 +24,9 @@ import frc.robot.Constants.ShooterConstants;
 
 @Logged
 public class Shooter extends SubsystemBase {
-	private TalonFX leader = new TalonFX(ShooterConstants.LeaderPort);
-	private TalonFX follower = new TalonFX(ShooterConstants.FollowerPort);
+	private TalonFX leader = new TalonFX(ShooterConstants.Shooter1Port);
+	private TalonFX follower = new TalonFX(ShooterConstants.Shooter2Port);
+	private TalonFX follower2 = new TalonFX(ShooterConstants.Follower2Port);
 
 	private TalonFX spinner = new TalonFX(ShooterConstants.SpinnerPort);
 
@@ -38,10 +39,12 @@ public class Shooter extends SubsystemBase {
 	public Shooter() {
 		leader.getConfigurator().apply(ShooterConstants.ShooterConfig);
 		follower.getConfigurator().apply(ShooterConstants.ShooterConfig);
+		follower2.getConfigurator().apply(ShooterConstants.ShooterConfig);
 		spinner.getConfigurator().apply(ShooterConstants.SpinnerConfig);
 		kicker.getConfigurator().apply(ShooterConstants.KickerConfig);
 
-		follower.setControl(new Follower(ShooterConstants.LeaderPort, MotorAlignmentValue.Opposed));
+		follower.setControl(new Follower(ShooterConstants.Shooter1Port, MotorAlignmentValue.Opposed));
+		follower2.setControl(new Follower(ShooterConstants.Shooter1Port, MotorAlignmentValue.Aligned));
 
 		leader.getVelocity().setUpdateFrequency(Hertz.of(100));
 		spinner.getVelocity().setUpdateFrequency(Hertz.of(100));

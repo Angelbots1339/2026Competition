@@ -173,7 +173,7 @@ public class RobotContainer {
 	}
 
 	public void setDefaultCommands() {
-		intake.setDefaultCommand(intake.runOnce(intake::disable).andThen(intake.deploy()));
+		// intake.setDefaultCommand(intake.runOnce(intake::disable).andThen(intake.deploy()));
 		indexer.setDefaultCommand(indexer.run(indexer::disable));
 		shooter.setDefaultCommand(shooter.run(shooter::disable));
 	}
