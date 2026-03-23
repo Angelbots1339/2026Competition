@@ -24,36 +24,36 @@ public record ChoreoTraj(
     Pose2d initialPoseBlue,
     Pose2d endPoseBlue
 ) {
-    public static final ChoreoTraj BumpToNeutral = new ChoreoTraj(
-        "BumpToNeutral",
+    public static final ChoreoTraj Bump_To_Neutral = new ChoreoTraj(
+        "Bump_To_Neutral",
         OptionalInt.empty(),
         4.53054,
         new Pose2d(3.64292, 6.06233, Rotation2d.fromRadians(-1.5708)),
         new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677))
     );
-    public static final ChoreoTraj BumpToNeutralSweep = new ChoreoTraj(
-        "BumpToNeutralSweep",
+    public static final ChoreoTraj Bump_To_NeutralSweep = new ChoreoTraj(
+        "Bump_To_NeutralSweep",
         OptionalInt.empty(),
         4.17445,
         new Pose2d(3.64292, 6.06233, Rotation2d.fromRadians(-1.5708)),
         new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677))
     );
-    public static final ChoreoTraj HubtoNeutralShoot = new ChoreoTraj(
-        "HubtoNeutralShoot",
+    public static final ChoreoTraj Hub_To_Depot = new ChoreoTraj(
+        "Hub_To_Depot",
         OptionalInt.empty(),
         4.48333,
         new Pose2d(3.56546, 5.03974, Rotation2d.fromRadians(1.5708)),
         new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677))
     );
-    public static final ChoreoTraj NeutralShootHubSweep = new ChoreoTraj(
-        "NeutralShootHubSweep",
+    public static final ChoreoTraj Shoot_To_HubSweep = new ChoreoTraj(
+        "Shoot_To_HubSweep",
         OptionalInt.empty(),
         3.96022,
         new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677)),
         new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677))
     );
-    public static final ChoreoTraj NeutralShootToNeutral2 = new ChoreoTraj(
-        "NeutralShootToNeutral2",
+    public static final ChoreoTraj Shoot_To_Neutral = new ChoreoTraj(
+        "Shoot_To_Neutral",
         OptionalInt.empty(),
         3.69592,
         new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677)),
@@ -65,11 +65,11 @@ public record ChoreoTraj(
      * This allows for trajectory data to be looked up with strings during runtime.
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
-        Map.entry("BumpToNeutral", BumpToNeutral),
-        Map.entry("BumpToNeutralSweep", BumpToNeutralSweep),
-        Map.entry("HubtoNeutralShoot", HubtoNeutralShoot),
-        Map.entry("NeutralShootHubSweep", NeutralShootHubSweep),
-        Map.entry("NeutralShootToNeutral2", NeutralShootToNeutral2)
+        Map.entry("Bump_To_Neutral", Bump_To_Neutral),
+        Map.entry("Bump_To_NeutralSweep", Bump_To_NeutralSweep),
+        Map.entry("Hub_To_Depot", Hub_To_Depot),
+        Map.entry("Shoot_To_HubSweep", Shoot_To_HubSweep),
+        Map.entry("Shoot_To_Neutral", Shoot_To_Neutral)
     );
 
     /**
