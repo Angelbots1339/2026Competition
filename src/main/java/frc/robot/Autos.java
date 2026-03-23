@@ -4,15 +4,13 @@ import static edu.wpi.first.units.Units.Meters;
 
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
-import dev.doglog.DogLog;
-import dev.doglog.internal.DogLogForceNt;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -30,11 +28,9 @@ import frc.robot.subsystems.Swerve;
 public class Autos {
 	private AutoFactory factory;
 
-	String[] startPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
-			.filter(traj -> traj.startsWith("Bump") || traj.startsWith("Hub")).toArray(String[]::new);
-
-	String[] secondPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
-			.filter(traj -> !(traj.startsWith("Bump") || traj.startsWith("Hub"))).toArray(String[]::new);
+	SendableChooser<String> firstPathChooser = new SendableChooser<String>();
+	SendableChooser<String> secondPathChooser = new SendableChooser<String>();
+	SendableChooser<String> sideChooser = new SendableChooser<String>();
 
 	Supplier<Command> shoot = null;
 
@@ -63,44 +59,46 @@ public class Autos {
 	}
 
 	public void publishAutoPaths() {
+		String[] startPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
+				.filter(traj -> traj.startsWith("Bump") || traj.startsWith("Hub")).toArray(String[]::new);
+
+		String[] secondPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
+				.filter(traj -> !(traj.startsWith("Bump") || traj.startsWith("Hub"))).toArray(String[]::new);
+
 		for (String path : startPaths) {
-			SmartDashboard.putBoolean("Auto/Start Path/" + path, false);
+			firstPathChooser.addOption(path, path);
 		}
 
 		for (String path : secondPaths) {
-			SmartDashboard.putBoolean("Auto/Second Path/" + path, false);
+			secondPathChooser.addOption(path, path);
 		}
 
-		SmartDashboard.putBoolean("Auto/Side/" + "Left", true);
-		SmartDashboard.putBoolean("Auto/Side/" + "Right", false);
+		sideChooser.setDefaultOption("Left", "Left");
+		sideChooser.addOption("Right", "Right");
+
+		firstPathChooser.setDefaultOption("None", "");
+		secondPathChooser.setDefaultOption("None", "");
+
+		SmartDashboard.putData("Auto/First Path", firstPathChooser);
+		SmartDashboard.putData("Auto/Second Path", secondPathChooser);
+		SmartDashboard.putData("Auto/Side", sideChooser);
 	}
 
 	public AutoRoutine customAuto() {
 		final var routine = factory.newRoutine("Custom Auto");
 		AutoTrajectory startTraj = routine.trajectory("");
 		AutoTrajectory secondTraj = routine.trajectory("");
-		boolean needsFlip = SmartDashboard.getBoolean("Auto/Side/" + "Right", false);
 
-		for (String path : startPaths) {
-			boolean usePath = SmartDashboard.getBoolean("Auto/Start Path/" + path, false);
-			if (usePath) {
-				if (needsFlip)
-					startTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(path).getRawTrajectory()));
-				else
-					startTraj = routine.trajectory(path);
-				break;
-			}
-		}
+		boolean needsFlip = sideChooser.getSelected() == "Right";
+		String firstPath = firstPathChooser.getSelected();
+		String secondPath = secondPathChooser.getSelected();
 
-		for (String path : secondPaths) {
-			boolean usePath = SmartDashboard.getBoolean("Auto/Second Path/" + path, false);
-			if (usePath) {
-				if (needsFlip)
-					secondTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(path).getRawTrajectory()));
-				else
-					secondTraj = routine.trajectory(path);
-				break;
-			}
+		if (needsFlip) {
+			startTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(firstPath).getRawTrajectory()));
+			secondTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(secondPath).getRawTrajectory()));
+		} else {
+			startTraj = routine.trajectory(firstPath);
+			secondTraj = routine.trajectory(secondPath);
 		}
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
