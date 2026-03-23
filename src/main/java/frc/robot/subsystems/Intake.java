@@ -58,7 +58,7 @@ public class Intake extends SubsystemBase {
 
 	public void setIntakeAngle(Angle angle) {
 		targetAngle = angle;
-		deployMotor.setControl(new MotionMagicVoltage(angle));
+		// deployMotor.setControl(new MotionMagicVoltage(angle));
 	}
 
 	public Angle getIntakeAngle() {
