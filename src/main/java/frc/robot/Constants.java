@@ -179,7 +179,7 @@ public class Constants {
 						.withKV(0));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
-				.withUpdateFreqHz(Hertz.of(100));
+				.withUpdateFreqHz(Hertz.of(1000));
 	}
 
 	public class IntakeConstants {
