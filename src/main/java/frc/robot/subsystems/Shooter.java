@@ -44,7 +44,7 @@ public class Shooter extends SubsystemBase {
 		kicker.getConfigurator().apply(ShooterConstants.KickerConfig);
 
 		follower.setControl(new Follower(ShooterConstants.Shooter1Port, MotorAlignmentValue.Opposed));
-		follower2.setControl(new Follower(ShooterConstants.Shooter1Port, MotorAlignmentValue.Aligned));
+		follower2.setControl(new Follower(ShooterConstants.Shooter1Port, MotorAlignmentValue.Opposed));
 
 		leader.getVelocity().setUpdateFrequency(Hertz.of(100));
 		spinner.getVelocity().setUpdateFrequency(Hertz.of(100));
