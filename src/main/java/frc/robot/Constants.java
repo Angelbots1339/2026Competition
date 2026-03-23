@@ -99,6 +99,7 @@ public class Constants {
 		// top = 0.657m
 		// pitch = 15deg
 		// roll = 180deg
+		// yaw = 180deg
 
 		public static double calcStdDev(double metersFromTarget) {
 			return 0.08 * Math.pow(metersFromTarget, 2);
