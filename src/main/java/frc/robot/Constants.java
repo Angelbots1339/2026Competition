@@ -195,11 +195,11 @@ public class Constants {
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
 		// angle of COM in CAD
-		// public static final Angle MinAngle = Degrees.of(15.5614);
-		// public static final Angle MaxAngle = Degrees.of(115.558);
+		// public static final Angle MinAngle = Degrees.of(6.76);
+		// public static final Angle MaxAngle = Degrees.of(144.978);
 
-		public static final Angle MinAngle = Degrees.of(25);
-		public static final Angle MaxAngle = Degrees.of(115.558);
+		public static final Angle MinAngle = Degrees.of(6);
+		public static final Angle MaxAngle = Degrees.of(145);
 
 		public static final Angle IntakeAngleTolerence = Degrees.of(10);
 
