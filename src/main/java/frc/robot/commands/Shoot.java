@@ -27,6 +27,8 @@ public class Shoot extends Command {
 	private Supplier<Boolean> runKicker = () -> true;
 
 	private Timer cycleTimer = new Timer();
+	// TODO: remove later
+	private Timer shootTimer = new Timer();
 
 	public Shoot(Shooter shooter, Indexer indexer, Intake intake) {
 		this(shooter, indexer, intake, () -> 0.0, () -> 0.0, () -> true);
@@ -48,12 +50,18 @@ public class Shoot extends Command {
 	@Override
 	public void initialize() {
 		cycleTimer.reset();
+		shootTimer.restart();
 	}
 
 	public void runShoot(double shooterRPS, double spinnerRPS, Supplier<Boolean> runKicker) {
 		shooter.setRPS(shooterRPS, spinnerRPS);
 
-		if (shooter.atSetpoint() && runKicker.get()) {
+		if (!shootTimer.isRunning()) {
+			shootTimer.restart();
+		}
+
+		// if (shooter.atSetpoint() && runKicker.get()) {
+		if (shootTimer.hasElapsed(1) && runKicker.get()) { // TODO: remove when shooter is actually tuned
 			shooter.setKickerVelocity(ShooterConstants.KickerRPS);
 			indexer.runVoltage(IndexerConstants.IndexerVolts);
 			intake.setIntakeVoltage(IntakeConstants.IntakeVoltage / 2.0);
