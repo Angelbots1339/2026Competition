@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -57,7 +58,12 @@ public class RegressionTuning {
 		DogLog.tunable("Regression/Spinner RPS Target", 0.0, target -> spinnerRPS = target);
 
 		pidtuneFOC.whileTrue(Commands.parallel(
-				swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true),
+				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> {
+
+					return Rotation2d.fromRadians(
+							FieldUtil.getHubCenter().getTranslation().minus(swerve.getPose().getTranslation())
+									.getAngle().plus(Rotation2d.k180deg).getRadians());
+				}, () -> true)),
 				new Shoot(shooter, indexer, intake, () -> shooterRPS, () -> spinnerRPS, swerve::atRotation)));
 
 		regression.whileTrue(new RegressionShoot(swerve, shooter, indexer, intake, leftY, leftX));
