@@ -51,7 +51,7 @@ public class Constants {
 	}
 
 	public class ShootingConstants {
-		public static final Time IntakeRetractTime = Seconds.of(1);
+		public static final Time IntakeRetractTime = Seconds.of(3);
 		public static final Time IntakeRetractOffsetTime = Seconds.of(0.5);
 	}
 
@@ -172,7 +172,7 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(24.0 / 18.0))
 				.withSlot0(new Slot0Configs()
-						.withKP(8)
+						.withKP(13)
 						.withKI(0)
 						.withKD(0)
 						.withKS(18)
@@ -186,10 +186,8 @@ public class Constants {
 		public static final int intakeMotorId = 22;
 		public static final int deployMotorId = 24;
 
-		public static final Angle DeployedAngle = Degrees.of(6);
-		public static final Angle RetractedAngle = Degrees.of(115);
-		public static final Angle AgitationAngle = Degrees.of(50);
-		public static final Angle AgitationAngle2 = Degrees.of(70);
+		public static final Angle DeployedAngle = Degrees.of(0);
+		public static final Angle RetractedAngle = Degrees.of(111);
 		public static final double IntakeVoltage = 7;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
@@ -198,9 +196,8 @@ public class Constants {
 		// public static final Angle MinAngle = Degrees.of(6.76);
 		// public static final Angle MaxAngle = Degrees.of(144.978);
 
-		public static final Angle MinAngle = Degrees.of(6);
-		public static final Angle MaxAngle = Degrees.of(126);
-
+		public static final Angle MinAngle = Degrees.of(0);
+		public static final Angle MaxAngle = Degrees.of(111);
 		public static final Angle IntakeAngleTolerence = Degrees.of(10);
 
 		// Recalc:
