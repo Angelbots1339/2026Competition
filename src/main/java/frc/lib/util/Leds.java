@@ -41,8 +41,9 @@ public class Leds extends SubsystemBase {
 	public boolean isHubActive = false;
 	public boolean shooting = false;
 
-	private Frequency DSAttachFreq = Hertz.of(1);
+	private Frequency DSAttachFreq = Hertz.of(2);
 	private Frequency hubAlertFreq = Hertz.of(3);
+	private Frequency allianceBreathFrequency = Hertz.of(1);
 
 	private double waveExponent = 0.4;
 
@@ -126,6 +127,10 @@ public class Leds extends SubsystemBase {
 		solid(i, i + 1, color);
 	}
 
+	public void solid(Section section, Color color) {
+		solid(section.start(), section.end(), color);
+	}
+
 	public void solid(int start, int end, Color color) {
 		m_candle.setControl(new SolidColor(start, end).withColor(new RGBWColor(color)));
 	}
@@ -134,6 +139,19 @@ public class Leds extends SubsystemBase {
 		m_candle.setControl(
 				new StrobeAnimation(section.start(), section.end()).withColor(new RGBWColor(color))
 						.withFrameRate(frequency));
+	}
+
+	private void breath(Section section, Color c1, Color c2, double duration) {
+		breath(section, c1, c2, duration, Timer.getFPGATimestamp());
+	}
+
+	private void breath(Section section, Color c1, Color c2, double duration, double timestamp) {
+		double x = ((timestamp % duration) / duration) * 2.0 * Math.PI;
+		double ratio = (Math.sin(x) + 1.0) / 2.0;
+		double red = (c1.red * (1 - ratio)) + (c2.red * ratio);
+		double green = (c1.green * (1 - ratio)) + (c2.green * ratio);
+		double blue = (c1.blue * (1 - ratio)) + (c2.blue * ratio);
+		solid(section, new Color(red, green, blue));
 	}
 
 	private void wave(Section section, Color c1, Color c2, double cycleLength, double duration) {
