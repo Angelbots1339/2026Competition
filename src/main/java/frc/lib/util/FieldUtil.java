@@ -45,7 +45,7 @@ public class FieldUtil {
 		ENDGAME_START(30),
 		;
 
-		private double time;
+		public double time;
 
 		private HubShiftTime(double time) {
 			this.time = time;
@@ -141,7 +141,7 @@ public class FieldUtil {
 	 * 25sec: Shift 4: Auto win enabled
 	 * 30sec: EndGame: both enabled
 	 */
-	public static String isHubActive() {
+	public static String getHubState() {
 		double matchTime = (int) DriverStation.getMatchTime();
 
 		if (DriverStation.isAutonomous())
@@ -185,9 +185,13 @@ public class FieldUtil {
 		return enabledColor;
 	}
 
+	public static boolean isHubActive() {
+		return getHubState() == enabledColor;
+	}
+
 	public static int shift = 0;
 
-	public static String isHubActive(int shift) {
+	public static String getHubState(int shift) {
 
 		if (shift == 0)
 			return nextEnabledColor;

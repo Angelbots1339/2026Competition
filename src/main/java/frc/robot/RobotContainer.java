@@ -190,7 +190,7 @@ public class RobotContainer {
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
 	public String isHubActive() {
-		return FieldUtil.isHubActive();
+		return FieldUtil.getHubState();
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Shift Time Left")
@@ -201,7 +201,7 @@ public class RobotContainer {
 
 	@Logged(importance = Importance.CRITICAL, name = "Shift Next")
 	public String shiftNext() {
-		return FieldUtil.isHubActive(FieldUtil.shift + 1);
+		return FieldUtil.getHubState(FieldUtil.shift + 1);
 	}
 
 	@Logged(importance = Importance.CRITICAL)

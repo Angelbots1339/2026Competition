@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Seconds;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.lib.util.Leds;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -48,6 +49,7 @@ public class Shoot extends Command {
 	@Override
 	public void initialize() {
 		cycleTimer.reset();
+		Leds.getInstance().shooting = true;
 	}
 
 	public void runShoot(double shooterRPS, double spinnerRPS, Supplier<Boolean> runKicker) {
@@ -84,6 +86,7 @@ public class Shoot extends Command {
 		shooter.disableKicker();
 		shooter.disableShooter();
 		indexer.disable();
+		Leds.getInstance().shooting = true;
 	}
 
 	@Override
