@@ -66,11 +66,16 @@ public class Robot extends TimedRobot {
 		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 3", m_robotContainer.isShift3()), 0.5);
 		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 4", m_robotContainer.isShift4()), 0.5);
 		addPeriodic(() -> DogLog.forceNt.log("Match/Is Endgame", m_robotContainer.isEndGame()), 0.5);
+
+		disabledTimer.restart();
 	}
 
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
+		if (DriverStation.isEnabled()) {
+			disabledTimer.reset();
+		}
 		if (RobotController.getBatteryVoltage() < lowBatteryVoltage
 				&& disabledTimer.hasElapsed(lowBatteryDisabledTime)) {
 			Leds.getInstance().lowbattery = true;
