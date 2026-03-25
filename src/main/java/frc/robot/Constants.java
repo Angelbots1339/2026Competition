@@ -234,7 +234,7 @@ public class Constants {
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
 						.withMotionMagicCruiseVelocity(0.6)
-						.withMotionMagicAcceleration(2));
+						.withMotionMagicAcceleration(4));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
 				.withKP(0)
