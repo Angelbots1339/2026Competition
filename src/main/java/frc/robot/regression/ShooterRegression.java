@@ -20,13 +20,22 @@ import frc.robot.subsystems.Swerve;
 public class ShooterRegression {
 	public static final double[][] shotRPSData = {
 			// distance (m), shooter rps, spinner rps
-			{ 1.828, 41, 3 },
-			{ 2.315, 43, 7 },
-			{ 2.614, 43, 10 },
-			{ 2.953, 45, 10 },
-			{ 3.317, 45.5, 12 },
-			{ 3.550, 46, 13 },
-			{ 3.90, 47, 15 },
+			// { 1.828, 41, 3 },
+			// { 2.315, 43, 7 },
+			// { 2.614, 43, 10 },
+			// { 2.953, 45, 10 },
+			// { 3.317, 45.5, 12 },
+			// { 3.550, 46, 13 },
+			// { 3.90, 47, 15 },
+
+			// new shooter data
+			{ 2.132, 38, 5.5 },
+			{ 2.57, 38.5, 7.5 },
+			{ 2.99, 40, 9.5 },
+			{ 3.53, 42, 10 },
+			{ 3.97, 43, 12 },
+			{ 4.60, 44, 14 },
+			{ 5.12, 46, 16 },
 	};
 
 	public static final double[][] tofData = {

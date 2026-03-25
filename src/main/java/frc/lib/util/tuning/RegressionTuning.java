@@ -41,6 +41,7 @@ public class RegressionTuning {
 	private static Trigger addData = baseTrigger.and(() -> tester.getXButton());
 	private static Trigger clearData = baseTrigger.and(() -> tester.getStartButton());
 	private static Trigger drive = baseTrigger.and(() -> tester.getLeftTriggerAxis() > 0.2);
+	private static Trigger resetGyro = baseTrigger.and(() -> tester.getBButton());
 
 	private static Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-tester.getLeftY(), true)
 			* RobotConstants.maxSpeed.in(MetersPerSecond);
@@ -57,6 +58,7 @@ public class RegressionTuning {
 		DogLog.tunable("Regression/Shooter RPS Target", 0.0, target -> shooterRPS = target);
 		DogLog.tunable("Regression/Spinner RPS Target", 0.0, target -> spinnerRPS = target);
 
+		resetGyro.onTrue(swerve.run(swerve::resetGyro));
 		pidtuneFOC.whileTrue(Commands.parallel(
 				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> {
 

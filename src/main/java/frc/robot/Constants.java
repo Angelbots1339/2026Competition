@@ -164,7 +164,7 @@ public class Constants {
 
 		public static TalonFXConfiguration KickerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(Amps.of(60))
+						.withStatorCurrentLimit(Amps.of(80))
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
@@ -186,18 +186,18 @@ public class Constants {
 		public static final int intakeMotorId = 22;
 		public static final int deployMotorId = 24;
 
-		public static final Angle DeployedAngle = Degrees.of(0);
-		public static final Angle RetractedAngle = Degrees.of(111);
+		public static final Angle DeployedAngle = Degrees.of(7);
+		public static final Angle RetractedAngle = Degrees.of(116);
 		public static final double IntakeVoltage = 7;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
 		// angle of COM in CAD
 		// public static final Angle MinAngle = Degrees.of(6.76);
-		// public static final Angle MaxAngle = Degrees.of(144.978);
+		// public static final Angle MaxAngle = Degrees.of(144.975);
 
-		public static final Angle MinAngle = Degrees.of(0);
-		public static final Angle MaxAngle = Degrees.of(111);
+		public static final Angle MinAngle = Degrees.of(6.76);
+		public static final Angle MaxAngle = Degrees.of(116.977);
 		public static final Angle IntakeAngleTolerence = Degrees.of(10);
 
 		// Recalc:
