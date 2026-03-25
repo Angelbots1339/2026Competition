@@ -43,7 +43,7 @@ public class Leds extends SubsystemBase {
 	public boolean isHubActive = false;
 	public boolean shooting = false;
 
-	private Frequency DSAttachFreq = Hertz.of(2);
+	private Frequency DSAttachFreq = Hertz.of(1);
 	private Frequency hubAlertFreq = Hertz.of(3);
 	private Time allianceBreathPeriod = Seconds.of(3);
 
@@ -139,7 +139,7 @@ public class Leds extends SubsystemBase {
 	public void strobe(Section section, Color color, Frequency frequency) {
 		m_candle.setControl(
 				new StrobeAnimation(section.start(), section.end()).withColor(new RGBWColor(color))
-						.withFrameRate(frequency));
+						.withFrameRate(frequency.times(2)));
 	}
 
 	private void breath(Section section, Color c1, Color c2, Time duration) {
