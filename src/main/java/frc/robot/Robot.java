@@ -50,6 +50,8 @@ public class Robot extends TimedRobot {
 		Epilogue.configure(config -> {
 			// config.minimumImportance = Importance.CRITICAL;
 			config.minimumImportance = Importance.DEBUG;
+			// TODO: this probably doesn't work as fms takes time to attach and isn't at
+			// robot boot
 			if (DriverStation.isFMSAttached())
 				config.backend = new FileBackend(DataLogManager.getLog());
 		});
@@ -80,6 +82,13 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledInit() {
+		CommandScheduler.getInstance().schedule(
+				Commands.runOnce(() -> {
+					if (!DriverStation.isFMSAttached()) {
+						FieldUtil.allianceWithActiveHubStart = null;
+						FieldUtil.shift = 0;
+					}
+				}));
 	}
 
 	@Override
