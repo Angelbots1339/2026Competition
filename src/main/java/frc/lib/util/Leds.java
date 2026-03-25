@@ -7,6 +7,7 @@
 package frc.lib.util;
 
 import static edu.wpi.first.units.Units.Hertz;
+import static edu.wpi.first.units.Units.Seconds;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import com.ctre.phoenix6.signals.RGBWColor;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Frequency;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
@@ -43,7 +45,7 @@ public class Leds extends SubsystemBase {
 
 	private Frequency DSAttachFreq = Hertz.of(2);
 	private Frequency hubAlertFreq = Hertz.of(3);
-	private Frequency allianceBreathFrequency = Hertz.of(1);
+	private Time allianceBreathPeriod = Seconds.of(3);
 
 	private double waveExponent = 0.4;
 
@@ -90,14 +92,13 @@ public class Leds extends SubsystemBase {
 						if (!driverStation_attached)
 							strobe(Section.TOP, Color.kRed, DSAttachFreq);
 						else
-							solid(Color.kRed);
-
+							breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
 						break;
 					case Blue:
 						if (!driverStation_attached)
 							strobe(Section.TOP, Color.kBlue, DSAttachFreq);
 						else
-							solid(Color.kBlue);
+							breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
 						break;
 					default:
 						if (!driverStation_attached)
@@ -141,8 +142,8 @@ public class Leds extends SubsystemBase {
 						.withFrameRate(frequency));
 	}
 
-	private void breath(Section section, Color c1, Color c2, double duration) {
-		breath(section, c1, c2, duration, Timer.getFPGATimestamp());
+	private void breath(Section section, Color c1, Color c2, Time duration) {
+		breath(section, c1, c2, duration.in(Seconds), Timer.getFPGATimestamp());
 	}
 
 	private void breath(Section section, Color c1, Color c2, double duration, double timestamp) {
