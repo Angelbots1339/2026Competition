@@ -19,6 +19,7 @@ import com.ctre.phoenix6.signals.RGBWColor;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Frequency;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
@@ -29,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Leds extends SubsystemBase {
 
 	private static Leds instance;
-	private final CANdle m_candle = new CANdle(1);
+	private final CANdle m_candle = new CANdle(60);
 
 	private Alliance alliance = Alliance.Blue;
 
@@ -56,6 +57,8 @@ public class Leds extends SubsystemBase {
 
 	// Effect configs
 	private double waveExponent = 0.4;
+
+	private AddressableLEDBuffer buf = new AddressableLEDBuffer(stripLength);
 
 	public static Leds getInstance() {
 		if (instance == null) {
@@ -126,6 +129,14 @@ public class Leds extends SubsystemBase {
 
 		if (hubStateChangeAlert)
 			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
+
+		setLEDS();
+	}
+
+	public void setLEDS() {
+		for (int i = 0; i < stripLength; i++) {
+			m_candle.setControl(new SolidColor(i, i + 1).withColor(new RGBWColor(buf.getLED(i))));
+		}
 	}
 
 	public void solid(Color color) {
@@ -141,13 +152,18 @@ public class Leds extends SubsystemBase {
 	}
 
 	public void solid(int start, int end, Color color) {
-		m_candle.setControl(new SolidColor(start, end).withColor(new RGBWColor(color)));
+		for (int i = start; i < end; i++) {
+			buf.setRGB(i, (int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255));
+		}
 	}
 
 	public void strobe(Section section, Color color, Frequency frequency) {
-		m_candle.setControl(
-				new StrobeAnimation(section.start(), section.end()).withColor(new RGBWColor(color))
-						.withFrameRate(frequency.times(2)));
+		strobe(section, color, 1.0 / frequency.in(Hertz));
+	}
+
+	public void strobe(Section section, Color color, double duration) {
+		boolean on = ((Timer.getFPGATimestamp() % duration) / duration) > 0.5;
+		solid(section, on ? color : Color.kBlack);
 	}
 
 	private void breath(Section section, Color c1, Color c2, Time duration) {
