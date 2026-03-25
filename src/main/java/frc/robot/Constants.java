@@ -77,7 +77,7 @@ public class Constants {
 		public static final TrapezoidProfile.Constraints angularDriveConstraints = new TrapezoidProfile.Constraints(
 				10,
 				20);
-		public static final Angle angularDriveTolerance = Degrees.of(5); // Degrees
+		public static final Angle angularDriveTolerance = Degrees.of(3); // Degrees
 
 		public static final double pidToPoseKP = 2.5;
 		public static final double pidToPoseKD = 0;
