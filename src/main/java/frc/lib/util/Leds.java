@@ -43,10 +43,18 @@ public class Leds extends SubsystemBase {
 	public boolean isHubActive = false;
 	public boolean shooting = false;
 
+	// LED Config
 	private Frequency DSAttachFreq = Hertz.of(1);
 	private Frequency hubAlertFreq = Hertz.of(3);
 	private Time allianceBreathPeriod = Seconds.of(3);
 
+	private int waveSlowCycleLength = 25;
+	private Time waveSlowPeriod = Seconds.of(3.0);
+
+	private int stripesLongLength = 10;
+	private Time stripesFastPeriod = Seconds.of(0.5);
+
+	// Effect configs
 	private double waveExponent = 0.4;
 
 	public static Leds getInstance() {
@@ -78,7 +86,7 @@ public class Leds extends SubsystemBase {
 			hubStateChangeAlert = false;
 		}
 
-		wave(Section.TOP, defaultColor, Color.kBlack, 25, 3.0);
+		wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength, waveSlowPeriod);
 
 		if (DriverStation.isDisabled()) {
 			if (lowbattery || criticallyLowbattery) {
@@ -104,7 +112,7 @@ public class Leds extends SubsystemBase {
 						if (!driverStation_attached)
 							strobe(Section.TOP, defaultColor, DSAttachFreq);
 						else
-							wave(Section.TOP, defaultColor, Color.kBlack, 25, 3.0);
+							wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength, waveSlowPeriod);
 						break;
 				}
 			}
@@ -113,7 +121,7 @@ public class Leds extends SubsystemBase {
 		}
 
 		if (shooting) {
-			stripes(Section.TOP, List.of(Color.kBlack, Color.kRed), 10, 0.5);
+			stripes(Section.TOP, List.of(Color.kBlack, Color.kRed), stripesLongLength, stripesFastPeriod);
 		}
 
 		if (hubStateChangeAlert)
@@ -155,6 +163,10 @@ public class Leds extends SubsystemBase {
 		solid(section, new Color(red, green, blue));
 	}
 
+	private void wave(Section section, Color c1, Color c2, double cycleLength, Time period) {
+		wave(section, c1, c2, cycleLength, period.in(Seconds));
+	}
+
 	private void wave(Section section, Color c1, Color c2, double cycleLength, double duration) {
 		double x = (1 - ((Timer.getFPGATimestamp() % duration) / duration)) * 2.0 * Math.PI;
 		double xDiffPerLed = (2.0 * Math.PI) / cycleLength;
@@ -174,6 +186,10 @@ public class Leds extends SubsystemBase {
 				solid(i, new Color(red, green, blue));
 			}
 		}
+	}
+
+	private void stripes(Section section, List<Color> colors, int length, Time period) {
+		stripes(section, colors, length, period.in(Seconds));
 	}
 
 	private void stripes(Section section, List<Color> colors, int length, double duration) {
