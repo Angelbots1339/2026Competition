@@ -108,22 +108,14 @@ public class Leds extends SubsystemBase {
 			}
 		}
 
+		solid(isHubActive ? Color.kGreen : Color.kRed);
+
 		if (shooting) {
 			stripes(Section.TOP, List.of(Color.kBlack, Color.kRed), 10, 0.5);
 		}
 
-		if (isHubActive) {
-			solid(Color.kGreen);
-			if (hubStateChangeAlert)
-				strobe(Section.TOP, Color.kGreen, hubAlertFreq);
-		}
-
-		if (!isHubActive) {
-			solid(Color.kRed);
-			if (hubStateChangeAlert)
-				strobe(Section.TOP, Color.kRed, hubAlertFreq);
-		}
-
+		if (hubStateChangeAlert)
+			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
 	}
 
 	public void solid(Color color) {
