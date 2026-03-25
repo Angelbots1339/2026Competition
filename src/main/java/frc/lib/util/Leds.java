@@ -106,9 +106,9 @@ public class Leds extends SubsystemBase {
 						break;
 				}
 			}
+		} else {
+			solid(isHubActive ? Color.kGreen : Color.kRed);
 		}
-
-		solid(isHubActive ? Color.kGreen : Color.kRed);
 
 		if (shooting) {
 			stripes(Section.TOP, List.of(Color.kBlack, Color.kRed), 10, 0.5);
