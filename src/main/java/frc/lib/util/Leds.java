@@ -21,6 +21,7 @@ import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -34,7 +35,9 @@ public class Leds extends SubsystemBase {
 	private Alliance alliance = Alliance.Blue;
 
 	private Color defaultColor = Color.kGold;
-	static final int stripLength = 38;
+	static final int unlitStripLength = 9;
+	// static final int stripLength = 38;
+	static final int stripLength = unlitStripLength + 6;
 
 	public boolean lowbattery = false;
 	public boolean criticallyLowbattery = false;
@@ -72,6 +75,9 @@ public class Leds extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		for (int i = 0; i < buf.getLength(); i++) {
+			SmartDashboard.putString("LEDS/" + i, buf.getLED(i).toHexString());
+		}
 		if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
 			driverStation_attached = true;
 		}
@@ -125,7 +131,10 @@ public class Leds extends SubsystemBase {
 		// }
 		//
 		// if (shooting) {
-		stripes(Section.TOP, List.of(Color.kBlack, Color.kRed), stripesLongLength, stripesFastPeriod, true);
+		// stripes(Section.TOP, List.of(Color.kBlack, Color.kRed), stripesLongLength,
+		// stripesFastPeriod, true);
+		solid(Section.RIGHT, Color.kRed);
+		// solid(Section.RIGHT, Color.kRed);
 		// }
 
 		// if(hubStateChangeAlert)
@@ -138,7 +147,7 @@ public class Leds extends SubsystemBase {
 
 	public void setLEDS() {
 		for (int i = 0; i < stripLength; i++) {
-			m_candle.setControl(new SolidColor(i, i + 1).withColor(new RGBWColor(buf.getLED(i))));
+			m_candle.setControl(new SolidColor(i, i).withColor(new RGBWColor(buf.getLED(i))));
 		}
 	}
 
@@ -221,9 +230,6 @@ public class Leds extends SubsystemBase {
 
 	private void stripes(Section section, List<Color> colors, int length, double duration, boolean reverse) {
 		int offset = (int) (Timer.getFPGATimestamp() % duration / duration * length * colors.size());
-		if (reverse) {
-			offset = section.end() - offset - length * colors.size();
-		}
 		for (int i = section.start(); i < section.end(); i++) {
 			int colorIndex = (int) (Math.floor((double) (i - offset) / length) + colors.size()) % colors.size();
 			colorIndex = colors.size() - 1 - colorIndex;
@@ -240,11 +246,11 @@ public class Leds extends SubsystemBase {
 		private int start() {
 			switch (this) {
 				case TOP:
-					return 8;
+					return unlitStripLength;
 				case LEFT:
-					return 8;
+					return unlitStripLength;
 				case RIGHT:
-					return (stripLength - 8) / 2;
+					return unlitStripLength + (stripLength - unlitStripLength) / 2;
 				default:
 					return 0;
 			}
@@ -255,7 +261,7 @@ public class Leds extends SubsystemBase {
 				case TOP:
 					return stripLength;
 				case LEFT:
-					return (stripLength - 8) / 2;
+					return unlitStripLength + (stripLength - unlitStripLength) / 2;
 				case RIGHT:
 					return stripLength;
 				default:
