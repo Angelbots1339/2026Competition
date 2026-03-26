@@ -88,48 +88,52 @@ public class Leds extends SubsystemBase {
 			hubStateChangeAlert = false;
 		}
 
-		wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength, waveSlowPeriod);
+		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
+		// waveSlowPeriod);
+		//
+		// if (DriverStation.isDisabled()) {
+		// if (lowbattery || criticallyLowbattery) {
+		// if (criticallyLowbattery)
+		// strobe(Section.TOP, Color.kOrange, Hertz.of(3));
+		// else
+		// solid(Color.kOrange);
+		// } else {
+		// switch (alliance) {
+		// case Red:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, Color.kRed, DSAttachFreq);
+		// else
+		// breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
+		// break;
+		// case Blue:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, Color.kBlue, DSAttachFreq);
+		// else
+		// breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
+		// break;
+		// default:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, defaultColor, DSAttachFreq);
+		// else
+		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
+		// waveSlowPeriod);
+		// break;
+		// }
+		// }
+		// } else {
+		// solid(isHubActive ? Color.kGreen : Color.kRed);
+		// }
+		//
+		// if (shooting) {
+		stripes(Section.TOP, List.of(Color.kBlack, Color.kRed), stripesLongLength, stripesFastPeriod, true);
+		// }
 
-		if (DriverStation.isDisabled()) {
-			if (lowbattery || criticallyLowbattery) {
-				if (criticallyLowbattery)
-					strobe(Section.TOP, Color.kOrange, Hertz.of(3));
-				else
-					solid(Color.kOrange);
-			} else {
-				switch (alliance) {
-					case Red:
-						if (!driverStation_attached)
-							strobe(Section.TOP, Color.kRed, DSAttachFreq);
-						else
-							breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
-						break;
-					case Blue:
-						if (!driverStation_attached)
-							strobe(Section.TOP, Color.kBlue, DSAttachFreq);
-						else
-							breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
-						break;
-					default:
-						if (!driverStation_attached)
-							strobe(Section.TOP, defaultColor, DSAttachFreq);
-						else
-							wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength, waveSlowPeriod);
-						break;
-				}
-			}
-		} else {
-			solid(isHubActive ? Color.kGreen : Color.kRed);
-		}
-
-		if (shooting) {
-			stripes(Section.TOP, List.of(Color.kBlack, Color.kRed), stripesLongLength, stripesFastPeriod);
-		}
-
-		if (hubStateChangeAlert)
-			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
+		// if(hubStateChangeAlert)
+		//
+		// strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
 
 		setLEDS();
+
 	}
 
 	public void setLEDS() {
@@ -207,22 +211,40 @@ public class Leds extends SubsystemBase {
 		stripes(section, colors, length, period.in(Seconds));
 	}
 
+	private void stripes(Section section, List<Color> colors, int length, Time period, boolean reverse) {
+		stripes(section, colors, length, period.in(Seconds), reverse);
+	}
+
 	private void stripes(Section section, List<Color> colors, int length, double duration) {
+		stripes(section, colors, length, duration, false);
+	}
+
+	private void stripes(Section section, List<Color> colors, int length, double duration, boolean reverse) {
 		int offset = (int) (Timer.getFPGATimestamp() % duration / duration * length * colors.size());
+		if (reverse) {
+			offset = section.end() - offset - length * colors.size();
+		}
 		for (int i = section.start(); i < section.end(); i++) {
 			int colorIndex = (int) (Math.floor((double) (i - offset) / length) + colors.size()) % colors.size();
 			colorIndex = colors.size() - 1 - colorIndex;
 			solid(i, colors.get(colorIndex));
 		}
+
 	}
 
 	private static enum Section {
+		LEFT,
+		RIGHT,
 		TOP;
 
 		private int start() {
 			switch (this) {
 				case TOP:
 					return 8;
+				case LEFT:
+					return 8;
+				case RIGHT:
+					return (stripLength - 8) / 2;
 				default:
 					return 0;
 			}
@@ -231,6 +253,10 @@ public class Leds extends SubsystemBase {
 		private int end() {
 			switch (this) {
 				case TOP:
+					return stripLength;
+				case LEFT:
+					return (stripLength - 8) / 2;
+				case RIGHT:
 					return stripLength;
 				default:
 					return 0;
