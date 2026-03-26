@@ -11,6 +11,10 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import java.util.List;
 
+import com.ctre.phoenix6.controls.SolidColor;
+import com.ctre.phoenix6.hardware.CANdle;
+import com.ctre.phoenix6.signals.RGBWColor;
+
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Frequency;
 import edu.wpi.first.units.measure.Time;
@@ -25,12 +29,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Leds extends SubsystemBase {
 
 	private static Leds instance;
-	// private final CANdle m_candle = new CANdle(60);
+	private final CANdle m_candle = new CANdle(60);
 
 	private Alliance alliance = Alliance.Blue;
 
 	private Color defaultColor = Color.kGold;
-	static final int stripLength = 20;
+	static final int stripLength = 38;
 
 	public boolean lowbattery = false;
 	public boolean criticallyLowbattery = false;
@@ -130,13 +134,12 @@ public class Leds extends SubsystemBase {
 
 	public void setLEDS() {
 		for (int i = 0; i < stripLength; i++) {
-			// m_candle.setControl(new SolidColor(i, i + 1).withColor(new
-			// RGBWColor(buf.getLED(i))));
+			m_candle.setControl(new SolidColor(i, i + 1).withColor(new RGBWColor(buf.getLED(i))));
 		}
 	}
 
 	public void solid(Color color) {
-		solid(0, 20, color);
+		solid(0, stripLength, color);
 	}
 
 	public void solid(int i, Color color) {
@@ -219,7 +222,7 @@ public class Leds extends SubsystemBase {
 		private int start() {
 			switch (this) {
 				case TOP:
-					return 0;
+					return 8;
 				default:
 					return 0;
 			}
