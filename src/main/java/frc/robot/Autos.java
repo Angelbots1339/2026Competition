@@ -30,6 +30,7 @@ public class Autos {
 
 	SendableChooser<String> firstPathChooser = new SendableChooser<String>();
 	SendableChooser<String> secondPathChooser = new SendableChooser<String>();
+	SendableChooser<String> thirdPathChooser = new SendableChooser<String>();
 	SendableChooser<String> sideChooser = new SendableChooser<String>();
 
 	Supplier<Command> shoot = null;
@@ -73,14 +74,19 @@ public class Autos {
 			secondPathChooser.addOption(path, path);
 		}
 
+		thirdPathChooser.addOption(ChoreoTraj.NeutralShoot_SendToNeutral.name(),
+				ChoreoTraj.NeutralShoot_SendToNeutral.name());
+
 		sideChooser.setDefaultOption("Left", "Left");
 		sideChooser.addOption("Right", "Right");
 
 		firstPathChooser.setDefaultOption("None", "");
 		secondPathChooser.setDefaultOption("None", "");
+		thirdPathChooser.setDefaultOption("None", "");
 
 		SmartDashboard.putData("Auto/First Path", firstPathChooser);
 		SmartDashboard.putData("Auto/Second Path", secondPathChooser);
+		SmartDashboard.putData("Auto/Third Path", thirdPathChooser);
 		SmartDashboard.putData("Auto/Side", sideChooser);
 	}
 
@@ -88,17 +94,21 @@ public class Autos {
 		final var routine = factory.newRoutine("Custom Auto");
 		AutoTrajectory startTraj = routine.trajectory("");
 		AutoTrajectory secondTraj = routine.trajectory("");
+		AutoTrajectory thirdTraj = routine.trajectory("");
 
 		boolean needsFlip = sideChooser.getSelected() == "Right";
 		String firstPath = firstPathChooser.getSelected();
 		String secondPath = secondPathChooser.getSelected();
+		String thirdPath = thirdPathChooser.getSelected();
 
 		if (needsFlip) {
 			startTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(firstPath).getRawTrajectory()));
 			secondTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(secondPath).getRawTrajectory()));
+			thirdTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(thirdPath).getRawTrajectory()));
 		} else {
 			startTraj = routine.trajectory(firstPath);
 			secondTraj = routine.trajectory(secondPath);
+			thirdTraj = routine.trajectory(thirdPath);
 		}
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
@@ -111,7 +121,7 @@ public class Autos {
 		startTraj.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(secondTraj.cmd());
 		secondTraj.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(secondTraj.cmd());
+		routine.observe(shoot2::isFinished).onTrue(thirdTraj.cmd());
 
 		return routine;
 	}
