@@ -133,13 +133,11 @@ public class Leds extends SubsystemBase {
 		}
 
 		if (shooting) {
-			stripes(Section.LEFT, List.of(Color.kWhite, Color.kBlack), stripesLongLength, stripesFastPeriod, true);
-			stripes(Section.RIGHT, List.of(Color.kWhite, Color.kBlack), stripesLongLength, stripesFastPeriod);
+			pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(0.35));
+			pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(0.35), true);
 		}
 		if (hubStateChangeAlert)
 			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
-
-		pulse(Section.TOP, Color.kWhite, 5, Seconds.of(0.5));
 
 		setLEDS();
 	}
@@ -241,6 +239,10 @@ public class Leds extends SubsystemBase {
 		pulse(section, pulse, Color.kBlack, length, period, false);
 	}
 
+	private void pulse(Section section, Color pulse, int length, Time period, boolean reverse) {
+		pulse(section, pulse, Color.kBlack, length, period, reverse);
+	}
+
 	private void pulse(Section section, Color pulse, Color bg, int length, Time period) {
 		pulse(section, pulse, bg, length, period, false);
 	}
@@ -253,10 +255,17 @@ public class Leds extends SubsystemBase {
 		int offset = (int) (globalTimer % duration / duration * (section.end() - section.start()));
 		for (int i = 0; i < section.end() - section.start(); i++) {
 			boolean isPulse = (int) (Math.floor((double) (i - offset) / (double) length)) == 0;
-			if (isPulse)
-				solid(section.start() + i, pulse);
-			else
-				solid(section.start() + i, bg);
+			if (reverse) {
+				if (isPulse)
+					solid(section.end() - 1 - i, pulse);
+				else
+					solid(section.end() - 1 - i, bg);
+			} else {
+				if (isPulse)
+					solid(section.start() + i, pulse);
+				else
+					solid(section.start() + i, bg);
+			}
 		}
 	}
 
