@@ -36,7 +36,7 @@ public class Leds extends SubsystemBase {
 
 	private Color defaultColor = Color.kGold;
 	static final int unlitStripLength = 9;
-	static final int stripLength = 38;
+	static final int stripLength = 39;
 
 	public boolean lowbattery = false;
 	public boolean criticallyLowbattery = false;
