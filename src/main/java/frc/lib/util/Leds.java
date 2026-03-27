@@ -21,7 +21,6 @@ import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,8 +36,7 @@ public class Leds extends SubsystemBase {
 
 	private Color defaultColor = Color.kGold;
 	static final int unlitStripLength = 9;
-	// static final int stripLength = 38;
-	static final int stripLength = unlitStripLength + 6;
+	static final int stripLength = 38;
 
 	public boolean lowbattery = false;
 	public boolean criticallyLowbattery = false;
@@ -72,6 +70,9 @@ public class Leds extends SubsystemBase {
 
 	private Leds() {
 		System.out.println("[Init] Creating LEDs");
+		for (int i = 0; i < buf.getLength(); i++) {
+			buf.setLED(i, Color.kBlack);
+		}
 	}
 
 	@Override
@@ -130,20 +131,18 @@ public class Leds extends SubsystemBase {
 		}
 
 		if (shooting) {
-			stripes(Section.TOP, List.of(Color.kRed, Color.kBlack), stripesLongLength, stripesFastPeriod);
+			stripes(Section.LEFT, List.of(Color.kWhite, Color.kBlack), stripesLongLength, stripesFastPeriod, true);
+			stripes(Section.RIGHT, List.of(Color.kWhite, Color.kBlack), stripesLongLength, stripesFastPeriod);
 		}
-
 		if (hubStateChangeAlert)
 			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
 
 		setLEDS();
-		for (int i = 0; i < buf.getLength(); i++) {
-			SmartDashboard.putString("LEDS/" + i, buf.getLED(i).toHexString());
-		}
 	}
 
 	public void setLEDS() {
 		for (int i = 0; i < stripLength; i++) {
+			// TODO: maybe optimize?
 			m_candle.setControl(new SolidColor(i, i).withColor(new RGBWColor(buf.getLED(i))));
 		}
 	}
@@ -214,15 +213,23 @@ public class Leds extends SubsystemBase {
 	}
 
 	private void stripes(Section section, List<Color> colors, int length, Time period) {
-		stripes(section, colors, length, period.in(Seconds));
+		stripes(section, colors, length, period.in(Seconds), false);
 	}
 
-	private void stripes(Section section, List<Color> colors, int length, double duration) {
+	private void stripes(Section section, List<Color> colors, int length, Time period, boolean reverse) {
+		stripes(section, colors, length, period.in(Seconds), reverse);
+	}
+
+	private void stripes(Section section, List<Color> colors, int length, double duration, boolean reverse) {
 		int offset = (int) (globalTimer % duration / duration * length * colors.size());
-		for (int i = section.start(); i < section.end(); i++) {
-			int colorIndex = (int) (Math.floor((double) (i - offset) / length) + colors.size()) % colors.size();
+		for (int i = 0; i < section.end() - section.start(); i++) {
+			int colorIndex = (int) (Math.floor((double) (i - offset) / (double) length) + colors.size())
+					% colors.size();
 			colorIndex = colors.size() - 1 - colorIndex;
-			solid(i, colors.get(colorIndex));
+			if (reverse)
+				solid(section.end() - 1 - i, colors.get(colorIndex));
+			else
+				solid(section.start() + i, colors.get(colorIndex));
 		}
 	}
 
