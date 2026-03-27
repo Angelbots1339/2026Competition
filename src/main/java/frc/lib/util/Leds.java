@@ -35,6 +35,8 @@ public class Leds extends SubsystemBase {
 	private Alliance alliance = Alliance.Blue;
 
 	private Color defaultColor = Color.kGold;
+	private Color lowBatteryColor = new Color(255, 46, 1);
+
 	static final int unlitStripLength = 9;
 	static final int stripLength = 39;
 
@@ -102,9 +104,9 @@ public class Leds extends SubsystemBase {
 		if (DriverStation.isDisabled()) {
 			if (lowbattery || criticallyLowbattery) {
 				if (criticallyLowbattery)
-					strobe(Section.TOP, Color.kOrange, Hertz.of(3));
+					strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
 				else
-					solid(Color.kOrange);
+					solid(lowBatteryColor);
 			} else {
 				switch (alliance) {
 					case Red:
