@@ -80,6 +80,8 @@ public class Leds extends SubsystemBase {
 		globalTimer = Timer.getFPGATimestamp();
 		if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
 			driverStation_attached = true;
+		} else {
+			driverStation_attached = false;
 		}
 		if (DriverStation.getAlliance().isPresent()) {
 			alliance = DriverStation.getAlliance().get();
