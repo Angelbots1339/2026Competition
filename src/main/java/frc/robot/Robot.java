@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.concurrent.CompletableFuture;
+
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.epilogue.Epilogue;
@@ -12,18 +14,29 @@ import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.epilogue.logging.FileBackend;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.util.FieldUtil;
+import frc.lib.util.Leds;
 import frc.lib.util.tuning.TuningManager;
 
 @Logged(importance = Importance.CRITICAL)
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand = Commands.none();
+	@SuppressWarnings("unused")
+	private final Leds led = Leds.getInstance();
 
 	private final RobotContainer m_robotContainer;
+
+	private static final double lowBatteryVoltage = 12.3;
+	private static final double criticallyLowBatteryVoltage = 12;
+	private static final double lowBatteryDisabledTime = 1.5;
+
+	private final Timer disabledTimer = new Timer();
 
 	public Robot() {
 		m_robotContainer = new RobotContainer();
@@ -37,6 +50,8 @@ public class Robot extends TimedRobot {
 		Epilogue.configure(config -> {
 			// config.minimumImportance = Importance.CRITICAL;
 			config.minimumImportance = Importance.DEBUG;
+			// TODO: this probably doesn't work as fms takes time to attach and isn't at
+			// robot boot
 			if (DriverStation.isFMSAttached())
 				config.backend = new FileBackend(DataLogManager.getLog());
 		});
@@ -51,15 +66,34 @@ public class Robot extends TimedRobot {
 		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 3", m_robotContainer.isShift3()), 0.5);
 		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 4", m_robotContainer.isShift4()), 0.5);
 		addPeriodic(() -> DogLog.forceNt.log("Match/Is Endgame", m_robotContainer.isEndGame()), 0.5);
+
+		disabledTimer.restart();
 	}
 
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
+		if (DriverStation.isEnabled()) {
+			disabledTimer.reset();
+		}
+		if (RobotController.getBatteryVoltage() < lowBatteryVoltage
+				&& disabledTimer.hasElapsed(lowBatteryDisabledTime)) {
+			Leds.getInstance().lowbattery = true;
+
+			if (RobotController.getBatteryVoltage() < criticallyLowBatteryVoltage)
+				Leds.getInstance().criticallyLowbattery = true;
+		}
 	}
 
 	@Override
 	public void disabledInit() {
+		CommandScheduler.getInstance().schedule(
+				Commands.runOnce(() -> {
+					if (!DriverStation.isFMSAttached()) {
+						FieldUtil.allianceWithActiveHubStart = null;
+						FieldUtil.shift = 0;
+					}
+				}));
 	}
 
 	@Override

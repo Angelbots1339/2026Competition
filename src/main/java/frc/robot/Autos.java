@@ -7,8 +7,11 @@ import java.util.function.Supplier;
 
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -24,6 +27,10 @@ import frc.robot.subsystems.Swerve;
 
 public class Autos {
 	private AutoFactory factory;
+
+	SendableChooser<String> firstPathChooser = new SendableChooser<String>();
+	SendableChooser<String> secondPathChooser = new SendableChooser<String>();
+	SendableChooser<String> sideChooser = new SendableChooser<String>();
 
 	Supplier<Command> shoot = null;
 
@@ -47,38 +54,98 @@ public class Autos {
 		factory.bind("IntakeStart", intake.runIntake());
 		factory.bind("IntakeStop", intake.stopIntake());
 		CommandScheduler.getInstance().schedule(factory.trajectoryCmd("").ignoringDisable(true));
+
+		publishAutoPaths();
+	}
+
+	public void publishAutoPaths() {
+		String[] startPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
+				.filter(traj -> traj.startsWith("Bump") || traj.startsWith("Hub")).toArray(String[]::new);
+
+		String[] secondPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
+				.filter(traj -> !(traj.startsWith("Bump") || traj.startsWith("Hub"))).toArray(String[]::new);
+
+		for (String path : startPaths) {
+			firstPathChooser.addOption(path, path);
+		}
+
+		for (String path : secondPaths) {
+			secondPathChooser.addOption(path, path);
+		}
+
+		sideChooser.setDefaultOption("Left", "Left");
+		sideChooser.addOption("Right", "Right");
+
+		firstPathChooser.setDefaultOption("None", "");
+		secondPathChooser.setDefaultOption("None", "");
+
+		SmartDashboard.putData("Auto/First Path", firstPathChooser);
+		SmartDashboard.putData("Auto/Second Path", secondPathChooser);
+		SmartDashboard.putData("Auto/Side", sideChooser);
+	}
+
+	public AutoRoutine customAuto() {
+		final var routine = factory.newRoutine("Custom Auto");
+		AutoTrajectory startTraj = routine.trajectory("");
+		AutoTrajectory secondTraj = routine.trajectory("");
+
+		boolean needsFlip = sideChooser.getSelected() == "Right";
+		String firstPath = firstPathChooser.getSelected();
+		String secondPath = secondPathChooser.getSelected();
+
+		if (needsFlip) {
+			startTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(firstPath).getRawTrajectory()));
+			secondTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(secondPath).getRawTrajectory()));
+		} else {
+			startTraj = routine.trajectory(firstPath);
+			secondTraj = routine.trajectory(secondPath);
+		}
+
+		final var shoot1 = shoot.get().withTimeout(3.5);
+		final var shoot2 = shoot.get().withTimeout(3.5);
+
+		routine.active().onTrue(
+				Commands.sequence(
+						startTraj.resetOdometry(),
+						startTraj.cmd()));
+		startTraj.done().onTrue(shoot1);
+		routine.observe(shoot1::isFinished).onTrue(secondTraj.cmd());
+		secondTraj.done().onTrue(shoot2);
+		routine.observe(shoot2::isFinished).onTrue(secondTraj.cmd());
+
+		return routine;
 	}
 
 	public Command hubDepotAuto() {
 		final var routine = factory.newRoutine("Hub Depot");
-		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
+		final var hubToDepot = routine.trajectory(ChoreoTraj.Hub_To_Depot.name());
 
 		final var shoot1 = shoot.get().withTimeout(5);
 
 		routine.active().onTrue(
 				Commands.sequence(
-						hubToDepotShoot.resetOdometry(),
-						hubToDepotShoot.cmd()));
-		hubToDepotShoot.done().onTrue(shoot1);
+						hubToDepot.resetOdometry(),
+						hubToDepot.cmd()));
+		hubToDepot.done().onTrue(shoot1);
 
 		return routine.cmd();
 	}
 
 	public Command hubDepotNeutralAuto() {
 		final var routine = factory.newRoutine("Hub Depot Neutral");
-		final var hubToDepotShoot = routine.trajectory(ChoreoTraj.HubtoDepotShoot.name());
-		final var DepotShootNeutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
+		final var hubToDepot = routine.trajectory(ChoreoTraj.Hub_To_Depot.name());
+		final var NeutralShootNeutral2 = routine.trajectory(ChoreoTraj.Shoot_To_Neutral.name());
 
 		final var shoot1 = shoot.get().withTimeout(4.5);
 		final var shoot2 = shoot.get().withTimeout(5);
 
 		routine.active().onTrue(
 				Commands.sequence(
-						hubToDepotShoot.resetOdometry(),
-						hubToDepotShoot.cmd()));
-		hubToDepotShoot.done().onTrue(shoot1);
-		routine.observe(shoot1::isFinished).onTrue(DepotShootNeutral2.cmd());
-		DepotShootNeutral2.done().onTrue(shoot2);
+						hubToDepot.resetOdometry(),
+						hubToDepot.cmd()));
+		hubToDepot.done().onTrue(shoot1);
+		routine.observe(shoot1::isFinished).onTrue(NeutralShootNeutral2.cmd());
+		NeutralShootNeutral2.done().onTrue(shoot2);
 
 		return routine.cmd();
 	}
@@ -86,9 +153,10 @@ public class Autos {
 	public AutoRoutine rightNeutral() {
 		final var routine = factory.newRoutine("Right Neutral");
 		final var bumpToNeutral = routine
-				.trajectory(flipTrajectoryX(routine.trajectory(ChoreoTraj.BumpToNeutral.name()).getRawTrajectory()));
+				.trajectory(
+						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_Neutral.name()).getRawTrajectory()));
 		final var leftNeutral2 = routine.trajectory(
-				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.Shoot_To_Neutral.name()).getRawTrajectory()));
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
@@ -105,13 +173,13 @@ public class Autos {
 		return routine;
 	}
 
-	public AutoRoutine rightNeutralFarm() {
-		final var routine = factory.newRoutine("Right Neutral Famr");
+	public AutoRoutine rightNeutralSweep() {
+		final var routine = factory.newRoutine("Right Neutral Sweep");
 		final var bumpToNeutral = routine
 				.trajectory(
-						flipTrajectoryX(routine.trajectory(ChoreoTraj.BumpToNeutralFarm.name()).getRawTrajectory()));
+						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_Neutral.name()).getRawTrajectory()));
 		final var leftNeutral2 = routine.trajectory(
-				flipTrajectoryX(routine.trajectory(ChoreoTraj.DepotShootNeutral2.name()).getRawTrajectory()));
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name()).getRawTrajectory()));
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
@@ -130,8 +198,8 @@ public class Autos {
 
 	public AutoRoutine leftNeutral() {
 		final var routine = factory.newRoutine("Left Neutral");
-		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutral.name());
-		final var neutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
+		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_Neutral.name());
+		final var neutral2 = routine.trajectory(ChoreoTraj.Shoot_To_Neutral.name());
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
@@ -148,10 +216,10 @@ public class Autos {
 		return routine;
 	}
 
-	public AutoRoutine leftNeutralFarm() {
-		final var routine = factory.newRoutine("Left Neutral Farm");
-		final var bumpToNeutral = routine.trajectory(ChoreoTraj.BumpToNeutralFarm.name());
-		final var neutral2 = routine.trajectory(ChoreoTraj.DepotShootNeutral2.name());
+	public AutoRoutine leftNeutralSweep() {
+		final var routine = factory.newRoutine("Left Neutral Sweep");
+		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_Neutral.name());
+		final var neutral2 = routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name());
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);

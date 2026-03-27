@@ -1,5 +1,5 @@
+// spotless:off
 package frc.lib.choreo;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Units;
@@ -12,29 +12,24 @@ import edu.wpi.first.units.measure.*;
  */
 public final class ChoreoVars {
     public static final LinearVelocity BumpPassVel = Units.MetersPerSecond.of(2);
-    public static final Distance FieldHeight = Units.Meters.of(8.069);
+    public static final Distance FieldHeight = Units.Meters.of(8.069326);
+    public static final LinearVelocity IntakeVelocity = Units.MetersPerSecond.of(1);
 
     public static final class Poses {
-        public static final Pose2d DepotIntake = new Pose2d(0.75, 5.002, Rotation2d.fromRadians(2.234));
-        public static final Pose2d DepotIntakeEnd = new Pose2d(0.75, 6.71, Rotation2d.fromRadians(2.234));
-        public static final Pose2d DepotShoot = new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588));
-        public static final Pose2d FirstBumpStart = new Pose2d(3.74, 5.822, Rotation2d.fromRadians(-1.571));
-        public static final Pose2d HubLeftStart = new Pose2d(3.565, 5.04, Rotation2d.fromRadians(1.571));
-        public static final Pose2d LeftBumpStart = new Pose2d(3.634, 5.909, Rotation2d.kZero);
-        public static final Pose2d LeftNeutralFarmStop = new Pose2d(7.764, 5.01, Rotation2d.fromRadians(-1.571));
-        public static final Pose2d LeftNeutralStart = new Pose2d(7.764, 6.841, Rotation2d.fromRadians(-1.571));
-        public static final Pose2d LeftNeutralStop = new Pose2d(7.764, 5.531, Rotation2d.fromRadians(-1.571));
-        public static final Pose2d LeftStart = new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142));
-        public static final Pose2d LeftTowerAlign = new Pose2d(1.07, 4.916, Rotation2d.fromRadians(1.571));
-        public static final Pose2d OutpostIntakeEnd = new Pose2d(0.708, 0.721, Rotation2d.fromRadians(3.142));
-        public static final Pose2d OutpostIntakeStart = new Pose2d(2, 0.721, Rotation2d.fromRadians(3.142));
-        public static final Pose2d OutpostShoot = new Pose2d(2.322, 2.672, Rotation2d.fromRadians(0.588));
-        public static final Pose2d RightTowerAlign = new Pose2d(1.079, 2.593, Rotation2d.fromRadians(-1.571));
-        public static final Pose2d SecondBumpStart = new Pose2d(5.603, 5.562, Rotation2d.fromRadians(-1.571));
-        public static final Pose2d SecondBumpStop = new Pose2d(3.651, 5.562, Rotation2d.fromRadians(-1.571));
-
-        private Poses() {}
+        public static final Pose2d DepotIntake = new Pose2d(0.75, 5.0020819, Rotation2d.fromRadians(2.2340214));
+        public static final Pose2d DepotIntakeEnd = new Pose2d(0.75, 6.71, Rotation2d.fromRadians(2.2340214));
+        public static final Pose2d DepotShoot = new Pose2d(2.3219109, 5.3971691, Rotation2d.fromRadians(-0.5880032));
+        public static final Pose2d FirstBumpStart = new Pose2d(3.7402761, 5.8216133, Rotation2d.fromRadians(-1.5707963));
+        public static final Pose2d HubLeftStart = new Pose2d(3.5654624, 5.0397372, Rotation2d.fromRadians(1.5707963));
+        public static final Pose2d HubSweepStart = new Pose2d(5.8285224, 3.8, Rotation2d.fromRadians(1.5707963));
+        public static final Pose2d LeftBumpStart = new Pose2d(3.6429224, 6.0623264, Rotation2d.fromRadians(-1.5707963));
+        public static final Pose2d NeutralFarmStart = new Pose2d(8.0050018, 7.2233806, Rotation2d.fromRadians(-1.5707963));
+        public static final Pose2d NeutralFarmStop = new Pose2d(8.0050018, 4.75, Rotation2d.fromRadians(-1.5707963));
+        public static final Pose2d NeutralShoot = new Pose2d(3.4846222, 5.4584527, Rotation2d.fromRadians(2.2367652));
+        public static final Pose2d NeutralStart = new Pose2d(7.7759833, 6.36747, Rotation2d.fromRadians(-1.5707963));
+        public static final Pose2d NeutralStop = new Pose2d(7.7759833, 5.0096962, Rotation2d.fromRadians(-1.5707963));
+        public static final Pose2d SecondBumpStart = new Pose2d(5.6032634, 5.562218, Rotation2d.fromRadians(-1.5707963));
+        public static final Pose2d SecondBumpStop = new Pose2d(3.65137, 5.562218, Rotation2d.fromRadians(-1.5707963));
     }
-
-    private ChoreoVars() {}
 }
+// spotless:on

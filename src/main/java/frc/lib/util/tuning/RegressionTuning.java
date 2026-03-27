@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -40,6 +41,7 @@ public class RegressionTuning {
 	private static Trigger addData = baseTrigger.and(() -> tester.getXButton());
 	private static Trigger clearData = baseTrigger.and(() -> tester.getStartButton());
 	private static Trigger drive = baseTrigger.and(() -> tester.getLeftTriggerAxis() > 0.2);
+	private static Trigger resetGyro = baseTrigger.and(() -> tester.getBButton());
 
 	private static Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-tester.getLeftY(), true)
 			* RobotConstants.maxSpeed.in(MetersPerSecond);
@@ -56,8 +58,14 @@ public class RegressionTuning {
 		DogLog.tunable("Regression/Shooter RPS Target", 0.0, target -> shooterRPS = target);
 		DogLog.tunable("Regression/Spinner RPS Target", 0.0, target -> spinnerRPS = target);
 
+		resetGyro.onTrue(swerve.run(swerve::resetGyro));
 		pidtuneFOC.whileTrue(Commands.parallel(
-				swerve.pointDriveCommand(leftY, leftX, () -> FieldUtil.getHubCenter(), () -> true),
+				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> {
+
+					return Rotation2d.fromRadians(
+							FieldUtil.getHubCenter().getTranslation().minus(swerve.getPose().getTranslation())
+									.getAngle().plus(Rotation2d.k180deg).getRadians());
+				}, () -> true)),
 				new Shoot(shooter, indexer, intake, () -> shooterRPS, () -> spinnerRPS, swerve::atRotation)));
 
 		regression.whileTrue(new RegressionShoot(swerve, shooter, indexer, intake, leftY, leftX));

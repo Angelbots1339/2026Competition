@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Hertz;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -58,7 +59,7 @@ public class Intake extends SubsystemBase {
 
 	public void setIntakeAngle(Angle angle) {
 		targetAngle = angle;
-		deployMotor.setControl(new MotionMagicVoltage(angle));
+		deployMotor.setControl(new MotionMagicVoltage(angle).withUpdateFreqHz(Hertz.of(1000)));
 	}
 
 	public Angle getIntakeAngle() {

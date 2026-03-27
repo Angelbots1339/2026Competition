@@ -51,7 +51,7 @@ public class Constants {
 	}
 
 	public class ShootingConstants {
-		public static final Time IntakeRetractTime = Seconds.of(1);
+		public static final Time IntakeRetractTime = Seconds.of(3);
 		public static final Time IntakeRetractOffsetTime = Seconds.of(0.5);
 	}
 
@@ -77,7 +77,7 @@ public class Constants {
 		public static final TrapezoidProfile.Constraints angularDriveConstraints = new TrapezoidProfile.Constraints(
 				10,
 				20);
-		public static final Angle angularDriveTolerance = Degrees.of(5); // Degrees
+		public static final Angle angularDriveTolerance = Degrees.of(3); // Degrees
 
 		public static final double pidToPoseKP = 2.5;
 		public static final double pidToPoseKD = 0;
@@ -94,10 +94,12 @@ public class Constants {
 		public static final double maxUsableRange = 4.0;
 
 		// limelight location
-		// forward = 0.020m
+		// forward = -0.077m
 		// left = 0.000m
-		// top = 0.654m
-		// pitch = 12deg
+		// top = 0.657m
+		// pitch = 15deg
+		// roll = 180deg
+		// yaw = 180deg
 
 		public static double calcStdDev(double metersFromTarget) {
 			return 0.08 * Math.pow(metersFromTarget, 2);
@@ -115,8 +117,9 @@ public class Constants {
 	}
 
 	public class ShooterConstants {
-		public static final int LeaderPort = 30;
-		public static final int FollowerPort = 32;
+		public static final int Shooter1Port = 30;
+		public static final int Shooter2Port = 32;
+		public static final int Shooter3Port = 38;
 		public static final int SpinnerPort = 34;
 		public static final int KickerPort = 36;
 
@@ -133,10 +136,10 @@ public class Constants {
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(24.0 / 30.0))
+						.withSensorToMechanismRatio(24.0 / 18.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
-						.withKP(13)
+						.withKP(18)
 						.withKI(0)
 						.withKV(0.049)
 						.withKS(6.3));
@@ -149,9 +152,9 @@ public class Constants {
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.CounterClockwise_Positive))
+						.withInverted(InvertedValue.Clockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(18.0 / 36.0))
+						.withSensorToMechanismRatio(24.0 / 12.0))
 				.withSlot0(new Slot0Configs()
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign)
 						.withKP(6)
@@ -161,43 +164,40 @@ public class Constants {
 
 		public static TalonFXConfiguration KickerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(Amps.of(60))
+						.withStatorCurrentLimit(Amps.of(80))
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
-						.withInverted(InvertedValue.Clockwise_Positive))
+						.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(36.0 / 18.0))
+						.withSensorToMechanismRatio(24.0 / 18.0))
 				.withSlot0(new Slot0Configs()
-						.withKP(8)
+						.withKP(13)
 						.withKI(0)
 						.withKD(0)
 						.withKS(18)
 						.withKV(0));
 
 		public static VelocityTorqueCurrentFOC velocityTorqueControl = new VelocityTorqueCurrentFOC(0)
-				.withUpdateFreqHz(Hertz.of(100));
+				.withUpdateFreqHz(Hertz.of(1000));
 	}
 
 	public class IntakeConstants {
 		public static final int intakeMotorId = 22;
 		public static final int deployMotorId = 24;
 
-		public static final Angle DeployedAngle = Degrees.of(20);
-		public static final Angle RetractedAngle = Degrees.of(115);
-		public static final Angle AgitationAngle = Degrees.of(50);
-		public static final Angle AgitationAngle2 = Degrees.of(70);
+		public static final Angle DeployedAngle = Degrees.of(7);
+		public static final Angle RetractedAngle = Degrees.of(116);
 		public static final double IntakeVoltage = 7;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
 		// angle of COM in CAD
-		// public static final Angle MinAngle = Degrees.of(15.5614);
-		// public static final Angle MaxAngle = Degrees.of(115.558);
+		// public static final Angle MinAngle = Degrees.of(6.76);
+		// public static final Angle MaxAngle = Degrees.of(144.975);
 
-		public static final Angle MinAngle = Degrees.of(25);
-		public static final Angle MaxAngle = Degrees.of(115.558);
-
+		public static final Angle MinAngle = Degrees.of(6.76);
+		public static final Angle MaxAngle = Degrees.of(116.977);
 		public static final Angle IntakeAngleTolerence = Degrees.of(10);
 
 		// Recalc:
@@ -234,7 +234,7 @@ public class Constants {
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
 						.withMotionMagicCruiseVelocity(0.6)
-						.withMotionMagicAcceleration(2));
+						.withMotionMagicAcceleration(4));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
 				.withKP(0)
@@ -272,11 +272,10 @@ public class Constants {
 		public static final TalonFXConfiguration IndexerMotorConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
 						.withStatorCurrentLimit(80)
-						.withSupplyCurrentLowerTime(50)
 						.withStatorCurrentLimitEnable(true)
-						.withSupplyCurrentLimitEnable(true))
+						.withSupplyCurrentLimitEnable(false))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(24.0 / 24.0))
+						.withSensorToMechanismRatio(16.0 / 16.0))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withInverted(InvertedValue.CounterClockwise_Positive)
 						.withNeutralMode(NeutralModeValue.Coast))
@@ -287,6 +286,5 @@ public class Constants {
 						.withKS(0)
 						.withKV(0)
 						.withStaticFeedforwardSign(StaticFeedforwardSignValue.UseVelocitySign));
-
 	}
 }

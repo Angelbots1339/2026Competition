@@ -1,4 +1,4 @@
-
+// spotless:off
 package frc.lib.choreo;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -6,10 +6,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.Map;
 import java.util.OptionalInt;
 
-// If these imports cause errors because you're not using ChoreoLib,
-// turn off "Include ChoreoLib-specific Helpers" in Choreo's codegen settings.
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+// If the 2 imports above cause errors because you're not using ChoreoLib,
+// turn off "Include ChoreoLib-specific Helpers" in Choreo's codegen settings.
 
 /**
  * A class containing the name, start pose, end pose, and total time of every Choreo trajectory.
@@ -24,44 +24,52 @@ public record ChoreoTraj(
     Pose2d initialPoseBlue,
     Pose2d endPoseBlue
 ) {
-    public static final ChoreoTraj BumpToNeutral = new ChoreoTraj(
-	    "BumpToNeutral",
-	    OptionalInt.empty(),
-	    6.04088,
-	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142)),
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588))
-	);
-	public static final ChoreoTraj BumpToNeutralFarm = new ChoreoTraj(
-	    "BumpToNeutralFarm",
-	    OptionalInt.empty(),
-	    7.21151,
-	    new Pose2d(3.643, 6.062, Rotation2d.fromRadians(-3.142)),
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588))
-	);
-	public static final ChoreoTraj DepotShootNeutral2 = new ChoreoTraj(
-	    "DepotShootNeutral2",
-	    OptionalInt.empty(),
-	    7.23023,
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588)),
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.588))
-	);
-	public static final ChoreoTraj HubtoDepotShoot = new ChoreoTraj(
-	    "HubtoDepotShoot",
-	    OptionalInt.empty(),
-	    4.87894,
-	    new Pose2d(3.565, 5.04, Rotation2d.fromRadians(1.571)),
-	    new Pose2d(2.322, 5.397, Rotation2d.fromRadians(-0.748))
-	);
+    public static final ChoreoTraj Bump_To_Neutral = new ChoreoTraj(
+        "Bump_To_Neutral",
+        OptionalInt.empty(),
+        5.49882,
+        new Pose2d(3.64292, 6.06233, Rotation2d.fromRadians(-1.5708)),
+        new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677))
+    );
+    public static final ChoreoTraj Bump_To_NeutralSweep = new ChoreoTraj(
+        "Bump_To_NeutralSweep",
+        OptionalInt.empty(),
+        5.14634,
+        new Pose2d(3.64292, 6.06233, Rotation2d.fromRadians(-1.5708)),
+        new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677))
+    );
+    public static final ChoreoTraj Hub_To_Depot = new ChoreoTraj(
+        "Hub_To_Depot",
+        OptionalInt.empty(),
+        4.48374,
+        new Pose2d(3.56546, 5.03974, Rotation2d.fromRadians(1.5708)),
+        new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677))
+    );
+    public static final ChoreoTraj Shoot_To_HubSweep = new ChoreoTraj(
+        "Shoot_To_HubSweep",
+        OptionalInt.empty(),
+        5.08796,
+        new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677)),
+        new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677))
+    );
+    public static final ChoreoTraj Shoot_To_Neutral = new ChoreoTraj(
+        "Shoot_To_Neutral",
+        OptionalInt.empty(),
+        4.79442,
+        new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677)),
+        new Pose2d(3.48462, 5.45845, Rotation2d.fromRadians(2.23677))
+    );
 
     /**
      * A map between trajectory names and their corresponding data.
      * This allows for trajectory data to be looked up with strings during runtime.
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
-    	Map.entry("BumpToNeutral", BumpToNeutral),
-		Map.entry("BumpToNeutralFarm", BumpToNeutralFarm),
-		Map.entry("DepotShootNeutral2", DepotShootNeutral2),
-		Map.entry("HubtoDepotShoot", HubtoDepotShoot)
+        Map.entry("Bump_To_Neutral", Bump_To_Neutral),
+        Map.entry("Bump_To_NeutralSweep", Bump_To_NeutralSweep),
+        Map.entry("Hub_To_Depot", Hub_To_Depot),
+        Map.entry("Shoot_To_HubSweep", Shoot_To_HubSweep),
+        Map.entry("Shoot_To_Neutral", Shoot_To_Neutral)
     );
 
     /**
@@ -88,3 +96,4 @@ public record ChoreoTraj(
         return routine.trajectory(this.name);
     }
 }
+// spotless:on

@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import frc.lib.util.Leds;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Indexer;
@@ -33,6 +34,7 @@ public class RegressionShoot extends Shoot {
 	@Override
 	public void initialize() {
 		aligned = false;
+		Leds.getInstance().shooting = true;
 	}
 
 	@Override

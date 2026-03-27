@@ -93,13 +93,15 @@ public class RobotContainer {
 		configureBindings();
 		configureControllerAlerts();
 		setDefaultCommands();
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 		autoChooser.addCmd("Hub Depot", autos::hubDepotAuto);
 		autoChooser.addCmd("Hub Depot Neutral", autos::hubDepotNeutralAuto);
 		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
 		autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
-		autoChooser.addRoutine("Right 2x Neutral Farm", autos::rightNeutralFarm);
-		autoChooser.addRoutine("Left 2x Neutral Farm", autos::leftNeutralFarm);
-		SmartDashboard.putData("Auto Chooser", autoChooser);
+		autoChooser.addRoutine("Right Neutral Sweep", autos::rightNeutralSweep);
+		autoChooser.addRoutine("Left Neutral Sweep", autos::leftNeutralSweep);
+		autoChooser.addRoutine("Custom Auto", autos::customAuto);
+		autoChooser.select("Nothing");
 	}
 
 	private void configureBindings() {
@@ -107,7 +109,7 @@ public class RobotContainer {
 		resetGyro.onTrue(Commands.runOnce(() -> swerve.resetGyro(), swerve));
 		pass.whileTrue(Commands.parallel(
 				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
-						() -> FieldUtil.isRedAlliance() ? Rotation2d.kZero : Rotation2d.k180deg, () -> true)),
+						() -> FieldUtil.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero, () -> true)),
 				new Shoot(shooter, indexer, intake, () -> 45.0, () -> 45.0, swerve::atRotation)));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosestBumpAngle(),
@@ -188,7 +190,7 @@ public class RobotContainer {
 
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
 	public String isHubActive() {
-		return FieldUtil.isHubActive();
+		return FieldUtil.getHubState();
 	}
 
 	@Logged(importance = Importance.CRITICAL, name = "Shift Time Left")
@@ -199,7 +201,7 @@ public class RobotContainer {
 
 	@Logged(importance = Importance.CRITICAL, name = "Shift Next")
 	public String shiftNext() {
-		return FieldUtil.isHubActive(FieldUtil.shift + 1);
+		return FieldUtil.getHubState(FieldUtil.shift + 1);
 	}
 
 	@Logged(importance = Importance.CRITICAL)

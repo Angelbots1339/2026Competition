@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.Radians;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,13 +20,29 @@ import frc.robot.subsystems.Swerve;
 public class ShooterRegression {
 	public static final double[][] shotRPSData = {
 			// distance (m), shooter rps, spinner rps
-			{ 1.828, 41, 3 },
-			{ 2.315, 43, 7 },
-			{ 2.614, 43, 10 },
-			{ 2.953, 45, 10 },
-			{ 3.317, 45.5, 12 },
-			{ 3.550, 46, 13 },
-			{ 3.90, 47, 15 },
+			// { 1.828, 41, 3 },
+			// { 2.315, 43, 7 },
+			// { 2.614, 43, 10 },
+			// { 2.953, 45, 10 },
+			// { 3.317, 45.5, 12 },
+			// { 3.550, 46, 13 },
+			// { 3.90, 47, 15 },
+
+			// new shooter data
+			// { 2.132, 38, 5.5 },
+			// { 2.57, 38.5, 7.5 },
+			// { 2.99, 40, 9.5 },
+			// { 3.53, 42, 10 },
+			// { 3.97, 43, 12 },
+			// { 4.60, 44, 14 },
+			// { 5.12, 46, 16 },
+
+			// new new shooter data
+			{ 2.19, 37, 4 },
+			{ 2.73, 38, 7 },
+			{ 3.64, 40, 10 },
+			{ 4.23, 42, 12 },
+			{ 5.38, 45, 15 },
 	};
 
 	public static final double[][] tofData = {
@@ -91,7 +106,7 @@ public class ShooterRegression {
 		double[] rps = shotRPSMap.get(lookaheadDistance);
 
 		Rotation2d angle = Rotation2d.fromRadians(
-				target.minus(lookaheadPose).getAngle().getRadians());
+				target.minus(lookaheadPose).getAngle().plus(Rotation2d.k180deg).getRadians());
 
 		Angle maxAngleError = Radians
 				.of(Math.abs(Math.atan2(FieldUtil.hubRadius.in(Meters), distance)));
