@@ -139,6 +139,8 @@ public class Leds extends SubsystemBase {
 		if (hubStateChangeAlert)
 			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
 
+		pulse(Section.TOP, Color.kWhite, 5, Seconds.of(0.5));
+
 		setLEDS();
 	}
 
@@ -232,6 +234,29 @@ public class Leds extends SubsystemBase {
 				solid(section.end() - 1 - i, colors.get(colorIndex));
 			else
 				solid(section.start() + i, colors.get(colorIndex));
+		}
+	}
+
+	private void pulse(Section section, Color pulse, int length, Time period) {
+		pulse(section, pulse, Color.kBlack, length, period, false);
+	}
+
+	private void pulse(Section section, Color pulse, Color bg, int length, Time period) {
+		pulse(section, pulse, bg, length, period, false);
+	}
+
+	private void pulse(Section section, Color pulse, Color bg, int length, Time period, boolean reverse) {
+		pulse(section, pulse, bg, length, period.in(Seconds), reverse);
+	}
+
+	private void pulse(Section section, Color pulse, Color bg, int length, double duration, boolean reverse) {
+		int offset = (int) (globalTimer % duration / duration * (section.end() - section.start()));
+		for (int i = 0; i < section.end() - section.start(); i++) {
+			boolean isPulse = (int) (Math.floor((double) (i - offset) / (double) length)) == 0;
+			if (isPulse)
+				solid(section.start() + i, pulse);
+			else
+				solid(section.start() + i, bg);
 		}
 	}
 
