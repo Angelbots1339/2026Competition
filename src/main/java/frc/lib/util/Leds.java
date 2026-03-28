@@ -35,8 +35,10 @@ public class Leds extends SubsystemBase {
 	private Alliance alliance = Alliance.Blue;
 
 	private Color defaultColor = Color.kGold;
+	private Color lowBatteryColor = new Color(255, 46, 1);
+
 	static final int unlitStripLength = 9;
-	static final int stripLength = 38;
+	static final int stripLength = 39;
 
 	public boolean lowbattery = false;
 	public boolean criticallyLowbattery = false;
@@ -80,6 +82,8 @@ public class Leds extends SubsystemBase {
 		globalTimer = Timer.getFPGATimestamp();
 		if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
 			driverStation_attached = true;
+		} else {
+			driverStation_attached = false;
 		}
 		if (DriverStation.getAlliance().isPresent()) {
 			alliance = DriverStation.getAlliance().get();
@@ -100,9 +104,9 @@ public class Leds extends SubsystemBase {
 		if (DriverStation.isDisabled()) {
 			if (lowbattery || criticallyLowbattery) {
 				if (criticallyLowbattery)
-					strobe(Section.TOP, Color.kOrange, Hertz.of(3));
+					strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
 				else
-					solid(Color.kOrange);
+					solid(lowBatteryColor);
 			} else {
 				switch (alliance) {
 					case Red:
@@ -131,8 +135,8 @@ public class Leds extends SubsystemBase {
 		}
 
 		if (shooting) {
-			stripes(Section.LEFT, List.of(Color.kWhite, Color.kBlack), stripesLongLength, stripesFastPeriod, true);
-			stripes(Section.RIGHT, List.of(Color.kWhite, Color.kBlack), stripesLongLength, stripesFastPeriod);
+			pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(0.35));
+			pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(0.35), true);
 		}
 		if (hubStateChangeAlert)
 			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
@@ -230,6 +234,40 @@ public class Leds extends SubsystemBase {
 				solid(section.end() - 1 - i, colors.get(colorIndex));
 			else
 				solid(section.start() + i, colors.get(colorIndex));
+		}
+	}
+
+	private void pulse(Section section, Color pulse, int length, Time period) {
+		pulse(section, pulse, Color.kBlack, length, period, false);
+	}
+
+	private void pulse(Section section, Color pulse, int length, Time period, boolean reverse) {
+		pulse(section, pulse, Color.kBlack, length, period, reverse);
+	}
+
+	private void pulse(Section section, Color pulse, Color bg, int length, Time period) {
+		pulse(section, pulse, bg, length, period, false);
+	}
+
+	private void pulse(Section section, Color pulse, Color bg, int length, Time period, boolean reverse) {
+		pulse(section, pulse, bg, length, period.in(Seconds), reverse);
+	}
+
+	private void pulse(Section section, Color pulse, Color bg, int length, double duration, boolean reverse) {
+		int offset = (int) (globalTimer % duration / duration * (section.end() - section.start()));
+		for (int i = 0; i < section.end() - section.start(); i++) {
+			boolean isPulse = (int) (Math.floor((double) (i - offset) / (double) length)) == 0;
+			if (reverse) {
+				if (isPulse)
+					solid(section.end() - 1 - i, pulse);
+				else
+					solid(section.end() - 1 - i, bg);
+			} else {
+				if (isPulse)
+					solid(section.start() + i, pulse);
+				else
+					solid(section.start() + i, bg);
+			}
 		}
 	}
 
