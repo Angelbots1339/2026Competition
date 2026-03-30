@@ -13,6 +13,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -46,6 +47,16 @@ import frc.robot.Constants.VisionConstants;
 
 @Logged
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
+	// expose for epilogue
+	@Logged(name = "Modules/Front Left")
+	private SwerveModule frontLeftModule = this.getModule(0);
+	@Logged(name = "Modules/Front Right")
+	private SwerveModule frontRightModule = this.getModule(1);
+	@Logged(name = "Modules/Back Left")
+	private SwerveModule backLeftModule = this.getModule(2);
+	@Logged(name = "Modules/Back Right")
+	private SwerveModule backRightModule = this.getModule(3);
+
 	@NotLogged
 	private static final double kSimLoopPeriod = 0.004; // 4 ms
 	@NotLogged

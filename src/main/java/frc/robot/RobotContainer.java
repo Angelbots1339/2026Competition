@@ -43,7 +43,6 @@ public class RobotContainer {
 	// private XboxController operater = new
 	// XboxController(DriverConstants.OperatorPort);
 
-	@Logged(importance = Importance.CRITICAL)
 	private Swerve swerve = TunerConstants.swerve;
 	private Indexer indexer = new Indexer();
 	private Intake intake = new Intake();
