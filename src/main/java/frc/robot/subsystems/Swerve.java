@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Radians;
@@ -13,6 +14,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -33,6 +35,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -46,6 +49,16 @@ import frc.robot.Constants.VisionConstants;
 
 @Logged
 public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> implements Subsystem {
+	// expose for epilogue
+	@Logged(name = "Modules/Front Left")
+	private SwerveModule frontLeftModule = this.getModule(0);
+	@Logged(name = "Modules/Front Right")
+	private SwerveModule frontRightModule = this.getModule(1);
+	@Logged(name = "Modules/Back Left")
+	private SwerveModule backLeftModule = this.getModule(2);
+	@Logged(name = "Modules/Back Right")
+	private SwerveModule backRightModule = this.getModule(3);
+
 	@NotLogged
 	private static final double kSimLoopPeriod = 0.004; // 4 ms
 	@NotLogged
@@ -380,5 +393,15 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		DogLog.tunable("Swerve/Angular PID/kD", angularDrivePID.getI(), d -> angularDrivePID.setD(d));
 		DogLog.tunable("Swerve/Angular PID/kS", angularDriveFF.getKs(), s -> angularDriveFF.setKs(s));
 		DogLog.tunable("Swerve/Angular PID/kV", angularDriveFF.getKv(), v -> angularDriveFF.setKv(v));
+	}
+
+	public double getTotalStatorCurrent() {
+		double total = 0.0;
+		for (var module : getModules()) {
+			total += module.getDriveMotor().getStatorCurrent().getValueAsDouble();
+			total += module.getSteerMotor().getStatorCurrent().getValueAsDouble();
+		}
+
+		return total;
 	}
 }
