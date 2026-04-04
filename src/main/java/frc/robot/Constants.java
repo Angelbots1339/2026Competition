@@ -53,6 +53,8 @@ public class Constants {
 	public class ShootingConstants {
 		public static final Time IntakeRetractTime = Seconds.of(3);
 		public static final Time IntakeRetractOffsetTime = Seconds.of(0.5);
+		public static final double MaximumOtherCurrentDraw = 100; // TODO: TUNE THIS THIS IS MAXIMUM STATOR CURRENT FROM
+																	// SWERVE DURING ROTATION
 	}
 
 	public class RobotConstants {

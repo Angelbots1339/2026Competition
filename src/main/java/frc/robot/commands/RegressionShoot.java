@@ -4,7 +4,9 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.lib.util.Leds;
+import frc.robot.Constants.ShootingConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Indexer;
@@ -47,8 +49,10 @@ public class RegressionShoot extends Shoot {
 				params.maxAngleError());
 		boolean areSticksMoving = Math.hypot(x.get(), y.get()) > 0;
 
-		runShoot(params.shooterRPS(), params.spinnerRPS(),
-				swerve::atRotation);
+		if (swerve.getTotalStatorCurrent() <= ShootingConstants.MaximumOtherCurrentDraw) {
+			runShoot(params.shooterRPS(), params.spinnerRPS(),
+					swerve::atRotation);
+		}
 
 		if (aligned == false) {
 			Leds.getInstance().shooterMisaligned = true;
