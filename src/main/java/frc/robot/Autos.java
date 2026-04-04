@@ -10,6 +10,7 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -116,7 +117,8 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		CommandScheduler.getInstance().schedule(startTraj.resetOdometry().repeatedly().ignoringDisable(true));
+		CommandScheduler.getInstance().schedule(
+				startTraj.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
 
 		routine.active().onTrue(startTraj.cmd());
 		startTraj.done().onTrue(shoot1);
@@ -133,7 +135,8 @@ public class Autos {
 
 		final var shoot1 = shoot.get().withTimeout(5);
 
-		CommandScheduler.getInstance().schedule(hubToDepot.resetOdometry().repeatedly().ignoringDisable(true));
+		CommandScheduler.getInstance().schedule(
+				hubToDepot.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
 		routine.active().onTrue(hubToDepot.cmd());
 		hubToDepot.done().onTrue(shoot1);
 
@@ -149,7 +152,8 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(4.5);
 		final var shoot2 = shoot.get().withTimeout(5);
 
-		CommandScheduler.getInstance().schedule(hubToDepot.resetOdometry().repeatedly().ignoringDisable(true));
+		CommandScheduler.getInstance().schedule(
+				hubToDepot.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
 		routine.active().onTrue(hubToDepot.cmd());
 		hubToDepot.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(NeutralShootNeutral2.cmd());
@@ -172,7 +176,8 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		CommandScheduler.getInstance().schedule(bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true));
+		CommandScheduler.getInstance().schedule(
+				bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
 
 		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
@@ -196,7 +201,8 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		CommandScheduler.getInstance().schedule(bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true));
+		CommandScheduler.getInstance().schedule(
+				bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
 		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
@@ -215,7 +221,8 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		CommandScheduler.getInstance().schedule(bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true));
+		CommandScheduler.getInstance().schedule(
+				bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
 		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(neutral2.cmd());
@@ -234,7 +241,8 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		CommandScheduler.getInstance().schedule(bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true));
+		CommandScheduler.getInstance().schedule(
+				bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
 		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(neutral2.cmd());
