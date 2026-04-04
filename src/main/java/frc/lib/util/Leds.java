@@ -106,7 +106,7 @@ public class Leds extends SubsystemBase {
 				if (criticallyLowbattery)
 					strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
 				else
-					solid(lowBatteryColor);
+					solid(Section.TOP, lowBatteryColor);
 			} else {
 				switch (alliance) {
 					case Red:
@@ -131,7 +131,7 @@ public class Leds extends SubsystemBase {
 				}
 			}
 		} else {
-			solid(isHubActive ? Color.kGreen : Color.kRed);
+			solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
 		}
 
 		if (shooting) {
