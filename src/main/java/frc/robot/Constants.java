@@ -233,7 +233,7 @@ public class Constants {
 								.withReverseSoftLimitThreshold(MinAngle))
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
-						.withMotionMagicCruiseVelocity(0.6)
+						.withMotionMagicCruiseVelocity(0.3)
 						.withMotionMagicAcceleration(4));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
