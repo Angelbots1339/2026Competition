@@ -51,7 +51,7 @@ public class Constants {
 	}
 
 	public class ShootingConstants {
-		public static final Time IntakeRetractTime = Seconds.of(3);
+		public static final Time IntakeRetractTime = Seconds.of(2);
 		public static final Time IntakeRetractOffsetTime = Seconds.of(0.5);
 	}
 
@@ -164,7 +164,7 @@ public class Constants {
 
 		public static TalonFXConfiguration KickerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(Amps.of(80))
+						.withStatorCurrentLimit(Amps.of(100))
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
