@@ -51,7 +51,7 @@ public class Constants {
 	}
 
 	public class ShootingConstants {
-		public static final Time IntakeRetractTime = Seconds.of(2);
+		public static final Time IntakeRetractTime = Seconds.of(1);
 		public static final Time IntakeRetractOffsetTime = Seconds.of(0.5);
 	}
 
@@ -124,7 +124,7 @@ public class Constants {
 		public static final int KickerPort = 36;
 
 		public static final double shootRPS = 41.5;
-		public static final double KickerRPS = 30.0;
+		public static final double KickerRPS = 20.0;
 		public static final double rpsTolerence = 1;
 
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
@@ -233,7 +233,7 @@ public class Constants {
 								.withReverseSoftLimitThreshold(MinAngle))
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
-						.withMotionMagicCruiseVelocity(0.3)
+						.withMotionMagicCruiseVelocity(0.5)
 						.withMotionMagicAcceleration(4));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
