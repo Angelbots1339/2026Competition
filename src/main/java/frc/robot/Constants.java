@@ -91,12 +91,12 @@ public class Constants {
 
 	public class VisionConstants {
 		public static final String LimelightName = "limelight";
-		public static final double maxUsableRange = 4.0;
+		public static final double maxUsableRange = 4.3;
 
 		// limelight location
-		// forward = -0.077m
+		// forward = -0.081m
 		// left = 0.000m
-		// top = 0.657m
+		// top = 0.684m
 		// pitch = 15deg
 		// roll = 180deg
 		// yaw = 180deg
@@ -233,7 +233,7 @@ public class Constants {
 								.withReverseSoftLimitThreshold(MinAngle))
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
-						.withMotionMagicCruiseVelocity(0.6)
+						.withMotionMagicCruiseVelocity(0.3)
 						.withMotionMagicAcceleration(4));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
