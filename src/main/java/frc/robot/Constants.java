@@ -91,7 +91,7 @@ public class Constants {
 
 	public class VisionConstants {
 		public static final String LimelightName = "limelight";
-		public static final double maxUsableRange = 4.0;
+		public static final double maxUsableRange = 4.3;
 
 		// limelight location
 		// forward = -0.077m
