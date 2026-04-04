@@ -74,6 +74,7 @@ public class Shoot extends Command {
 				cycleTimer.restart();
 			}
 		}
+
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class Shoot extends Command {
 		shooter.disableKicker();
 		shooter.disableShooter();
 		indexer.disable();
-		Leds.getInstance().shooting = true;
+		Leds.getInstance().shooting = false;
 	}
 
 	@Override

@@ -29,11 +29,6 @@ import frc.robot.subsystems.Swerve;
 public class Autos {
 	private AutoFactory factory;
 
-	SendableChooser<String> firstPathChooser = new SendableChooser<String>();
-	SendableChooser<String> secondPathChooser = new SendableChooser<String>();
-	SendableChooser<String> thirdPathChooser = new SendableChooser<String>();
-	SendableChooser<String> sideChooser = new SendableChooser<String>();
-
 	Supplier<Command> shoot = null;
 
 	public Autos(Swerve swerve, Shooter shooter, Intake intake, Indexer indexer) {
@@ -56,77 +51,6 @@ public class Autos {
 		factory.bind("IntakeStart", intake.runIntake());
 		factory.bind("IntakeStop", intake.stopIntake());
 		CommandScheduler.getInstance().schedule(factory.trajectoryCmd("").ignoringDisable(true));
-
-		publishAutoPaths();
-	}
-
-	public void publishAutoPaths() {
-		String[] startPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
-				.filter(traj -> traj.startsWith("Bump") || traj.startsWith("Hub")).toArray(String[]::new);
-
-		String[] secondPaths = ChoreoTraj.ALL_TRAJECTORIES.keySet().stream()
-				.filter(traj -> !(traj.startsWith("Bump") || traj.startsWith("Hub"))).toArray(String[]::new);
-
-		for (String path : startPaths) {
-			firstPathChooser.addOption(path, path);
-		}
-
-		for (String path : secondPaths) {
-			secondPathChooser.addOption(path, path);
-		}
-
-		thirdPathChooser.addOption(ChoreoTraj.NeutralShoot_SendToNeutral.name(),
-				ChoreoTraj.NeutralShoot_SendToNeutral.name());
-
-		sideChooser.setDefaultOption("Left", "Left");
-		sideChooser.addOption("Right", "Right");
-
-		firstPathChooser.setDefaultOption("None", "");
-		secondPathChooser.setDefaultOption("None", "");
-		thirdPathChooser.setDefaultOption("None", "");
-
-		SmartDashboard.putData("Auto/First Path", firstPathChooser);
-		SmartDashboard.putData("Auto/Second Path", secondPathChooser);
-		SmartDashboard.putData("Auto/Third Path", thirdPathChooser);
-		SmartDashboard.putData("Auto/Side", sideChooser);
-	}
-
-	// TODO: figure out if calling resetOdometry() in the command is necessary
-
-	public AutoRoutine customAuto() {
-		final var routine = factory.newRoutine("Custom Auto");
-		AutoTrajectory startTraj = routine.trajectory("");
-		AutoTrajectory secondTraj = routine.trajectory("");
-		AutoTrajectory thirdTraj = routine.trajectory("");
-
-		boolean needsFlip = sideChooser.getSelected() == "Right";
-		String firstPath = firstPathChooser.getSelected();
-		String secondPath = secondPathChooser.getSelected();
-		String thirdPath = thirdPathChooser.getSelected();
-
-		if (needsFlip) {
-			startTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(firstPath).getRawTrajectory()));
-			secondTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(secondPath).getRawTrajectory()));
-			thirdTraj = routine.trajectory(flipTrajectoryX(routine.trajectory(thirdPath).getRawTrajectory()));
-		} else {
-			startTraj = routine.trajectory(firstPath);
-			secondTraj = routine.trajectory(secondPath);
-			thirdTraj = routine.trajectory(thirdPath);
-		}
-
-		final var shoot1 = shoot.get().withTimeout(3.5);
-		final var shoot2 = shoot.get().withTimeout(3.5);
-
-		CommandScheduler.getInstance().schedule(
-				startTraj.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
-
-		routine.active().onTrue(startTraj.cmd());
-		startTraj.done().onTrue(shoot1);
-		routine.observe(shoot1::isFinished).onTrue(secondTraj.cmd());
-		secondTraj.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(thirdTraj.cmd());
-
-		return routine;
 	}
 
 	public Command hubDepotAuto() {
@@ -192,7 +116,7 @@ public class Autos {
 		final var routine = factory.newRoutine("Right Neutral Sweep");
 		final var bumpToNeutral = routine
 				.trajectory(
-						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_Neutral.name()).getRawTrajectory()));
+						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name()).getRawTrajectory()));
 		final var leftNeutral2 = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name()).getRawTrajectory()));
 		final var NeutralSend = routine.trajectory(
@@ -201,9 +125,7 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		CommandScheduler.getInstance().schedule(
-				bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
-		routine.active().onTrue(bumpToNeutral.cmd());
+		routine.active().onTrue(bumpToNeutral.resetOdometry().andThen(bumpToNeutral.cmd()));
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
 		leftNeutral2.done().onTrue(shoot2);
@@ -234,7 +156,7 @@ public class Autos {
 
 	public AutoRoutine leftNeutralSweep() {
 		final var routine = factory.newRoutine("Left Neutral Sweep");
-		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_Neutral.name());
+		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name());
 		final var neutral2 = routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name());
 		final var NeutralSend = routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name());
 
