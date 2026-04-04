@@ -24,7 +24,6 @@ public class IntakeTuning {
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Intake);
 	private static Trigger runIntake = baseTrigger.and(() -> tester.getAButton());
 	private static Trigger pidPosition = baseTrigger.and(() -> tester.getBButton());
-	private static Trigger setPosition = baseTrigger.and(() -> tester.getXButton());
 
 	private static double targetVoltage = 0.0;
 	private static Angle targetAngle = Degrees.of(0);
@@ -41,7 +40,6 @@ public class IntakeTuning {
 				Commands.run(() -> intake.setIntakeAngle(targetAngle))
 						.handleInterrupt(() -> intake.disable()));
 
-		setPosition.onTrue(Commands.runOnce(() -> intake.resetPosition(targetAngle)));
 		intake.removeDefaultCommand();
 	}
 
