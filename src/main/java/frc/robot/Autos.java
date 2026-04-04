@@ -90,6 +90,8 @@ public class Autos {
 		SmartDashboard.putData("Auto/Side", sideChooser);
 	}
 
+	// TODO: figure out if calling resetOdometry() in the command is necessary
+
 	public AutoRoutine customAuto() {
 		final var routine = factory.newRoutine("Custom Auto");
 		AutoTrajectory startTraj = routine.trajectory("");
@@ -114,6 +116,7 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
+		startTraj.resetOdometry();
 		routine.active().onTrue(
 				Commands.sequence(
 						startTraj.resetOdometry(),
@@ -132,6 +135,7 @@ public class Autos {
 
 		final var shoot1 = shoot.get().withTimeout(5);
 
+		hubToDepot.resetOdometry();
 		routine.active().onTrue(
 				Commands.sequence(
 						hubToDepot.resetOdometry(),
@@ -150,6 +154,7 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(4.5);
 		final var shoot2 = shoot.get().withTimeout(5);
 
+		hubToDepot.resetOdometry();
 		routine.active().onTrue(
 				Commands.sequence(
 						hubToDepot.resetOdometry(),
@@ -175,6 +180,7 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
+		bumpToNeutral.resetOdometry();
 		routine.active().onTrue(
 				Commands.sequence(
 						bumpToNeutral.resetOdometry(),
@@ -200,6 +206,7 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
+		bumpToNeutral.resetOdometry();
 		routine.active().onTrue(
 				Commands.sequence(
 						bumpToNeutral.resetOdometry(),
@@ -221,6 +228,7 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
+		bumpToNeutral.resetOdometry();
 		routine.active().onTrue(
 				Commands.sequence(
 						bumpToNeutral.resetOdometry(),
@@ -242,6 +250,7 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
+		bumpToNeutral.resetOdometry();
 		routine.active().onTrue(
 				Commands.sequence(
 						bumpToNeutral.resetOdometry(),
