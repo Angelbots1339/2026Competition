@@ -170,7 +170,7 @@ public class Constants {
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(24.0 / 18.0))
+						.withSensorToMechanismRatio(29.0 / 12.0))
 				.withSlot0(new Slot0Configs()
 						.withKP(13)
 						.withKI(0)
