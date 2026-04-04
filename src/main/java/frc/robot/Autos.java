@@ -10,6 +10,7 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import choreo.trajectory.SwerveSample;
 import choreo.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -90,6 +91,8 @@ public class Autos {
 		SmartDashboard.putData("Auto/Side", sideChooser);
 	}
 
+	// TODO: figure out if calling resetOdometry() in the command is necessary
+
 	public AutoRoutine customAuto() {
 		final var routine = factory.newRoutine("Custom Auto");
 		AutoTrajectory startTraj = routine.trajectory("");
@@ -114,10 +117,10 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		routine.active().onTrue(
-				Commands.sequence(
-						startTraj.resetOdometry(),
-						startTraj.cmd()));
+		CommandScheduler.getInstance().schedule(
+				startTraj.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
+
+		routine.active().onTrue(startTraj.cmd());
 		startTraj.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(secondTraj.cmd());
 		secondTraj.done().onTrue(shoot2);
@@ -132,10 +135,9 @@ public class Autos {
 
 		final var shoot1 = shoot.get().withTimeout(5);
 
-		routine.active().onTrue(
-				Commands.sequence(
-						hubToDepot.resetOdometry(),
-						hubToDepot.cmd()));
+		CommandScheduler.getInstance().schedule(
+				hubToDepot.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
+		routine.active().onTrue(hubToDepot.cmd());
 		hubToDepot.done().onTrue(shoot1);
 
 		return routine.cmd();
@@ -145,17 +147,18 @@ public class Autos {
 		final var routine = factory.newRoutine("Hub Depot Neutral");
 		final var hubToDepot = routine.trajectory(ChoreoTraj.Hub_To_Depot.name());
 		final var NeutralShootNeutral2 = routine.trajectory(ChoreoTraj.Shoot_To_Neutral.name());
+		final var NeutralSend = routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name());
 
 		final var shoot1 = shoot.get().withTimeout(4.5);
 		final var shoot2 = shoot.get().withTimeout(5);
 
-		routine.active().onTrue(
-				Commands.sequence(
-						hubToDepot.resetOdometry(),
-						hubToDepot.cmd()));
+		CommandScheduler.getInstance().schedule(
+				hubToDepot.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
+		routine.active().onTrue(hubToDepot.cmd());
 		hubToDepot.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(NeutralShootNeutral2.cmd());
 		NeutralShootNeutral2.done().onTrue(shoot2);
+		routine.observe(shoot2::isFinished).onTrue(NeutralSend.cmd());
 
 		return routine.cmd();
 	}
@@ -167,18 +170,20 @@ public class Autos {
 						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_Neutral.name()).getRawTrajectory()));
 		final var leftNeutral2 = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.Shoot_To_Neutral.name()).getRawTrajectory()));
+		final var NeutralSend = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name()).getRawTrajectory()));
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		routine.active().onTrue(
-				Commands.sequence(
-						bumpToNeutral.resetOdometry(),
-						bumpToNeutral.cmd()));
+		CommandScheduler.getInstance().schedule(
+				bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
+
+		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
 		leftNeutral2.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(leftNeutral2.cmd());
+		routine.observe(shoot2::isFinished).onTrue(NeutralSend.cmd());
 
 		return routine;
 	}
@@ -190,18 +195,19 @@ public class Autos {
 						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_Neutral.name()).getRawTrajectory()));
 		final var leftNeutral2 = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name()).getRawTrajectory()));
+		final var NeutralSend = routine.trajectory(
+				flipTrajectoryX(routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name()).getRawTrajectory()));
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		routine.active().onTrue(
-				Commands.sequence(
-						bumpToNeutral.resetOdometry(),
-						bumpToNeutral.cmd()));
+		CommandScheduler.getInstance().schedule(
+				bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
+		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
 		leftNeutral2.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(leftNeutral2.cmd());
+		routine.observe(shoot2::isFinished).onTrue(NeutralSend.cmd());
 
 		return routine;
 	}
@@ -210,18 +216,18 @@ public class Autos {
 		final var routine = factory.newRoutine("Left Neutral");
 		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_Neutral.name());
 		final var neutral2 = routine.trajectory(ChoreoTraj.Shoot_To_Neutral.name());
+		final var NeutralSend = routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name());
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		routine.active().onTrue(
-				Commands.sequence(
-						bumpToNeutral.resetOdometry(),
-						bumpToNeutral.cmd()));
+		CommandScheduler.getInstance().schedule(
+				bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
+		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(neutral2.cmd());
 		neutral2.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(neutral2.cmd());
+		routine.observe(shoot2::isFinished).onTrue(NeutralSend.cmd());
 
 		return routine;
 	}
@@ -230,18 +236,18 @@ public class Autos {
 		final var routine = factory.newRoutine("Left Neutral Sweep");
 		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_Neutral.name());
 		final var neutral2 = routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name());
+		final var NeutralSend = routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name());
 
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		routine.active().onTrue(
-				Commands.sequence(
-						bumpToNeutral.resetOdometry(),
-						bumpToNeutral.cmd()));
+		CommandScheduler.getInstance().schedule(
+				bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
+		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(neutral2.cmd());
 		neutral2.done().onTrue(shoot2);
-		routine.observe(shoot2::isFinished).onTrue(neutral2.cmd());
+		routine.observe(shoot2::isFinished).onTrue(NeutralSend.cmd());
 
 		return routine;
 	}
