@@ -172,8 +172,8 @@ public class Constants {
 				.withFeedback(new FeedbackConfigs()
 						.withSensorToMechanismRatio(29.0 / 12.0))
 				.withSlot0(new Slot0Configs()
-						.withKP(13)
-						.withKI(0)
+						.withKP(16)
+						.withKI(2)
 						.withKD(0)
 						.withKS(18)
 						.withKV(0));
