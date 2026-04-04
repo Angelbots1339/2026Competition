@@ -116,11 +116,9 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		startTraj.resetOdometry();
-		routine.active().onTrue(
-				Commands.sequence(
-						startTraj.resetOdometry(),
-						startTraj.cmd()));
+		CommandScheduler.getInstance().schedule(startTraj.resetOdometry().repeatedly().ignoringDisable(true));
+
+		routine.active().onTrue(startTraj.cmd());
 		startTraj.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(secondTraj.cmd());
 		secondTraj.done().onTrue(shoot2);
@@ -135,11 +133,8 @@ public class Autos {
 
 		final var shoot1 = shoot.get().withTimeout(5);
 
-		hubToDepot.resetOdometry();
-		routine.active().onTrue(
-				Commands.sequence(
-						hubToDepot.resetOdometry(),
-						hubToDepot.cmd()));
+		CommandScheduler.getInstance().schedule(hubToDepot.resetOdometry().repeatedly().ignoringDisable(true));
+		routine.active().onTrue(hubToDepot.cmd());
 		hubToDepot.done().onTrue(shoot1);
 
 		return routine.cmd();
@@ -154,11 +149,8 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(4.5);
 		final var shoot2 = shoot.get().withTimeout(5);
 
-		hubToDepot.resetOdometry();
-		routine.active().onTrue(
-				Commands.sequence(
-						hubToDepot.resetOdometry(),
-						hubToDepot.cmd()));
+		CommandScheduler.getInstance().schedule(hubToDepot.resetOdometry().repeatedly().ignoringDisable(true));
+		routine.active().onTrue(hubToDepot.cmd());
 		hubToDepot.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(NeutralShootNeutral2.cmd());
 		NeutralShootNeutral2.done().onTrue(shoot2);
@@ -180,11 +172,9 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		bumpToNeutral.resetOdometry();
-		routine.active().onTrue(
-				Commands.sequence(
-						bumpToNeutral.resetOdometry(),
-						bumpToNeutral.cmd()));
+		CommandScheduler.getInstance().schedule(bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true));
+
+		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
 		leftNeutral2.done().onTrue(shoot2);
@@ -206,11 +196,8 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		bumpToNeutral.resetOdometry();
-		routine.active().onTrue(
-				Commands.sequence(
-						bumpToNeutral.resetOdometry(),
-						bumpToNeutral.cmd()));
+		CommandScheduler.getInstance().schedule(bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true));
+		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
 		leftNeutral2.done().onTrue(shoot2);
@@ -228,11 +215,8 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		bumpToNeutral.resetOdometry();
-		routine.active().onTrue(
-				Commands.sequence(
-						bumpToNeutral.resetOdometry(),
-						bumpToNeutral.cmd()));
+		CommandScheduler.getInstance().schedule(bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true));
+		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(neutral2.cmd());
 		neutral2.done().onTrue(shoot2);
@@ -250,11 +234,8 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		bumpToNeutral.resetOdometry();
-		routine.active().onTrue(
-				Commands.sequence(
-						bumpToNeutral.resetOdometry(),
-						bumpToNeutral.cmd()));
+		CommandScheduler.getInstance().schedule(bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true));
+		routine.active().onTrue(bumpToNeutral.cmd());
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(neutral2.cmd());
 		neutral2.done().onTrue(shoot2);
