@@ -74,6 +74,7 @@ public class Shoot extends Command {
 				cycleTimer.restart();
 			}
 		}
+
 	}
 
 	@Override
