@@ -90,16 +90,28 @@ public class Constants {
 	}
 
 	public class VisionConstants {
-		public static final String LimelightName = "limelight";
-		public static final double maxUsableRange = 4.3;
+		public static final String Limelight3Name = "limelight-front";
+		public static final String Limelight4Name = "limelight-back";
+		public static final double maxUsableLL3Range = 4.3;
+		public static final double maxUsableLL4Range = 4.6; // TODO: find a value for this
 
-		// limelight location
+		// limelight 4 (back limelight) location
 		// forward = -0.081m
 		// left = 0.000m
 		// top = 0.684m
 		// pitch = 15deg
 		// roll = 180deg
 		// yaw = 180deg
+
+		/*
+		 * LL3 (front) location
+		 * forward = 0.033m
+		 * right = 0.015m
+		 * top = 0.673m
+		 * pitch = 15 deg
+		 * roll = 180deg
+		 * yaw = 0 deg
+		 */
 
 		public static double calcStdDev(double metersFromTarget) {
 			return 0.08 * Math.pow(metersFromTarget, 2);
