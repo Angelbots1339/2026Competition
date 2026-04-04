@@ -275,6 +275,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		headingController.enableContinuousInput(-Math.PI, Math.PI);
 		return (sample) -> {
 			Pose2d pose = getPose();
+			DogLog.log("Autos/target", sample.getPose());
 
 			// Generate the next speeds for the robot
 			ChassisSpeeds speeds = new ChassisSpeeds(
