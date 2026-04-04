@@ -134,8 +134,9 @@ public class RobotContainer {
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 		}));
 
-		runIntake.whileTrue(intake.runIntake()
-				.alongWith(indexer.run(() -> indexer.runVoltage(IndexerConstants.IntakeIndexerVoltage))));
+		runIntake.whileTrue(intake.runIntake());
+		// .alongWith(indexer.run(() ->
+		// indexer.runVoltage(IndexerConstants.IntakeIndexerVoltage))));
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 		trenchShot.whileTrue(new Shoot(shooter, indexer, intake, () -> 45.0, () -> 12.6, () -> true));
 
