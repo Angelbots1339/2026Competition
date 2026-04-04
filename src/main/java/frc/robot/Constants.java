@@ -105,12 +105,12 @@ public class Constants {
 
 		/*
 		 * LL3 (front) location
-		 * forward
-		 * right
-		 * top
-		 * pitch
-		 * roll
-		 * yaw
+		 * forward = 0.033m
+		 * right = 0.015m
+		 * top = 0.673m
+		 * pitch = 15 deg
+		 * roll = 180deg
+		 * yaw = 0 deg
 		 */
 
 		public static double calcStdDev(double metersFromTarget) {
