@@ -42,6 +42,7 @@ public class IntakeTuning {
 						.handleInterrupt(() -> intake.disable()));
 
 		setPosition.onTrue(Commands.runOnce(() -> intake.resetPosition(targetAngle)));
+		intake.removeDefaultCommand();
 	}
 
 	public static void logPID(String key, TalonFX motor, TalonFXConfiguration config) {
