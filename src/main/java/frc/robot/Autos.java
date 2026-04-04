@@ -55,7 +55,7 @@ public class Autos {
 		}));
 		factory.bind("IntakeStart", intake.runIntake());
 		factory.bind("IntakeStop", intake.stopIntake());
-		CommandScheduler.getInstance().schedule(factory.trajectoryCmd("").ignoringDisable(true));
+		// CommandScheduler.getInstance().schedule(factory.trajectoryCmd("").ignoringDisable(true));
 
 		publishAutoPaths();
 	}
@@ -192,7 +192,7 @@ public class Autos {
 		final var routine = factory.newRoutine("Right Neutral Sweep");
 		final var bumpToNeutral = routine
 				.trajectory(
-						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_Neutral.name()).getRawTrajectory()));
+						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name()).getRawTrajectory()));
 		final var leftNeutral2 = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name()).getRawTrajectory()));
 		final var NeutralSend = routine.trajectory(
@@ -201,9 +201,7 @@ public class Autos {
 		final var shoot1 = shoot.get().withTimeout(3.5);
 		final var shoot2 = shoot.get().withTimeout(3.5);
 
-		CommandScheduler.getInstance().schedule(
-				bumpToNeutral.resetOdometry().repeatedly().ignoringDisable(true).onlyWhile(DriverStation::isDisabled));
-		routine.active().onTrue(bumpToNeutral.cmd());
+		routine.active().onTrue(bumpToNeutral.resetOdometry().andThen(bumpToNeutral.cmd()));
 		bumpToNeutral.done().onTrue(shoot1);
 		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
 		leftNeutral2.done().onTrue(shoot2);
@@ -234,7 +232,7 @@ public class Autos {
 
 	public AutoRoutine leftNeutralSweep() {
 		final var routine = factory.newRoutine("Left Neutral Sweep");
-		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_Neutral.name());
+		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name());
 		final var neutral2 = routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name());
 		final var NeutralSend = routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name());
 
