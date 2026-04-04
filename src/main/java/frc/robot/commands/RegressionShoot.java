@@ -14,6 +14,7 @@ import frc.robot.subsystems.Swerve;
 
 public class RegressionShoot extends Shoot {
 	private Swerve swerve;
+	private Shooter shooter;
 
 	private Supplier<Double> x;
 	private Supplier<Double> y;
@@ -23,6 +24,8 @@ public class RegressionShoot extends Shoot {
 	public RegressionShoot(Swerve swerve, Shooter shooter, Indexer indexer, Intake intake, Supplier<Double> x,
 			Supplier<Double> y) {
 		super(shooter, indexer, intake);
+
+		this.shooter = shooter;
 
 		this.swerve = swerve;
 		this.x = () -> x.get() / 5.0;
@@ -48,8 +51,11 @@ public class RegressionShoot extends Shoot {
 				swerve::atRotation);
 
 		if (aligned == false) {
+			Leds.getInstance().shooterMisaligned = true;
 			swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
+			shooter.disableKicker();
 		} else {
+			Leds.getInstance().shooterMisaligned = false;
 			swerve.setControl(new SwerveRequest.SwerveDriveBrake());
 		}
 
