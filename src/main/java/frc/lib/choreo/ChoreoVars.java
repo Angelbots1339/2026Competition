@@ -12,7 +12,7 @@ import edu.wpi.first.units.measure.*;
  */
 public final class ChoreoVars {
     public static final Angle BumpPassAngle = Units.Radians.of(0.5235988);
-    public static final LinearVelocity BumpPassVel = Units.MetersPerSecond.of(1);
+    public static final LinearVelocity BumpPassVel = Units.MetersPerSecond.of(2);
     public static final Distance FieldHeight = Units.Meters.of(8.069326);
     public static final LinearVelocity IntakeVelocity = Units.MetersPerSecond.of(1);
 
