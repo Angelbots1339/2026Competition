@@ -141,12 +141,14 @@ public class Leds extends SubsystemBase {
 		}
 		if (hubStateChangeAlert)
 			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
+		pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(3));
+		pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(3), true);
 
 		setLEDS();
 	}
 
 	public void setLEDS() {
-		for (int i = 0; i < stripLength; i++) {
+		for (int i = 9; i < stripLength; i++) {
 			// TODO: maybe optimize?
 			m_candle.setControl(new SolidColor(i, i).withColor(new RGBWColor(buf.getLED(i))));
 		}
@@ -255,9 +257,13 @@ public class Leds extends SubsystemBase {
 	}
 
 	private void pulse(Section section, Color pulse, Color bg, int length, double duration, boolean reverse) {
-		int offset = (int) (globalTimer % duration / duration * (section.end() - section.start() + length - 1));
+		int offset = (int) (globalTimer % duration / duration * (section.end() - section.start() + length))
+				% (section.end() - section.start() + length);
 		for (int i = 0; i < section.end() - section.start(); i++) {
-			boolean isPulse = (int) (Math.floor((double) (i - offset) / (double) length)) == 0;
+			boolean isPulse = (int) (Math
+					.floor((double) (i % (section.end() - section.start()) - offset)
+							/ (double) length)
+					+ 1) == 0;
 			if (reverse) {
 				if (isPulse)
 					solid(section.end() - 1 - i, pulse);
