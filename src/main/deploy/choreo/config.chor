@@ -4,11 +4,18 @@
  "type":"Swerve",
  "variables":{
   "expressions":{
+   "BumpPassAngle":{
+    "dimension":"Angle",
+    "var":{
+     "exp":"30 deg",
+     "val":0.5235987755982988
+    }
+   },
    "BumpPassVel":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2 m / s",
-     "val":2.0
+     "exp":"1 m / s",
+     "val":1.0
     }
    },
    "FieldHeight":{
