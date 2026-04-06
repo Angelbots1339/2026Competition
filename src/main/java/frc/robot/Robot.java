@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
 	public Robot() {
 		m_robotContainer = new RobotContainer();
 		// PathfindingCommand.warmupCommand().schedule();
-		DogLog.setOptions(new DogLogOptions().withLogExtras(false).withCaptureNt(true));
+		DogLog.setOptions(new DogLogOptions().withLogExtras(true).withCaptureNt(true));
 		// doglog log thread takes some time to start up so warm it up
 		DogLog.log("", "");
 

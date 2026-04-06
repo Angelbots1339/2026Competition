@@ -15,6 +15,7 @@ import com.ctre.phoenix6.controls.SolidColor;
 import com.ctre.phoenix6.hardware.CANdle;
 import com.ctre.phoenix6.signals.RGBWColor;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Frequency;
 import edu.wpi.first.units.measure.Time;
@@ -254,7 +255,7 @@ public class Leds extends SubsystemBase {
 	}
 
 	private void pulse(Section section, Color pulse, Color bg, int length, double duration, boolean reverse) {
-		int offset = (int) (globalTimer % duration / duration * (section.end() - section.start()));
+		int offset = (int) (globalTimer % duration / duration * (section.end() - section.start() + length - 1));
 		for (int i = 0; i < section.end() - section.start(); i++) {
 			boolean isPulse = (int) (Math.floor((double) (i - offset) / (double) length)) == 0;
 			if (reverse) {
