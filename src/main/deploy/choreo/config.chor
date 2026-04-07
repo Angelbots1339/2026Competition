@@ -28,8 +28,8 @@
    "IntakeVelocity":{
     "dimension":"LinVel",
     "var":{
-     "exp":"1 m / s",
-     "val":1.0
+     "exp":"1.7 m / s",
+     "val":1.7
     }
    }
   },

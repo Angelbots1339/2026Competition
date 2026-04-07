@@ -50,7 +50,7 @@
     {"from":7, "to":8, "data":{"type":"MaxAngularVelocity", "props":{"max":{"exp":"1e-4 rad / s", "val":0.0001}}}, "enabled":true},
     {"from":1, "to":2, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"BumpPassVel", "val":2.0}}}, "enabled":true},
     {"from":7, "to":8, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"BumpPassVel", "val":2.0}}}, "enabled":true},
-    {"from":5, "to":6, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"IntakeVelocity", "val":1.0}}}, "enabled":true},
+    {"from":5, "to":6, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"IntakeVelocity", "val":1.7}}}, "enabled":true},
     {"from":7, "to":7, "data":{"type":"KeepOutCircle", "props":{"x":{"exp":"5.145064942538738 m", "val":5.145064942538738}, "y":{"exp":"4.53139678388834 m", "val":4.53139678388834}, "r":{"exp":"0.25 m", "val":0.25}}}, "enabled":true},
     {"from":1, "to":2, "data":{"type":"KeepInLane", "props":{"tolerance":{"exp":"0.01 m", "val":0.01}}}, "enabled":true}],
   "targetDt":{
