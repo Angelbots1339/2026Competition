@@ -50,10 +50,7 @@ public class Robot extends TimedRobot {
 		Epilogue.configure(config -> {
 			// config.minimumImportance = Importance.CRITICAL;
 			config.minimumImportance = Importance.DEBUG;
-			// TODO: this probably doesn't work as fms takes time to attach and isn't at
-			// robot boot
-			if (DriverStation.isFMSAttached())
-				config.backend = new FileBackend(DataLogManager.getLog());
+			config.backend = new FileBackend(DataLogManager.getLog());
 		});
 		Epilogue.bind(this);
 		// DogLog.setEnabled(false);
