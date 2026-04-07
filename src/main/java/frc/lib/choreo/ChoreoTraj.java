@@ -48,9 +48,9 @@ public record ChoreoTraj(
     public static final ChoreoTraj NeutralShoot_SendToNeutral = new ChoreoTraj(
         "NeutralShoot_SendToNeutral",
         OptionalInt.empty(),
-        1.96554,
+        1.95691,
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722)),
-        new Pose2d(7.56669, 5.67501, Rotation2d.fromRadians(0))
+        new Pose2d(7.56669, 5.67501, Rotation2d.fromRadians(1.5708))
     );
     public static final ChoreoTraj Shoot_To_HubSweep = new ChoreoTraj(
         "Shoot_To_HubSweep",
