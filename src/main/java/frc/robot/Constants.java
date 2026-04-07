@@ -51,7 +51,7 @@ public class Constants {
 	}
 
 	public class ShootingConstants {
-		public static final double MaximumOtherCurrentDraw = 100; // TODO: TUNE THIS THIS IS MAXIMUM STATOR CURRENT FROM
+		public static final double MaximumOtherCurrentDraw = 250; // TODO: TUNE THIS THIS IS MAXIMUM STATOR CURRENT FROM
 		public static final Time IntakeRetractTime = Seconds.of(1);
 		public static final Time IntakeRetractOffsetTime = Seconds.of(1);
 	}
