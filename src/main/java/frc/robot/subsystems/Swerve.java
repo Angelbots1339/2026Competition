@@ -346,13 +346,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		}
 
 		LimelightHelpers.SetFiducialIDFiltersOverride(llName, ids);
-
-		if (isLL4) {
-			if (DriverStation.isDisabled())
-				LimelightHelpers.SetIMUMode(llName, 1);
-			if (DriverStation.isEnabled())
-				LimelightHelpers.SetIMUMode(llName, 4);
-		}
 	}
 
 	public void updateVision(String llName, boolean isLL4) {

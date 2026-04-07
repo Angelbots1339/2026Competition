@@ -22,7 +22,7 @@ public final class ChoreoVars {
         public static final Pose2d DepotShoot = new Pose2d(2.3219109, 5.3971691, Rotation2d.fromRadians(-0.5880032));
         public static final Pose2d FirstBumpStart = new Pose2d(3.7402761, 5.8216133, Rotation2d.fromRadians(-1.5707963));
         public static final Pose2d HubLeftStart = new Pose2d(3.5654624, 5.0397372, Rotation2d.fromRadians(1.5707963));
-        public static final Pose2d HubSweepStart = new Pose2d(5.8285224, 3.8, Rotation2d.fromRadians(1.5707963));
+        public static final Pose2d HubSweepStart = new Pose2d(6.0085224, 3.8, Rotation2d.fromRadians(1.5707963));
         public static final Pose2d LeftBumpStart = new Pose2d(3.6429224, 6.0623264, Rotation2d.fromRadians(-1.5707963));
         public static final Pose2d NeutralFarmStart = new Pose2d(7.5050018, 7.2233806, Rotation2d.fromRadians(-1.5707963));
         public static final Pose2d NeutralFarmStop = new Pose2d(7.5050018, 5.2, Rotation2d.fromRadians(-1.5707963));
