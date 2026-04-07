@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,7 +37,7 @@ public class Leds extends SubsystemBase {
 	private Color lowBatteryColor = new Color(255, 46, 1);
 
 	static final int unlitStripLength = 1;
-	static final int stripLength = 31;
+	static final int stripLength = 30;
 
 	public boolean lowbattery = false;
 	public boolean criticallyLowbattery = false;
@@ -68,9 +69,11 @@ public class Leds extends SubsystemBase {
 		return instance;
 	}
 
+	LEDPattern red = LEDPattern.solid(Color.kRed);
+
 	private Leds() {
 		System.out.println("[Init] Creating LEDs");
-		leds = new AddressableLED(9);
+		leds = new AddressableLED(8);
 		buf = new AddressableLEDBuffer(stripLength);
 		leds.setLength(stripLength);
 		leds.setData(buf);
@@ -79,69 +82,69 @@ public class Leds extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		globalTimer = Timer.getFPGATimestamp();
-		if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
-			driverStation_attached = true;
-		} else {
-			driverStation_attached = false;
-		}
-		if (DriverStation.getAlliance().isPresent()) {
-			alliance = DriverStation.getAlliance().get();
-		}
-
-		isHubActive = FieldUtil.isHubActive();
-
-		if (FieldUtil.getShiftTimeLeft() <= 3 && DriverStation.isTeleop()
-				&& DriverStation.getMatchTime() > FieldUtil.HubShiftTime.ENDGAME_START.time) {
-			hubStateChangeAlert = true;
-		} else {
-			hubStateChangeAlert = false;
-		}
-
-		wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
-				waveSlowPeriod);
-
-		if (DriverStation.isDisabled()) {
-			if (lowbattery || criticallyLowbattery) {
-				if (criticallyLowbattery)
-					strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
-				else
-					solid(Section.TOP, lowBatteryColor);
-			} else {
-				switch (alliance) {
-					case Red:
-						if (!driverStation_attached)
-							strobe(Section.TOP, Color.kRed, DSAttachFreq);
-						else
-							breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
-						break;
-					case Blue:
-						if (!driverStation_attached)
-							strobe(Section.TOP, Color.kBlue, DSAttachFreq);
-						else
-							breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
-						break;
-					default:
-						if (!driverStation_attached)
-							strobe(Section.TOP, defaultColor, DSAttachFreq);
-						else
-							wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
-									waveSlowPeriod);
-						break;
-				}
-			}
-		} else {
-			solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
-		}
-
-		if (shooting) {
-			pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(0.35));
-			pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(0.35), true);
-		}
-		if (hubStateChangeAlert)
-			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
-		pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(3));
-		pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(3), true);
+		red.applyTo(buf);
+		// globalTimer = Timer.getFPGATimestamp();
+		// if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
+		// driverStation_attached = true;
+		// } else {
+		// driverStation_attached = false;
+		// }
+		// if (DriverStation.getAlliance().isPresent()) {
+		// alliance = DriverStation.getAlliance().get();
+		// }
+		//
+		// isHubActive = FieldUtil.isHubActive();
+		//
+		// if (FieldUtil.getShiftTimeLeft() <= 3 && DriverStation.isTeleop()
+		// && DriverStation.getMatchTime() > FieldUtil.HubShiftTime.ENDGAME_START.time)
+		// {
+		// hubStateChangeAlert = true;
+		// } else {
+		// hubStateChangeAlert = false;
+		// }
+		//
+		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
+		// waveSlowPeriod);
+		//
+		// if (DriverStation.isDisabled()) {
+		// if (lowbattery || criticallyLowbattery) {
+		// if (criticallyLowbattery)
+		// strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
+		// else
+		// solid(Section.TOP, lowBatteryColor);
+		// } else {
+		// switch (alliance) {
+		// case Red:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, Color.kRed, DSAttachFreq);
+		// else
+		// breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
+		// break;
+		// case Blue:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, Color.kBlue, DSAttachFreq);
+		// else
+		// breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
+		// break;
+		// default:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, defaultColor, DSAttachFreq);
+		// else
+		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
+		// waveSlowPeriod);
+		// break;
+		// }
+		// }
+		// } else {
+		// solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
+		// }
+		//
+		// if (shooting) {
+		// pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(0.35));
+		// pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(0.35), true);
+		// }
+		// if (hubStateChangeAlert)
+		// strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
 
 		leds.setData(buf);
 	}
