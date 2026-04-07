@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.Timer;
 import frc.lib.util.Leds;
 import frc.robot.Constants.ShootingConstants;
@@ -45,9 +46,11 @@ public class RegressionShoot extends Shoot {
 	@Override
 	public void execute() {
 		ShooterParams params = ShooterRegression.getShotParams(swerve);
-		boolean isAngledTowardsHub = !swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(),
+		boolean isAngledTowardsHub = swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(),
 				params.maxAngleError());
 		boolean areSticksMoving = Math.hypot(x.get(), y.get()) > 0;
+		DogLog.log("Regression Shoot/Sticks", areSticksMoving);
+		DogLog.log("Regression Shoot/Angled At Hub", isAngledTowardsHub);
 
 		if (swerve.getTotalStatorCurrent() <= ShootingConstants.MaximumOtherCurrentDraw) {
 			runShoot(params.shooterRPS(), params.spinnerRPS(),
