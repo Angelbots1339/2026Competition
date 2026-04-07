@@ -43,6 +43,8 @@ public class RegressionShoot extends Shoot {
 		boolean isAngledTowardsHub = !swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(),
 				params.maxAngleError());
 		boolean areSticksMoving = Math.hypot(x.get(), y.get()) > 0;
+		if (!params.isValid())
+			return;
 
 		runShoot(params.shooterRPS(), params.spinnerRPS(),
 				swerve::atRotation);
