@@ -14,8 +14,8 @@
    "BumpPassVel":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2 m / s",
-     "val":2.0
+     "exp":"2.5 m / s",
+     "val":2.5
     }
    },
    "FieldHeight":{
@@ -28,8 +28,8 @@
    "IntakeVelocity":{
     "dimension":"LinVel",
     "var":{
-     "exp":"1.7 m / s",
-     "val":1.7
+     "exp":"1.6 m / s",
+     "val":1.6
     }
    }
   },
