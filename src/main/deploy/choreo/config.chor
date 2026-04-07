@@ -4,11 +4,18 @@
  "type":"Swerve",
  "variables":{
   "expressions":{
+   "BumpPassAngle":{
+    "dimension":"Angle",
+    "var":{
+     "exp":"0 deg",
+     "val":0.0
+    }
+   },
    "BumpPassVel":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2 m / s",
-     "val":2.0
+     "exp":"2.5 m / s",
+     "val":2.5
     }
    },
    "FieldHeight":{
@@ -21,8 +28,8 @@
    "IntakeVelocity":{
     "dimension":"LinVel",
     "var":{
-     "exp":"1 m / s",
-     "val":1.0
+     "exp":"1.6 m / s",
+     "val":1.6
     }
    }
   },
@@ -99,8 +106,8 @@
    },
    "HubSweepStart":{
     "x":{
-     "exp":"5.828522396087647 m",
-     "val":5.828522396087647
+     "exp":"6.008522396087647 m",
+     "val":6.008522396087647
     },
     "y":{
      "exp":"3.8 m",
@@ -127,8 +134,8 @@
    },
    "NeutralFarmStart":{
     "x":{
-     "exp":"8.00500183105469 m",
-     "val":8.00500183105469
+     "exp":"7.50500183105469 m",
+     "val":7.50500183105469
     },
     "y":{
      "exp":"7.2233805656433105 m",
@@ -142,11 +149,11 @@
    "NeutralFarmStop":{
     "x":{
      "exp":"NeutralFarmStart.x",
-     "val":8.00500183105469
+     "val":7.50500183105469
     },
     "y":{
-     "exp":"4.75 m",
-     "val":4.75
+     "exp":"5.2 m",
+     "val":5.2
     },
     "heading":{
      "exp":"NeutralStop.heading",
@@ -247,12 +254,12 @@
    }
   },
   "mass":{
-   "exp":"125.7230386 lb",
-   "val":57.02701104217548
+   "exp":"135.7230386 lb",
+   "val":61.562934742175486
   },
   "inertia":{
-   "exp":"21658.14171 in ^ 2 lb",
-   "val":6.3380310839349026
+   "exp":"7543.197 in ^ 2 lb",
+   "val":2.207438555828181
   },
   "gearing":{
    "exp":"6.12",
@@ -267,8 +274,8 @@
    "val":502.6548245743669
   },
   "tmax":{
-   "exp":"1.4662 N * m",
-   "val":1.4662
+   "exp":"0.7704 N * m",
+   "val":0.7704
   },
   "cof":{
    "exp":"1.5",
@@ -276,12 +283,12 @@
   },
   "bumper":{
    "front":{
-    "exp":"28 in",
-    "val":0.7111999999999999
+    "exp":"24.625 in",
+    "val":0.625475
    },
    "side":{
-    "exp":"16.25 in",
-    "val":0.41275
+    "exp":"16.5 in",
+    "val":0.4191
    },
    "back":{
     "exp":"16.5 in",

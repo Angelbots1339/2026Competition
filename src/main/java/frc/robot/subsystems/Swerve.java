@@ -209,7 +209,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void setYaw(Rotation2d yaw) {
-		updateLimelightConfigs(yaw);
+		updateLimelightConfigs(VisionConstants.Limelight4Name, yaw, true);
+		updateLimelightConfigs(VisionConstants.Limelight3Name, yaw, false);
 		getPigeon2().setYaw(yaw.getDegrees());
 		resetRotation(yaw);
 		// hack to have advantage scope / pose be correct
@@ -258,7 +259,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void resetPose(Pose2d pose) {
-		updateLimelightConfigs(pose.getRotation());
+		updateLimelightConfigs(VisionConstants.Limelight4Name, pose.getRotation(), true);
+		updateLimelightConfigs(VisionConstants.Limelight3Name, pose.getRotation(), false);
 		super.resetPose(pose);
 		setYaw(pose.getRotation());
 	}
@@ -271,10 +273,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public Consumer<SwerveSample> followChoreoPath() {
 		final PIDController xController = new PIDController(5, 0.0, 0.0);
 		final PIDController yController = new PIDController(5, 0.0, 0.0);
-		final PIDController headingController = new PIDController(5.0, 0.0, 0.0);
+		final PIDController headingController = new PIDController(2.5, 0.0, 0.0);
 		headingController.enableContinuousInput(-Math.PI, Math.PI);
 		return (sample) -> {
 			Pose2d pose = getPose();
+			DogLog.log("Autos/target", sample.getPose());
 
 			// Generate the next speeds for the robot
 			ChassisSpeeds speeds = new ChassisSpeeds(
@@ -322,30 +325,34 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		);
 	}
 
-	public void updateLimelightConfigs(Rotation2d yaw) {
-		LimelightHelpers.SetRobotOrientation(VisionConstants.LimelightName,
+	public void updateLimelightConfigs(String llName, Rotation2d yaw, boolean isLL4) {
+		LimelightHelpers.SetRobotOrientation(llName,
 				yaw.getDegrees(), 0, 0, 0, 0, 0);
-		LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.LimelightName,
+		LimelightHelpers.SetFiducialIDFiltersOverride(llName,
 				new int[0]);
-		LimelightHelpers.RawFiducial[] fiducals = LimelightHelpers.getRawFiducials(VisionConstants.LimelightName);
+		LimelightHelpers.RawFiducial[] fiducals = LimelightHelpers.getRawFiducials(llName);
 		int fiducalLength = fiducals.length;
 		int[] ids = new int[fiducalLength];
 
 		int j = 0;
 		for (int i = 0; i < fiducals.length; i++) {
-			if (fiducals[i].distToCamera < VisionConstants.maxUsableRange)
-				ids[j++] = fiducals[i].id;
+			if (isLL4) {
+				if (fiducals[i].distToCamera < VisionConstants.maxUsableLL4Range)
+					ids[j++] = fiducals[i].id;
+			} else {
+				if (fiducals[i].distToCamera < VisionConstants.maxUsableLL3Range)
+					ids[j++] = fiducals[i].id;
+			}
 		}
 
-		LimelightHelpers.SetFiducialIDFiltersOverride(VisionConstants.LimelightName, ids);
-
+		LimelightHelpers.SetFiducialIDFiltersOverride(llName, ids);
 	}
 
-	public void updateVision() {
-		updateLimelightConfigs(getYaw());
+	public void updateVision(String llName, boolean isLL4) {
+		updateLimelightConfigs(llName, getYaw(), isLL4);
 
 		LimelightHelpers.PoseEstimate mt2 = LimelightHelpers
-				.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.LimelightName);
+				.getBotPoseEstimate_wpiBlue_MegaTag2(llName);
 		if (mt2 == null)
 			return;
 		if (mt2.tagCount < 1)
@@ -359,7 +366,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	@Override
 	public void periodic() {
-		updateVision();
+		updateVision(VisionConstants.Limelight4Name, true);
+		updateVision(VisionConstants.Limelight3Name, false);
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
 			DriverStation.getAlliance().ifPresent(allianceColor -> {

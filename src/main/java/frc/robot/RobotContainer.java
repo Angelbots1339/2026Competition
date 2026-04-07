@@ -93,13 +93,12 @@ public class RobotContainer {
 		configureControllerAlerts();
 		setDefaultCommands();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
-		autoChooser.addCmd("Hub Depot", autos::hubDepotAuto);
-		autoChooser.addCmd("Hub Depot Neutral", autos::hubDepotNeutralAuto);
-		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
-		autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
+		// autoChooser.addCmd("Hub Depot", autos::hubDepotAuto);
+		// autoChooser.addCmd("Hub Depot Neutral", autos::hubDepotNeutralAuto);
+		// autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
+		// autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
 		autoChooser.addRoutine("Right Neutral Sweep", autos::rightNeutralSweep);
-		autoChooser.addRoutine("Left Neutral Sweep", autos::leftNeutralSweep);
-		autoChooser.addRoutine("Custom Auto", autos::customAuto);
+		// autoChooser.addRoutine("Left Neutral Sweep", autos::leftNeutralSweep);
 		autoChooser.select("Nothing");
 	}
 
@@ -134,8 +133,9 @@ public class RobotContainer {
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 		}));
 
-		runIntake.whileTrue(intake.runIntake()
-				.alongWith(indexer.run(() -> indexer.runVoltage(IndexerConstants.IntakeIndexerVoltage))));
+		runIntake.whileTrue(intake.runIntake());
+		// .alongWith(indexer.run(() ->
+		// indexer.runVoltage(IndexerConstants.IntakeIndexerVoltage))));
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 		trenchShot.whileTrue(new Shoot(shooter, indexer, intake, () -> 45.0, () -> 12.6, () -> true));
 

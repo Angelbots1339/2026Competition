@@ -51,10 +51,9 @@ public class Constants {
 	}
 
 	public class ShootingConstants {
-		public static final Time IntakeRetractTime = Seconds.of(3);
-		public static final Time IntakeRetractOffsetTime = Seconds.of(0.5);
 		public static final double MaximumOtherCurrentDraw = 100; // TODO: TUNE THIS THIS IS MAXIMUM STATOR CURRENT FROM
-																	// SWERVE DURING ROTATION
+		public static final Time IntakeRetractTime = Seconds.of(1);
+		public static final Time IntakeRetractOffsetTime = Seconds.of(1);
 	}
 
 	public class RobotConstants {
@@ -68,10 +67,10 @@ public class Constants {
 
 		// has least amount of error, overshooting seems to be result of wheel slip on
 		// concrete
-		public static final double angularDriveKP = 5.3;
+		public static final double angularDriveKP = 5;
 		public static final double angularDriveKI = 0;
 		public static final double angularDriveKD = 0;
-		public static final double angularDriveKS = 0.12;
+		public static final double angularDriveKS = 0.17;
 		public static final double angularDriveKV = 0;
 		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(
 				angularDriveKS,
@@ -92,16 +91,28 @@ public class Constants {
 	}
 
 	public class VisionConstants {
-		public static final String LimelightName = "limelight";
-		public static final double maxUsableRange = 4.0;
+		public static final String Limelight3Name = "limelight-front";
+		public static final String Limelight4Name = "limelight-back";
+		public static final double maxUsableLL3Range = 4.3;
+		public static final double maxUsableLL4Range = 4.6; // TODO: find a value for this
 
-		// limelight location
-		// forward = -0.077m
+		// limelight 4 (back limelight) location
+		// forward = -0.081m
 		// left = 0.000m
-		// top = 0.657m
+		// top = 0.684m
 		// pitch = 15deg
 		// roll = 180deg
 		// yaw = 180deg
+
+		/*
+		 * LL3 (front) location
+		 * forward = 0.033m
+		 * right = 0.015m
+		 * top = 0.673m
+		 * pitch = 15 deg
+		 * roll = 180deg
+		 * yaw = 0 deg
+		 */
 
 		public static double calcStdDev(double metersFromTarget) {
 			return 0.08 * Math.pow(metersFromTarget, 2);
@@ -126,7 +137,7 @@ public class Constants {
 		public static final int KickerPort = 36;
 
 		public static final double shootRPS = 41.5;
-		public static final double KickerRPS = 30.0;
+		public static final double KickerRPS = 20.0;
 		public static final double rpsTolerence = 1;
 
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
@@ -166,16 +177,16 @@ public class Constants {
 
 		public static TalonFXConfiguration KickerConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(Amps.of(80))
+						.withStatorCurrentLimit(Amps.of(100))
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
 						.withNeutralMode(NeutralModeValue.Coast)
 						.withInverted(InvertedValue.CounterClockwise_Positive))
 				.withFeedback(new FeedbackConfigs()
-						.withSensorToMechanismRatio(24.0 / 18.0))
+						.withSensorToMechanismRatio(29.0 / 12.0))
 				.withSlot0(new Slot0Configs()
-						.withKP(13)
-						.withKI(0)
+						.withKP(16)
+						.withKI(2)
 						.withKD(0)
 						.withKS(18)
 						.withKV(0));
@@ -188,7 +199,7 @@ public class Constants {
 		public static final int intakeMotorId = 22;
 		public static final int deployMotorId = 24;
 
-		public static final Angle DeployedAngle = Degrees.of(7);
+		public static final Angle DeployedAngle = Degrees.of(12.5);
 		public static final Angle RetractedAngle = Degrees.of(116);
 		public static final double IntakeVoltage = 7;
 
@@ -198,7 +209,8 @@ public class Constants {
 		// public static final Angle MinAngle = Degrees.of(6.76);
 		// public static final Angle MaxAngle = Degrees.of(144.975);
 
-		public static final Angle MinAngle = Degrees.of(6.76);
+		// resting is 13.97
+		public static final Angle MinAngle = Degrees.of(12.5);
 		public static final Angle MaxAngle = Degrees.of(116.977);
 		public static final Angle IntakeAngleTolerence = Degrees.of(10);
 
@@ -235,7 +247,7 @@ public class Constants {
 								.withReverseSoftLimitThreshold(MinAngle))
 				.withSlot0(deploySlot0)
 				.withMotionMagic(new MotionMagicConfigs()
-						.withMotionMagicCruiseVelocity(0.6)
+						.withMotionMagicCruiseVelocity(0.5)
 						.withMotionMagicAcceleration(4));
 
 		public static final Slot0Configs intakeSlot0 = new Slot0Configs()
