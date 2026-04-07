@@ -110,7 +110,7 @@ public class Autos {
 		final var NeutralSend = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name()).getRawTrajectory()));
 
-		final var shoot1 = shoot.get().withTimeout(3.5);
+		final var shoot1 = shoot.get().withTimeout(3.1);
 		final var shoot2 = shoot.get().withTimeout(3);
 
 		routine.active().onTrue(bumpToNeutral.resetOdometry().andThen(bumpToNeutral.cmd()));
