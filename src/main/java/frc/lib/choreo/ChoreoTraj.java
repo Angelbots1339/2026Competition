@@ -34,7 +34,7 @@ public record ChoreoTraj(
     public static final ChoreoTraj Bump_To_NeutralSweep = new ChoreoTraj(
         "Bump_To_NeutralSweep",
         OptionalInt.empty(),
-        6.58159,
+        6.8577,
         new Pose2d(3.64292, 6.06233, Rotation2d.fromRadians(-1.5708)),
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722))
     );
@@ -55,14 +55,14 @@ public record ChoreoTraj(
     public static final ChoreoTraj Shoot_To_HubSweep = new ChoreoTraj(
         "Shoot_To_HubSweep",
         OptionalInt.empty(),
-        5.79567,
+        7.83206,
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722)),
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722))
     );
     public static final ChoreoTraj Shoot_To_Neutral = new ChoreoTraj(
         "Shoot_To_Neutral",
         OptionalInt.empty(),
-        5.01217,
+        5.04568,
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722)),
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722))
     );
