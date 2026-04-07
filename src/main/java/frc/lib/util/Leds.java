@@ -11,13 +11,10 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import java.util.List;
 
-import com.ctre.phoenix6.controls.SolidColor;
-import com.ctre.phoenix6.hardware.CANdle;
-import com.ctre.phoenix6.signals.RGBWColor;
-
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.measure.Frequency;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -29,7 +26,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Leds extends SubsystemBase {
 
 	private static Leds instance;
-	private final CANdle m_candle = new CANdle(60);
+	private final AddressableLED leds;
+	private AddressableLEDBuffer buf;
 	private static double globalTimer = 0.0;
 
 	private Alliance alliance = Alliance.Blue;
@@ -37,8 +35,8 @@ public class Leds extends SubsystemBase {
 	private Color defaultColor = Color.kGold;
 	private Color lowBatteryColor = new Color(255, 46, 1);
 
-	static final int unlitStripLength = 9;
-	static final int stripLength = 39;
+	static final int unlitStripLength = 1;
+	static final int stripLength = 30;
 
 	public boolean lowbattery = false;
 	public boolean criticallyLowbattery = false;
@@ -55,13 +53,13 @@ public class Leds extends SubsystemBase {
 	private int waveSlowCycleLength = 25;
 	private Time waveSlowPeriod = Seconds.of(3.0);
 
+	@SuppressWarnings("unused")
 	private int stripesLongLength = 10;
+	@SuppressWarnings("unused")
 	private Time stripesFastPeriod = Seconds.of(0.5);
 
 	// Effect configs
 	private double waveExponent = 0.4;
-
-	private AddressableLEDBuffer buf = new AddressableLEDBuffer(stripLength);
 
 	public static Leds getInstance() {
 		if (instance == null) {
@@ -72,84 +70,78 @@ public class Leds extends SubsystemBase {
 
 	private Leds() {
 		System.out.println("[Init] Creating LEDs");
-		for (int i = 0; i < buf.getLength(); i++) {
-			buf.setLED(i, Color.kBlack);
-		}
+		leds = new AddressableLED(8);
+		buf = new AddressableLEDBuffer(stripLength);
+		leds.setLength(stripLength);
+		leds.setData(buf);
+		leds.start();
 	}
 
 	@Override
 	public void periodic() {
-		// globalTimer = Timer.getFPGATimestamp();
-		// if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
-		// driverStation_attached = true;
-		// } else {
-		// driverStation_attached = false;
-		// }
-		// if (DriverStation.getAlliance().isPresent()) {
-		// alliance = DriverStation.getAlliance().get();
-		// }
-		//
-		// isHubActive = FieldUtil.isHubActive();
-		//
-		// if (FieldUtil.getShiftTimeLeft() <= 3 && DriverStation.isTeleop()
-		// && DriverStation.getMatchTime() > FieldUtil.HubShiftTime.ENDGAME_START.time)
-		// {
-		// hubStateChangeAlert = true;
-		// } else {
-		// hubStateChangeAlert = false;
-		// }
-		//
-		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
-		// waveSlowPeriod);
-		//
-		// if (DriverStation.isDisabled()) {
-		// if (lowbattery || criticallyLowbattery) {
-		// if (criticallyLowbattery)
-		// strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
-		// else
-		// solid(Section.TOP, lowBatteryColor);
-		// } else {
-		// switch (alliance) {
-		// case Red:
-		// if (!driverStation_attached)
-		// strobe(Section.TOP, Color.kRed, DSAttachFreq);
-		// else
-		// breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
-		// break;
-		// case Blue:
-		// if (!driverStation_attached)
-		// strobe(Section.TOP, Color.kBlue, DSAttachFreq);
-		// else
-		// breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
-		// break;
-		// default:
-		// if (!driverStation_attached)
-		// strobe(Section.TOP, defaultColor, DSAttachFreq);
-		// else
-		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
-		// waveSlowPeriod);
-		// break;
-		// }
-		// }
-		// } else {
-		// solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
-		// }
-		//
-		// if (shooting) {
-		// pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(0.35));
-		// pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(0.35), true);
-		// }
-		// if (hubStateChangeAlert)
-		// strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
-		//
-		// setLEDS();
-	}
-
-	public void setLEDS() {
-		for (int i = 0; i < stripLength; i++) {
-			// TODO: maybe optimize?
-			m_candle.setControl(new SolidColor(i, i).withColor(new RGBWColor(buf.getLED(i))));
+		globalTimer = Timer.getFPGATimestamp();
+		if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
+			driverStation_attached = true;
+		} else {
+			driverStation_attached = false;
 		}
+		if (DriverStation.getAlliance().isPresent()) {
+			alliance = DriverStation.getAlliance().get();
+		}
+
+		isHubActive = FieldUtil.isHubActive();
+
+		if (FieldUtil.getShiftTimeLeft() <= 3 && DriverStation.isTeleop()
+				&& DriverStation.getMatchTime() > FieldUtil.HubShiftTime.ENDGAME_START.time) {
+			hubStateChangeAlert = true;
+		} else {
+			hubStateChangeAlert = false;
+		}
+
+		wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
+				waveSlowPeriod);
+
+		if (DriverStation.isDisabled()) {
+			if (lowbattery || criticallyLowbattery) {
+				if (criticallyLowbattery)
+					strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
+				else
+					solid(Section.TOP, lowBatteryColor);
+			} else {
+				switch (alliance) {
+					case Red:
+						if (!driverStation_attached)
+							strobe(Section.TOP, Color.kRed, DSAttachFreq);
+						else
+							breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
+						break;
+					case Blue:
+						if (!driverStation_attached)
+							strobe(Section.TOP, Color.kBlue, DSAttachFreq);
+						else
+							breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
+						break;
+					default:
+						if (!driverStation_attached)
+							strobe(Section.TOP, defaultColor, DSAttachFreq);
+						else
+							wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
+									waveSlowPeriod);
+						break;
+				}
+			}
+		} else {
+			solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
+		}
+
+		if (shooting) {
+			pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(0.35));
+			pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(0.35), true);
+		}
+		if (hubStateChangeAlert)
+			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
+
+		leds.setData(buf);
 	}
 
 	public void solid(Color color) {
@@ -166,7 +158,7 @@ public class Leds extends SubsystemBase {
 
 	public void solid(int start, int end, Color color) {
 		for (int i = start; i < end; i++) {
-			buf.setRGB(i, (int) (color.red * 255), (int) (color.green * 255), (int) (color.blue * 255));
+			buf.setLED(i, color);
 		}
 	}
 
@@ -217,10 +209,12 @@ public class Leds extends SubsystemBase {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void stripes(Section section, List<Color> colors, int length, Time period) {
 		stripes(section, colors, length, period.in(Seconds), false);
 	}
 
+	@SuppressWarnings("unused")
 	private void stripes(Section section, List<Color> colors, int length, Time period, boolean reverse) {
 		stripes(section, colors, length, period.in(Seconds), reverse);
 	}
@@ -246,6 +240,7 @@ public class Leds extends SubsystemBase {
 		pulse(section, pulse, Color.kBlack, length, period, reverse);
 	}
 
+	@SuppressWarnings("unused")
 	private void pulse(Section section, Color pulse, Color bg, int length, Time period) {
 		pulse(section, pulse, bg, length, period, false);
 	}
@@ -255,9 +250,12 @@ public class Leds extends SubsystemBase {
 	}
 
 	private void pulse(Section section, Color pulse, Color bg, int length, double duration, boolean reverse) {
-		int offset = (int) (globalTimer % duration / duration * (section.end() - section.start()));
+		int offset = (int) (globalTimer % duration / duration * (section.length() + length));
 		for (int i = 0; i < section.end() - section.start(); i++) {
-			boolean isPulse = (int) (Math.floor((double) (i - offset) / (double) length)) == 0;
+			boolean isPulse = (int) (Math
+					.floor((double) (i - offset)
+							/ (double) length)
+					+ 1) == 0;
 			if (reverse) {
 				if (isPulse)
 					solid(section.end() - 1 - i, pulse);
@@ -302,6 +300,10 @@ public class Leds extends SubsystemBase {
 				default:
 					return 0;
 			}
+		}
+
+		private int length() {
+			return this.end() - this.start();
 		}
 	}
 }
