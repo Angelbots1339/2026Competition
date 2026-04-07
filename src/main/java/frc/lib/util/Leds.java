@@ -140,8 +140,6 @@ public class Leds extends SubsystemBase {
 		}
 		if (hubStateChangeAlert)
 			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
-		pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(3));
-		pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(3), true);
 
 		leds.setData(buf);
 	}
