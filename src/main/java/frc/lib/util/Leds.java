@@ -30,14 +30,12 @@ public class Leds extends SubsystemBase {
 	private AddressableLEDBuffer buf;
 	private static double globalTimer = 0.0;
 
-	private Alliance alliance = Alliance.Blue;
-
-	private Color defaultColor = Color.kGold;
-	private Color lowBatteryColor = new Color(255, 46, 1);
-
 	static final int unlitStripLength = 1;
 	static final int stripLength = 30;
 
+	private Time hubAlertOffset = Seconds.of(5);
+
+	private Alliance alliance = Alliance.Blue;
 	public boolean lowbattery = false;
 	public boolean criticallyLowbattery = false;
 	public boolean driverStation_attached = false;
@@ -46,6 +44,8 @@ public class Leds extends SubsystemBase {
 	public boolean shooting = false;
 
 	// LED Config
+	private Color defaultColor = Color.kGold;
+	private Color lowBatteryColor = new Color(255, 46, 1);
 	private Frequency DSAttachFreq = Hertz.of(1);
 	private Frequency hubAlertFreq = Hertz.of(3);
 	private Time allianceBreathPeriod = Seconds.of(3);
@@ -91,7 +91,7 @@ public class Leds extends SubsystemBase {
 
 		isHubActive = FieldUtil.isHubActive();
 
-		if (FieldUtil.getShiftTimeLeft() <= 3 && DriverStation.isTeleop()
+		if (FieldUtil.getShiftTimeLeft() <= hubAlertOffset.in(Seconds) && DriverStation.isTeleop()
 				&& DriverStation.getMatchTime() > FieldUtil.HubShiftTime.ENDGAME_START.time) {
 			hubStateChangeAlert = true;
 		} else {
