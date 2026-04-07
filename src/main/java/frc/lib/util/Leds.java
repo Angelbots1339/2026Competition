@@ -79,69 +79,70 @@ public class Leds extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		globalTimer = Timer.getFPGATimestamp();
-		if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
-			driverStation_attached = true;
-		} else {
-			driverStation_attached = false;
-		}
-		if (DriverStation.getAlliance().isPresent()) {
-			alliance = DriverStation.getAlliance().get();
-		}
-
-		isHubActive = FieldUtil.isHubActive();
-
-		if (FieldUtil.getShiftTimeLeft() <= 3 && DriverStation.isTeleop()
-				&& DriverStation.getMatchTime() > FieldUtil.HubShiftTime.ENDGAME_START.time) {
-			hubStateChangeAlert = true;
-		} else {
-			hubStateChangeAlert = false;
-		}
-
-		wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
-				waveSlowPeriod);
-
-		if (DriverStation.isDisabled()) {
-			if (lowbattery || criticallyLowbattery) {
-				if (criticallyLowbattery)
-					strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
-				else
-					solid(Section.TOP, lowBatteryColor);
-			} else {
-				switch (alliance) {
-					case Red:
-						if (!driverStation_attached)
-							strobe(Section.TOP, Color.kRed, DSAttachFreq);
-						else
-							breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
-						break;
-					case Blue:
-						if (!driverStation_attached)
-							strobe(Section.TOP, Color.kBlue, DSAttachFreq);
-						else
-							breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
-						break;
-					default:
-						if (!driverStation_attached)
-							strobe(Section.TOP, defaultColor, DSAttachFreq);
-						else
-							wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
-									waveSlowPeriod);
-						break;
-				}
-			}
-		} else {
-			solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
-		}
-
-		if (shooting) {
-			pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(0.35));
-			pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(0.35), true);
-		}
-		if (hubStateChangeAlert)
-			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
-
-		setLEDS();
+		// globalTimer = Timer.getFPGATimestamp();
+		// if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
+		// driverStation_attached = true;
+		// } else {
+		// driverStation_attached = false;
+		// }
+		// if (DriverStation.getAlliance().isPresent()) {
+		// alliance = DriverStation.getAlliance().get();
+		// }
+		//
+		// isHubActive = FieldUtil.isHubActive();
+		//
+		// if (FieldUtil.getShiftTimeLeft() <= 3 && DriverStation.isTeleop()
+		// && DriverStation.getMatchTime() > FieldUtil.HubShiftTime.ENDGAME_START.time)
+		// {
+		// hubStateChangeAlert = true;
+		// } else {
+		// hubStateChangeAlert = false;
+		// }
+		//
+		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
+		// waveSlowPeriod);
+		//
+		// if (DriverStation.isDisabled()) {
+		// if (lowbattery || criticallyLowbattery) {
+		// if (criticallyLowbattery)
+		// strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
+		// else
+		// solid(Section.TOP, lowBatteryColor);
+		// } else {
+		// switch (alliance) {
+		// case Red:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, Color.kRed, DSAttachFreq);
+		// else
+		// breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
+		// break;
+		// case Blue:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, Color.kBlue, DSAttachFreq);
+		// else
+		// breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
+		// break;
+		// default:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, defaultColor, DSAttachFreq);
+		// else
+		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
+		// waveSlowPeriod);
+		// break;
+		// }
+		// }
+		// } else {
+		// solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
+		// }
+		//
+		// if (shooting) {
+		// pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(0.35));
+		// pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(0.35), true);
+		// }
+		// if (hubStateChangeAlert)
+		// strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
+		//
+		// setLEDS();
 	}
 
 	public void setLEDS() {
