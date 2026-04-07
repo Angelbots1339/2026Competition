@@ -273,7 +273,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public Consumer<SwerveSample> followChoreoPath() {
 		final PIDController xController = new PIDController(5, 0.0, 0.0);
 		final PIDController yController = new PIDController(5, 0.0, 0.0);
-		final PIDController headingController = new PIDController(7.5, 0.0, 0.0);
+		final PIDController headingController = new PIDController(2.5, 0.0, 0.0);
 		headingController.enableContinuousInput(-Math.PI, Math.PI);
 		return (sample) -> {
 			Pose2d pose = getPose();

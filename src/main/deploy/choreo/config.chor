@@ -7,8 +7,8 @@
    "BumpPassAngle":{
     "dimension":"Angle",
     "var":{
-     "exp":"30 deg",
-     "val":0.5235987755982988
+     "exp":"0 deg",
+     "val":0.0
     }
    },
    "BumpPassVel":{
