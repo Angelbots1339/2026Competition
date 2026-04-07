@@ -11,9 +11,10 @@ import edu.wpi.first.units.measure.*;
  * in the Choreo GUI.
  */
 public final class ChoreoVars {
-    public static final LinearVelocity BumpPassVel = Units.MetersPerSecond.of(2);
+    public static final Angle BumpPassAngle = Units.Radians.of(0);
+    public static final LinearVelocity BumpPassVel = Units.MetersPerSecond.of(2.5);
     public static final Distance FieldHeight = Units.Meters.of(8.069326);
-    public static final LinearVelocity IntakeVelocity = Units.MetersPerSecond.of(1);
+    public static final LinearVelocity IntakeVelocity = Units.MetersPerSecond.of(1.6);
 
     public static final class Poses {
         public static final Pose2d DepotIntake = new Pose2d(0.75, 5.0020819, Rotation2d.fromRadians(2.2340214));
@@ -21,10 +22,10 @@ public final class ChoreoVars {
         public static final Pose2d DepotShoot = new Pose2d(2.3219109, 5.3971691, Rotation2d.fromRadians(-0.5880032));
         public static final Pose2d FirstBumpStart = new Pose2d(3.7402761, 5.8216133, Rotation2d.fromRadians(-1.5707963));
         public static final Pose2d HubLeftStart = new Pose2d(3.5654624, 5.0397372, Rotation2d.fromRadians(1.5707963));
-        public static final Pose2d HubSweepStart = new Pose2d(5.8285224, 3.8, Rotation2d.fromRadians(1.5707963));
+        public static final Pose2d HubSweepStart = new Pose2d(6.0085224, 3.8, Rotation2d.fromRadians(1.5707963));
         public static final Pose2d LeftBumpStart = new Pose2d(3.6429224, 6.0623264, Rotation2d.fromRadians(-1.5707963));
-        public static final Pose2d NeutralFarmStart = new Pose2d(8.0050018, 7.2233806, Rotation2d.fromRadians(-1.5707963));
-        public static final Pose2d NeutralFarmStop = new Pose2d(8.0050018, 5.2, Rotation2d.fromRadians(-1.5707963));
+        public static final Pose2d NeutralFarmStart = new Pose2d(7.5050018, 7.2233806, Rotation2d.fromRadians(-1.5707963));
+        public static final Pose2d NeutralFarmStop = new Pose2d(7.5050018, 5.2, Rotation2d.fromRadians(-1.5707963));
         public static final Pose2d NeutralShoot = new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.3072158));
         public static final Pose2d NeutralStart = new Pose2d(7.7759833, 6.36747, Rotation2d.fromRadians(-1.5707963));
         public static final Pose2d NeutralStop = new Pose2d(7.7759833, 5.0096962, Rotation2d.fromRadians(-1.5707963));

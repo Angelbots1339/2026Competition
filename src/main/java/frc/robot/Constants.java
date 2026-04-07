@@ -51,8 +51,8 @@ public class Constants {
 	}
 
 	public class ShootingConstants {
-		public static final Time IntakeRetractTime = Seconds.of(1.5);
-		public static final Time IntakeRetractOffsetTime = Seconds.of(0);
+		public static final Time IntakeRetractTime = Seconds.of(1);
+		public static final Time IntakeRetractOffsetTime = Seconds.of(1);
 	}
 
 	public class RobotConstants {
@@ -66,10 +66,10 @@ public class Constants {
 
 		// has least amount of error, overshooting seems to be result of wheel slip on
 		// concrete
-		public static final double angularDriveKP = 5.3;
+		public static final double angularDriveKP = 5;
 		public static final double angularDriveKI = 0;
 		public static final double angularDriveKD = 0;
-		public static final double angularDriveKS = 0.12;
+		public static final double angularDriveKS = 0.17;
 		public static final double angularDriveKV = 0;
 		public static final SimpleMotorFeedforward angularDriveFeedforward = new SimpleMotorFeedforward(
 				angularDriveKS,

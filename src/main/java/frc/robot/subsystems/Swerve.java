@@ -273,10 +273,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public Consumer<SwerveSample> followChoreoPath() {
 		final PIDController xController = new PIDController(5, 0.0, 0.0);
 		final PIDController yController = new PIDController(5, 0.0, 0.0);
-		final PIDController headingController = new PIDController(5.0, 0.0, 0.0);
+		final PIDController headingController = new PIDController(2.5, 0.0, 0.0);
 		headingController.enableContinuousInput(-Math.PI, Math.PI);
 		return (sample) -> {
 			Pose2d pose = getPose();
+			DogLog.log("Autos/target", sample.getPose());
 
 			// Generate the next speeds for the robot
 			ChassisSpeeds speeds = new ChassisSpeeds(
@@ -345,13 +346,6 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		}
 
 		LimelightHelpers.SetFiducialIDFiltersOverride(llName, ids);
-
-		if (isLL4) {
-			if (DriverStation.isDisabled())
-				LimelightHelpers.SetIMUMode(llName, 1);
-			if (DriverStation.isEnabled())
-				LimelightHelpers.SetIMUMode(llName, 4);
-		}
 	}
 
 	public void updateVision(String llName, boolean isLL4) {
