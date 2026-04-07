@@ -51,8 +51,8 @@ public class Constants {
 	}
 
 	public class ShootingConstants {
-		public static final Time IntakeRetractTime = Seconds.of(1.5);
-		public static final Time IntakeRetractOffsetTime = Seconds.of(0);
+		public static final Time IntakeRetractTime = Seconds.of(1);
+		public static final Time IntakeRetractOffsetTime = Seconds.of(1);
 	}
 
 	public class RobotConstants {
