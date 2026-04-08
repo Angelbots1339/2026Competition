@@ -93,12 +93,8 @@ public class RobotContainer {
 		configureControllerAlerts();
 		setDefaultCommands();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
-		// autoChooser.addCmd("Hub Depot", autos::hubDepotAuto);
-		// autoChooser.addCmd("Hub Depot Neutral", autos::hubDepotNeutralAuto);
 		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
-		// autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
 		autoChooser.addRoutine("Right Neutral Sweep", autos::rightNeutralSweep);
-		// autoChooser.addRoutine("Left Neutral Sweep", autos::leftNeutralSweep);
 		autoChooser.select("Nothing");
 	}
 
