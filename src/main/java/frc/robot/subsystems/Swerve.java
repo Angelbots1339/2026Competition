@@ -187,8 +187,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		// if doing setpoints/profiling change this velocity
 		rotation += angularDriveFF.calculate(Math.signum(target.minus(getYaw()).getRadians()));
 
-		if (angularDrivePID.atSetpoint())
-			return 0;
+		// if (angularDrivePID.atSetpoint())
+		// return 0;
 
 		return rotation;
 	}
