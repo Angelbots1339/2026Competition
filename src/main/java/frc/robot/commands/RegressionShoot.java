@@ -54,10 +54,11 @@ public class RegressionShoot extends Shoot {
 		if (!params.isValid())
 			return;
 
-		if (swerve.getTotalStatorCurrent() <= ShootingConstants.MaximumOtherCurrentDraw) {
-			runShoot(params.shooterRPS(), params.spinnerRPS(),
-					swerve::atRotation);
-		}
+		// if (swerve.getTotalStatorCurrent() <=
+		// ShootingConstants.MaximumOtherCurrentDraw) {
+		runShoot(params.shooterRPS(), params.spinnerRPS(),
+				swerve::atRotation);
+		// }
 
 		if (aligned == false) {
 			Leds.getInstance().shooterMisaligned = true;
