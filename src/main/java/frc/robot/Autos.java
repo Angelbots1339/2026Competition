@@ -70,6 +70,24 @@ public class Autos {
 		return routine;
 	}
 
+	public AutoRoutine leftNeutralNeutral() {
+		final var routine = factory.newRoutine("Left Neutral Neutral");
+		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name());
+		final var leftNeutral2 = routine.trajectory(ChoreoTraj.Shoot_To_Neutral.name());
+		final var NeutralSend = routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name());
+
+		final var shoot1 = shoot.get().withTimeout(3.5);
+		final var shoot2 = shoot.get().withTimeout(3.5);
+
+		routine.active().onTrue(bumpToNeutral.resetOdometry().andThen(bumpToNeutral.cmd()));
+		bumpToNeutral.done().onTrue(shoot1);
+		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
+		leftNeutral2.done().onTrue(shoot2);
+		routine.observe(shoot2::isFinished).onTrue(NeutralSend.cmd());
+
+		return routine;
+	}
+
 	public AutoRoutine rightSweepSweep() {
 		final var routine = factory.newRoutine("Right Sweep Sweep");
 		final var bumpToNeutral = routine
@@ -79,6 +97,24 @@ public class Autos {
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name()).getRawTrajectory()));
 		final var NeutralSend = routine.trajectory(
 				flipTrajectoryX(routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name()).getRawTrajectory()));
+
+		final var shoot1 = shoot.get().withTimeout(3.1);
+		final var shoot2 = shoot.get().withTimeout(3);
+
+		routine.active().onTrue(bumpToNeutral.resetOdometry().andThen(bumpToNeutral.cmd()));
+		bumpToNeutral.done().onTrue(shoot1);
+		routine.observe(shoot1::isFinished).onTrue(leftNeutral2.cmd());
+		leftNeutral2.done().onTrue(shoot2);
+		routine.observe(shoot2::isFinished).onTrue(NeutralSend.cmd());
+
+		return routine;
+	}
+
+	public AutoRoutine leftSweepSweep() {
+		final var routine = factory.newRoutine("Left Sweep Sweep");
+		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name());
+		final var leftNeutral2 = routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name());
+		final var NeutralSend = routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name());
 
 		final var shoot1 = shoot.get().withTimeout(3.1);
 		final var shoot2 = shoot.get().withTimeout(3);
