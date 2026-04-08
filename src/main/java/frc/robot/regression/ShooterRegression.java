@@ -18,6 +18,7 @@ import frc.lib.util.FieldUtil;
 import frc.robot.subsystems.Swerve;
 
 public class ShooterRegression {
+	public static final double minDistance = 2.0;
 	public static final double[][] shotRPSData = {
 			// distance (m), shooter rps, spinner rps
 			// { 1.828, 41, 3 },
@@ -39,20 +40,32 @@ public class ShooterRegression {
 
 			// new new shooter data
 			{ 2.19, 37, 4 },
-			{ 2.73, 38, 7 },
-			{ 3.64, 40, 10 },
+			{ 2.52, 38, 5.5 },
+			{ 2.76, 39, 7 },
+			{ 3.05, 40, 8 },
+			{ 3.31, 40, 9 },
+			{ 3.64, 41, 10 },
 			{ 4.23, 42, 12 },
 			{ 5.38, 45, 15 },
 	};
 
 	public static final double[][] tofData = {
 			// distance, tof from ball leaving the shooter to the hub
-			// 21, 23, 26, 25, 21, 22, 26, 26, 26, 23
-			{ 1.816, 23.9 / 29.982 },
-			// 27, 27, 29, 26, 31, 31, 31, 27, 30, 33, 26, 30, 27, 31, 29,
-			{ 2.820, 29.0 / 29.949 },
-			// 35, 36, 35, 36, 35, 38, 35, 39, 35, 37, 35, 35
-			{ 3.90, 35.9 / 29.949 },
+
+			// 19, 24, 22, 20, 22, 19
+			{ 2.03, 21.0 / 30.0 },
+
+			// 27, 23, 27, 28, 27, 28, 26, 26, 28
+			{ 2.52, 26.667 / 30.0 },
+
+			// todo: count actually
+			// 29, 26, 31, 29, 28
+			{ 3.01, 28.6 / 30.0 },
+
+			{ 3.52, 32 / 28.99 },
+
+			{ 4.04, 35 / 30.0 },
+
 	};
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
@@ -75,7 +88,8 @@ public class ShooterRegression {
 		}
 	}
 
-	public record ShooterParams(Rotation2d angle, double shooterRPS, double spinnerRPS, Angle maxAngleError) {
+	public record ShooterParams(Rotation2d angle, double shooterRPS, double spinnerRPS, Angle maxAngleError,
+			boolean isValid) {
 	};
 
 	public static ShooterParams getShotParams(Swerve swerve) {
@@ -116,8 +130,9 @@ public class ShooterRegression {
 		DogLog.log("Regression/Angle", angle);
 		DogLog.log("Regression/Shooter RPS", rps[0]);
 		DogLog.log("Regression/Spinner RPS", rps[1]);
+		boolean isValid = lookaheadDistance >= minDistance;
 
-		return new ShooterParams(angle, rps[0], rps[1], maxAngleError);
+		return new ShooterParams(angle, rps[0], rps[1], maxAngleError, isValid);
 	}
 
 	public static double[] getRegressionRPS(double meters) {

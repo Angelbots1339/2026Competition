@@ -4,7 +4,10 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import dev.doglog.DogLog;
+import edu.wpi.first.wpilibj.Timer;
 import frc.lib.util.Leds;
+import frc.robot.Constants.ShootingConstants;
 import frc.robot.regression.ShooterRegression;
 import frc.robot.regression.ShooterRegression.ShooterParams;
 import frc.robot.subsystems.Indexer;
@@ -14,6 +17,7 @@ import frc.robot.subsystems.Swerve;
 
 public class RegressionShoot extends Shoot {
 	private Swerve swerve;
+	private Shooter shooter;
 
 	private Supplier<Double> x;
 	private Supplier<Double> y;
@@ -23,6 +27,8 @@ public class RegressionShoot extends Shoot {
 	public RegressionShoot(Swerve swerve, Shooter shooter, Indexer indexer, Intake intake, Supplier<Double> x,
 			Supplier<Double> y) {
 		super(shooter, indexer, intake);
+
+		this.shooter = shooter;
 
 		this.swerve = swerve;
 		this.x = () -> x.get() / 5.0;
@@ -40,16 +46,25 @@ public class RegressionShoot extends Shoot {
 	@Override
 	public void execute() {
 		ShooterParams params = ShooterRegression.getShotParams(swerve);
-		boolean isAngledTowardsHub = !swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(),
+		boolean isAngledTowardsHub = swerve.getYaw().getMeasure().isNear(params.angle().getMeasure(),
 				params.maxAngleError());
 		boolean areSticksMoving = Math.hypot(x.get(), y.get()) > 0;
+		DogLog.log("Regression Shoot/Sticks", areSticksMoving);
+		DogLog.log("Regression Shoot/Angled At Hub", isAngledTowardsHub);
+		if (!params.isValid())
+			return;
 
+		// if (swerve.getTotalStatorCurrent() <=
+		// ShootingConstants.MaximumOtherCurrentDraw) {
 		runShoot(params.shooterRPS(), params.spinnerRPS(),
 				swerve::atRotation);
+		// }
 
 		if (aligned == false) {
+			Leds.getInstance().shooterMisaligned = true;
 			swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
 		} else {
+			Leds.getInstance().shooterMisaligned = false;
 			swerve.setControl(new SwerveRequest.SwerveDriveBrake());
 		}
 

@@ -58,7 +58,11 @@ public class TunerConstants {
 	// cannot be null.
 	// Some configs will be overwritten; check the `with*InitialConfigs()` API
 	// documentation.
-	private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
+	private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration()
+			.withCurrentLimits(
+					new CurrentLimitsConfigs()
+							.withStatorCurrentLimit(Amps.of(80))
+							.withStatorCurrentLimitEnable(true));
 	private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
 			.withCurrentLimits(
 					new CurrentLimitsConfigs()
@@ -265,11 +269,15 @@ public class TunerConstants {
 		 * @param odometryStandardDeviation The standard deviation for odometry
 		 *                                  calculation
 		 *                                  in the form [x, y, theta]áµ€, with units in
+		 *                                  
+		 * 
 		 *                                  meters
 		 *                                  and radians
 		 * @param visionStandardDeviation   The standard deviation for vision
 		 *                                  calculation
 		 *                                  in the form [x, y, theta]áµ€, with units in
+		 *                                  
+		 * 
 		 *                                  meters
 		 *                                  and radians
 		 * @param modules                   Constants for each specific module

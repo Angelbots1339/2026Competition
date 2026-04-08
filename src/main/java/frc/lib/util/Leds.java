@@ -42,6 +42,7 @@ public class Leds extends SubsystemBase {
 	public boolean hubStateChangeAlert = false;
 	public boolean isHubActive = false;
 	public boolean shooting = false;
+	public boolean shooterMisaligned = false;
 
 	// LED Config
 	private Color defaultColor = Color.kGold;
@@ -135,8 +136,12 @@ public class Leds extends SubsystemBase {
 		}
 
 		if (shooting) {
-			pulse(Section.RIGHT, Color.kWhite, 5, Seconds.of(0.35));
-			pulse(Section.LEFT, Color.kWhite, 5, Seconds.of(0.35), true);
+			Color col = Color.kWhite;
+			if (shooterMisaligned) {
+				col = Color.kRed;
+			}
+			pulse(Section.RIGHT, col, 5, Seconds.of(0.35));
+			pulse(Section.LEFT, col, 5, Seconds.of(0.35), true);
 		}
 		if (hubStateChangeAlert)
 			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
