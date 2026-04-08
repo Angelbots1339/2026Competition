@@ -63,7 +63,6 @@ public class RegressionShoot extends Shoot {
 		if (aligned == false) {
 			Leds.getInstance().shooterMisaligned = true;
 			swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);
-			shooter.disableKicker();
 		} else {
 			Leds.getInstance().shooterMisaligned = false;
 			swerve.setControl(new SwerveRequest.SwerveDriveBrake());
