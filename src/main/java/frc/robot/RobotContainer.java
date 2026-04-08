@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.RegressionShoot;
 import frc.robot.commands.Shoot;
@@ -93,8 +92,8 @@ public class RobotContainer {
 		configureControllerAlerts();
 		setDefaultCommands();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
-		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
-		autoChooser.addRoutine("Right Neutral Sweep", autos::rightNeutralSweep);
+		autoChooser.addRoutine("Right Neutral Neutral", autos::rightNeutralNeutral);
+		autoChooser.addRoutine("Right Sweep Sweep", autos::rightSweepSweep);
 		autoChooser.select("Nothing");
 	}
 
