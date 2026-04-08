@@ -94,6 +94,8 @@ public class RobotContainer {
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		autoChooser.addRoutine("Right Neutral Neutral", autos::rightNeutralNeutral);
 		autoChooser.addRoutine("Right Sweep Sweep", autos::rightSweepSweep);
+		autoChooser.addRoutine("Left Neutral Neutral", autos::leftNeutralNeutral);
+		autoChooser.addRoutine("Left Sweep Sweep", autos::leftSweepSweep);
 		autoChooser.select("Nothing");
 	}
 
