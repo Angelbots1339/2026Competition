@@ -48,8 +48,8 @@ public class Autos {
 		CommandScheduler.getInstance().schedule(factory.trajectoryCmd("").ignoringDisable(true));
 	}
 
-	public AutoRoutine rightNeutral() {
-		final var routine = factory.newRoutine("Right Neutral");
+	public AutoRoutine rightNeutralNeutral() {
+		final var routine = factory.newRoutine("Right Neutral Neutral");
 		final var bumpToNeutral = routine
 				.trajectory(
 						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name()).getRawTrajectory()));
@@ -70,8 +70,8 @@ public class Autos {
 		return routine;
 	}
 
-	public AutoRoutine rightNeutralSweep() {
-		final var routine = factory.newRoutine("Right Neutral Sweep");
+	public AutoRoutine rightSweepSweep() {
+		final var routine = factory.newRoutine("Right Sweep Sweep");
 		final var bumpToNeutral = routine
 				.trajectory(
 						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name()).getRawTrajectory()));
