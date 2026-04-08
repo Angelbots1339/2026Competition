@@ -42,6 +42,7 @@ public class Leds extends SubsystemBase {
 	public boolean hubStateChangeAlert = false;
 	public boolean isHubActive = false;
 	public boolean shooting = false;
+	public boolean passing = false;
 	public boolean shooterMisaligned = false;
 
 	// LED Config
@@ -138,13 +139,17 @@ public class Leds extends SubsystemBase {
 		if (shooting) {
 			Color col = Color.kWhite;
 			if (shooterMisaligned) {
-				col = Color.kRed;
+				col = Color.kOrange;
 			}
 			pulse(Section.RIGHT, col, 5, Seconds.of(0.35));
 			pulse(Section.LEFT, col, 5, Seconds.of(0.35), true);
+			if (!isHubActive && !passing)
+				solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
 		}
-		if (hubStateChangeAlert)
+
+		if (hubStateChangeAlert) {
 			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
+		}
 
 		leds.setData(buf);
 	}

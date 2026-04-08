@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.tuning.TuningManager;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.commands.RegressionShoot;
 import frc.robot.commands.Shoot;
@@ -35,6 +34,7 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
+import frc.lib.util.Leds;
 
 @Logged
 public class RobotContainer {
@@ -93,12 +93,10 @@ public class RobotContainer {
 		configureControllerAlerts();
 		setDefaultCommands();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
-		// autoChooser.addCmd("Hub Depot", autos::hubDepotAuto);
-		// autoChooser.addCmd("Hub Depot Neutral", autos::hubDepotNeutralAuto);
-		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
-		// autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
+		autoChooser.addRoutine("Right Neutral Neutral", autos::rightNeutralNeutral);
 		autoChooser.addRoutine("Right Neutral Sweep", autos::rightNeutralSweep);
-		// autoChooser.addRoutine("Left Neutral Sweep", autos::leftNeutralSweep);
+		autoChooser.addRoutine("Left Neutral Neutral", autos::leftNeutralNeutral);
+		autoChooser.addRoutine("Left Neutral Sweep", autos::leftNeutralSweep);
 		autoChooser.select("Nothing");
 	}
 
@@ -108,7 +106,9 @@ public class RobotContainer {
 		pass.whileTrue(Commands.parallel(
 				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
 						() -> FieldUtil.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero, () -> true)),
-				new Shoot(shooter, indexer, intake, () -> 46.0, () -> 40.0, swerve::atRotation)));
+				new Shoot(shooter, indexer, intake, () -> 46.0, () -> 40.0, swerve::atRotation),
+				Commands.runOnce(() -> Leds.getInstance().passing = true)))
+				.onFalse(Commands.runOnce(() -> Leds.getInstance().passing = false));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosestBumpAngle(),
 						() -> true),
