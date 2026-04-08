@@ -139,7 +139,7 @@ public class Leds extends SubsystemBase {
 		if (shooting) {
 			Color col = Color.kWhite;
 			if (shooterMisaligned) {
-				col = Color.kRed;
+				col = Color.kOrange;
 			}
 			pulse(Section.RIGHT, col, 5, Seconds.of(0.35));
 			pulse(Section.LEFT, col, 5, Seconds.of(0.35), true);
