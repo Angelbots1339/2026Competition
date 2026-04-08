@@ -51,12 +51,21 @@ public class ShooterRegression {
 
 	public static final double[][] tofData = {
 			// distance, tof from ball leaving the shooter to the hub
-			// 21, 23, 26, 25, 21, 22, 26, 26, 26, 23
-			{ 1.816, 23.9 / 29.982 },
-			// 27, 27, 29, 26, 31, 31, 31, 27, 30, 33, 26, 30, 27, 31, 29,
-			{ 2.820, 29.0 / 29.949 },
-			// 35, 36, 35, 36, 35, 38, 35, 39, 35, 37, 35, 35
-			{ 3.90, 35.9 / 29.949 },
+
+			// 19, 24, 22, 20, 22, 19
+			{ 2.03, 21.0 / 30.0 },
+
+			// 27, 23, 27, 28, 27, 28, 26, 26, 28
+			{ 2.52, 26.667 / 30.0 },
+
+			// todo: count actually
+			// 29, 26, 31, 29, 28
+			{ 3.01, 28.6 / 30.0 },
+
+			{ 3.52, 32 / 28.99 },
+
+			{ 4.04, 35 / 30.0 },
+
 	};
 
 	public static final InterpolatingDoubleTreeMap timeOfFlightMap = new InterpolatingDoubleTreeMap();
