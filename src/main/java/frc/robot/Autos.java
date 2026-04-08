@@ -88,8 +88,8 @@ public class Autos {
 		return routine;
 	}
 
-	public AutoRoutine rightSweepSweep() {
-		final var routine = factory.newRoutine("Right Sweep Sweep");
+	public AutoRoutine rightNeutralSweep() {
+		final var routine = factory.newRoutine("Right Neutral Sweep");
 		final var bumpToNeutral = routine
 				.trajectory(
 						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name()).getRawTrajectory()));
@@ -110,8 +110,8 @@ public class Autos {
 		return routine;
 	}
 
-	public AutoRoutine leftSweepSweep() {
-		final var routine = factory.newRoutine("Left Sweep Sweep");
+	public AutoRoutine leftNeutralSweep() {
+		final var routine = factory.newRoutine("Left Neutral Sweep");
 		final var bumpToNeutral = routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name());
 		final var leftNeutral2 = routine.trajectory(ChoreoTraj.Shoot_To_HubSweep.name());
 		final var NeutralSend = routine.trajectory(ChoreoTraj.NeutralShoot_SendToNeutral.name());
