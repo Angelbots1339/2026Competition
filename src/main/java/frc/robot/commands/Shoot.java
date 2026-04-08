@@ -28,6 +28,7 @@ public class Shoot extends Command {
 	private Supplier<Boolean> runKicker = () -> true;
 
 	private Timer cycleTimer = new Timer();
+	private boolean reversingIntake = false;
 
 	public Shoot(Shooter shooter, Indexer indexer, Intake intake) {
 		this(shooter, indexer, intake, () -> 0.0, () -> 0.0, () -> true);
@@ -67,11 +68,15 @@ public class Shoot extends Command {
 					MathUtil.interpolate(IntakeConstants.DeployedAngle.in(Degrees),
 							IntakeConstants.RetractedAngle.in(Degrees),
 							(1.0 / ShootingConstants.IntakeRetractTime.in(Seconds))
-									* (cycleTimer.get() - ShootingConstants.IntakeRetractOffsetTime.in(Seconds)))));
+									* ((reversingIntake)
+											? (ShootingConstants.IntakeRetractTime.in(Seconds) - cycleTimer.get())
+											: (cycleTimer.get()
+													- ShootingConstants.IntakeRetractOffsetTime.in(Seconds))))));
 
 			if (cycleTimer.hasElapsed(
 					ShootingConstants.IntakeRetractTime.plus(ShootingConstants.IntakeRetractOffsetTime).in(Seconds))) {
 				cycleTimer.restart();
+				reversingIntake = !reversingIntake;
 			}
 		}
 
@@ -88,6 +93,7 @@ public class Shoot extends Command {
 		shooter.disableShooter();
 		indexer.disable();
 		Leds.getInstance().shooting = false;
+		reversingIntake = false;
 	}
 
 	@Override
