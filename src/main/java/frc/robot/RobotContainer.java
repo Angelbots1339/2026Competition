@@ -95,7 +95,7 @@ public class RobotContainer {
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		// autoChooser.addCmd("Hub Depot", autos::hubDepotAuto);
 		// autoChooser.addCmd("Hub Depot Neutral", autos::hubDepotNeutralAuto);
-		// autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
+		autoChooser.addRoutine("Right 2x Neutral", autos::rightNeutral);
 		// autoChooser.addRoutine("Left 2x Neutral", autos::leftNeutral);
 		autoChooser.addRoutine("Right Neutral Sweep", autos::rightNeutralSweep);
 		// autoChooser.addRoutine("Left Neutral Sweep", autos::leftNeutralSweep);
@@ -108,7 +108,7 @@ public class RobotContainer {
 		pass.whileTrue(Commands.parallel(
 				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
 						() -> FieldUtil.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero, () -> true)),
-				new Shoot(shooter, indexer, intake, () -> 45.0, () -> 45.0, swerve::atRotation)));
+				new Shoot(shooter, indexer, intake, () -> 46.0, () -> 20.0, swerve::atRotation)));
 		bumpDrive.whileTrue(
 				Commands.run(() -> swerve.angularDriveRequest(leftY, leftX, () -> swerve.getClosestBumpAngle(),
 						() -> true),
@@ -137,7 +137,7 @@ public class RobotContainer {
 		// .alongWith(indexer.run(() ->
 		// indexer.runVoltage(IndexerConstants.IntakeIndexerVoltage))));
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
-		trenchShot.whileTrue(new Shoot(shooter, indexer, intake, () -> 45.0, () -> 12.6, () -> true));
+		trenchShot.whileTrue(new Shoot(shooter, indexer, intake, () -> 40.0, () -> 8.4, () -> true));
 
 		// reverse.whileTrue(Commands.parallel(
 		// shooter.run(() -> shooter.setKickerVelocity(-ShooterConstants.KickerRPS)),

@@ -18,6 +18,7 @@ import frc.lib.util.FieldUtil;
 import frc.robot.subsystems.Swerve;
 
 public class ShooterRegression {
+	public static final double minDistance = 2.0;
 	public static final double[][] shotRPSData = {
 			// distance (m), shooter rps, spinner rps
 			// { 1.828, 41, 3 },
@@ -39,8 +40,11 @@ public class ShooterRegression {
 
 			// new new shooter data
 			{ 2.19, 37, 4 },
-			{ 2.73, 38, 7 },
-			{ 3.64, 40, 10 },
+			{ 2.52, 38, 5.5 },
+			{ 2.76, 39, 7 },
+			{ 3.05, 40, 8 },
+			{ 3.31, 40, 9 },
+			{ 3.64, 41, 10 },
 			{ 4.23, 42, 12 },
 			{ 5.38, 45, 15 },
 	};
@@ -75,7 +79,8 @@ public class ShooterRegression {
 		}
 	}
 
-	public record ShooterParams(Rotation2d angle, double shooterRPS, double spinnerRPS, Angle maxAngleError) {
+	public record ShooterParams(Rotation2d angle, double shooterRPS, double spinnerRPS, Angle maxAngleError,
+			boolean isValid) {
 	};
 
 	public static ShooterParams getShotParams(Swerve swerve) {
@@ -116,8 +121,9 @@ public class ShooterRegression {
 		DogLog.log("Regression/Angle", angle);
 		DogLog.log("Regression/Shooter RPS", rps[0]);
 		DogLog.log("Regression/Spinner RPS", rps[1]);
+		boolean isValid = lookaheadDistance >= minDistance;
 
-		return new ShooterParams(angle, rps[0], rps[1], maxAngleError);
+		return new ShooterParams(angle, rps[0], rps[1], maxAngleError, isValid);
 	}
 
 	public static double[] getRegressionRPS(double meters) {

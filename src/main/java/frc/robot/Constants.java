@@ -53,7 +53,7 @@ public class Constants {
 	public class ShootingConstants {
 		public static final double MaximumOtherCurrentDraw = 250; // TODO: TUNE THIS THIS IS MAXIMUM STATOR CURRENT FROM
 		public static final Time IntakeRetractTime = Seconds.of(1);
-		public static final Time IntakeRetractOffsetTime = Seconds.of(1);
+		public static final Time IntakeRetractOffsetTime = Seconds.of(0.1);
 	}
 
 	public class RobotConstants {
@@ -137,7 +137,7 @@ public class Constants {
 		public static final int KickerPort = 36;
 
 		public static final double shootRPS = 41.5;
-		public static final double KickerRPS = 20.0;
+		public static final double KickerRPS = 25.0;
 		public static final double rpsTolerence = 1;
 
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()

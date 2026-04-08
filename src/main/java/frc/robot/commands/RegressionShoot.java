@@ -51,6 +51,8 @@ public class RegressionShoot extends Shoot {
 		boolean areSticksMoving = Math.hypot(x.get(), y.get()) > 0;
 		DogLog.log("Regression Shoot/Sticks", areSticksMoving);
 		DogLog.log("Regression Shoot/Angled At Hub", isAngledTowardsHub);
+		if (!params.isValid())
+			return;
 
 		if (swerve.getTotalStatorCurrent() <= ShootingConstants.MaximumOtherCurrentDraw) {
 			runShoot(params.shooterRPS(), params.spinnerRPS(),
