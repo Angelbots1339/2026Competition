@@ -65,7 +65,7 @@ public class Shoot extends Command {
 
 			intake.setIntakeAngle(Degrees.of(
 					MathUtil.interpolate(IntakeConstants.DeployedAngle.in(Degrees),
-							IntakeConstants.RetractedAngle.in(Degrees),
+							IntakeConstants.RetractedAngle.in(Degrees) / 2.0,
 							(1.0 / ShootingConstants.IntakeRetractTime.in(Seconds))
 									* (cycleTimer.get() - ShootingConstants.IntakeRetractOffsetTime.in(Seconds)))));
 
