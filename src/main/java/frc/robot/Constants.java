@@ -201,7 +201,7 @@ public class Constants {
 
 		public static final Angle DeployedAngle = Degrees.of(12.5);
 		public static final Angle RetractedAngle = Degrees.of(116);
-		public static final double IntakeVoltage = 7;
+		public static final double IntakeVoltage = 8;
 
 		public static final double deployIntakeGearRatio = 32.0 / 16.0 * 9;
 
