@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
 	public Robot() {
 		m_robotContainer = new RobotContainer();
 		// PathfindingCommand.warmupCommand().schedule();
-		DogLog.setOptions(new DogLogOptions().withNtPublish(false).withLogExtras(true).withCaptureNt(true));
+		DogLog.setOptions(new DogLogOptions().withNtPublish(false).withLogExtras(false).withCaptureNt(true));
 		// doglog log thread takes some time to start up so warm it up
 		DogLog.log("", "");
 
@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
 		addPeriodic(() -> DogLog.forceNt.log("Match/Shift Time Left", m_robotContainer.shifttimeleft()), 0.5);
 		addPeriodic(() -> DogLog.forceNt.log("Match/Hub Active", m_robotContainer.isHubActive()), 0.5);
 		addPeriodic(() -> DogLog.forceNt.log("Match/Hub Next Active", m_robotContainer.shiftNext()), 0.5);
-		addPeriodic(() -> DogLog.forceNt.log("Match/Is Transition", m_robotContainer.isTransitionPeriod()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Transition", m_robotContainer.isTransitionPeriod()), 1);
 		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 1", m_robotContainer.isShift1()), 1);
 		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 2", m_robotContainer.isShift2()), 1);
 		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 3", m_robotContainer.isShift3()), 1);
