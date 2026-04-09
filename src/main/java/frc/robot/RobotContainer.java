@@ -106,7 +106,7 @@ public class RobotContainer {
 		pass.whileTrue(Commands.parallel(
 				swerve.run(() -> swerve.angularDriveRequest(leftY, leftX,
 						() -> FieldUtil.isRedAlliance() ? Rotation2d.k180deg : Rotation2d.kZero, () -> true)),
-				new Shoot(shooter, indexer, intake, () -> 46.0, () -> 40.0, swerve::atRotation),
+				new Shoot(shooter, indexer, intake, () -> 46.0, () -> 20.0, swerve::atRotation),
 				Commands.runOnce(() -> Leds.getInstance().passing = true)))
 				.onFalse(Commands.runOnce(() -> Leds.getInstance().passing = false));
 		bumpDrive.whileTrue(
