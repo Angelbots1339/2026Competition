@@ -55,17 +55,15 @@ public class Robot extends TimedRobot {
 		Epilogue.bind(this);
 		// DogLog.setEnabled(false);
 
-		addPeriodic(() -> {
-			DogLog.forceNt.log("Match/Shift Time Left", m_robotContainer.shifttimeleft());
-			DogLog.forceNt.log("Match/Hub Active", m_robotContainer.isHubActive());
-			DogLog.forceNt.log("Match/Hub Next Active", m_robotContainer.shiftNext());
-			DogLog.forceNt.log("Match/Is Transition", m_robotContainer.isTransitionPeriod());
-			DogLog.forceNt.log("Match/Is Shift 1", m_robotContainer.isShift1());
-			DogLog.forceNt.log("Match/Is Shift 2", m_robotContainer.isShift2());
-			DogLog.forceNt.log("Match/Is Shift 3", m_robotContainer.isShift3());
-			DogLog.forceNt.log("Match/Is Shift 4", m_robotContainer.isShift4());
-			DogLog.forceNt.log("Match/Is Endgame", m_robotContainer.isEndGame());
-		}, 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Shift Time Left", m_robotContainer.shifttimeleft()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Hub Active", m_robotContainer.isHubActive()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Hub Next Active", m_robotContainer.shiftNext()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Transition", m_robotContainer.isTransitionPeriod()), 0.5);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 1", m_robotContainer.isShift1()), 1);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 2", m_robotContainer.isShift2()), 1);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 3", m_robotContainer.isShift3()), 1);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Shift 4", m_robotContainer.isShift4()), 1);
+		addPeriodic(() -> DogLog.forceNt.log("Match/Is Endgame", m_robotContainer.isEndGame()), 1);
 
 		disabledTimer.restart();
 	}

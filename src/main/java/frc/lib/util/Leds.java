@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-@Logged
 public class Leds extends SubsystemBase {
 
 	private static Leds instance;
@@ -82,14 +81,14 @@ public class Leds extends SubsystemBase {
 	@Override
 	public void periodic() {
 		globalTimer = Timer.getFPGATimestamp();
-		if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
-			driverStation_attached = true;
-		} else {
-			driverStation_attached = false;
-		}
-		if (DriverStation.getAlliance().isPresent()) {
-			alliance = DriverStation.getAlliance().get();
-		}
+		// if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
+		// driverStation_attached = true;
+		// } else {
+		// driverStation_attached = false;
+		// }
+		// if (DriverStation.getAlliance().isPresent()) {
+		// alliance = DriverStation.getAlliance().get();
+		// }
 
 		isHubActive = FieldUtil.isHubActive();
 
@@ -100,52 +99,52 @@ public class Leds extends SubsystemBase {
 			hubStateChangeAlert = false;
 		}
 
-		wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
-				waveSlowPeriod);
+		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
+		// waveSlowPeriod);
+		//
+		// if (DriverStation.isDisabled()) {
+		// if (lowbattery || criticallyLowbattery) {
+		// if (criticallyLowbattery)
+		// strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
+		// else
+		// solid(Section.TOP, lowBatteryColor);
+		// } else {
+		// switch (alliance) {
+		// case Red:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, Color.kRed, DSAttachFreq);
+		// else
+		// breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
+		// break;
+		// case Blue:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, Color.kBlue, DSAttachFreq);
+		// else
+		// breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
+		// break;
+		// default:
+		// if (!driverStation_attached)
+		// strobe(Section.TOP, defaultColor, DSAttachFreq);
+		// else
+		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
+		// waveSlowPeriod);
+		// break;
+		// }
+		// }
+		// } else {
+		solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
+		// }
 
-		if (DriverStation.isDisabled()) {
-			if (lowbattery || criticallyLowbattery) {
-				if (criticallyLowbattery)
-					strobe(Section.TOP, lowBatteryColor, Hertz.of(3));
-				else
-					solid(Section.TOP, lowBatteryColor);
-			} else {
-				switch (alliance) {
-					case Red:
-						if (!driverStation_attached)
-							strobe(Section.TOP, Color.kRed, DSAttachFreq);
-						else
-							breath(Section.TOP, Color.kRed, Color.kBlack, allianceBreathPeriod);
-						break;
-					case Blue:
-						if (!driverStation_attached)
-							strobe(Section.TOP, Color.kBlue, DSAttachFreq);
-						else
-							breath(Section.TOP, Color.kBlue, Color.kBlack, allianceBreathPeriod);
-						break;
-					default:
-						if (!driverStation_attached)
-							strobe(Section.TOP, defaultColor, DSAttachFreq);
-						else
-							wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
-									waveSlowPeriod);
-						break;
-				}
-			}
-		} else {
-			solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
-		}
-
-		if (shooting) {
-			Color col = Color.kWhite;
-			if (shooterMisaligned) {
-				col = Color.kOrange;
-			}
-			pulse(Section.RIGHT, col, 5, Seconds.of(0.35));
-			pulse(Section.LEFT, col, 5, Seconds.of(0.35), true);
-			if (!isHubActive && !passing)
-				solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
-		}
+		// if (shooting) {
+		// Color col = Color.kWhite;
+		// if (shooterMisaligned) {
+		// col = Color.kOrange;
+		// }
+		// pulse(Section.RIGHT, col, 5, Seconds.of(0.35));
+		// pulse(Section.LEFT, col, 5, Seconds.of(0.35), true);
+		// if (!isHubActive && !passing)
+		// solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
+		// }
 
 		if (hubStateChangeAlert) {
 			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
