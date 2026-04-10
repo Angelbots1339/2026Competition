@@ -271,7 +271,7 @@ public class Constants {
 								.withSensorToMechanismRatio(intakeWheelGearRatio))
 				.withCurrentLimits(
 						new CurrentLimitsConfigs()
-								.withStatorCurrentLimit(50)
+								.withStatorCurrentLimit(60)
 								.withStatorCurrentLimitEnable(true))
 				.withSlot0(deploySlot0);
 
