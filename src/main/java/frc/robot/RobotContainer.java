@@ -97,6 +97,9 @@ public class RobotContainer {
 		autoChooser.addRoutine("Right Neutral Sweep", autos::rightNeutralSweep);
 		autoChooser.addRoutine("Left Neutral Neutral", autos::leftNeutralNeutral);
 		autoChooser.addRoutine("Left Neutral Sweep", autos::leftNeutralSweep);
+
+		autoChooser.addRoutine("DANGER: LEFT SEND SWEEP", autos::leftNeutralSendSweep);
+		autoChooser.addRoutine("DANGER: RIGHT SEND SWEEP", autos::rightNeutralSendSweep);
 		autoChooser.select("Nothing");
 	}
 
