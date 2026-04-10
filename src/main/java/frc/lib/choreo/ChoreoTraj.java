@@ -31,6 +31,13 @@ public record ChoreoTraj(
         new Pose2d(3.64292, 5.96233, Rotation2d.fromRadians(-1.5708)),
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722))
     );
+    public static final ChoreoTraj Bump_To_NeutralSend = new ChoreoTraj(
+        "Bump_To_NeutralSend",
+        OptionalInt.empty(),
+        5.18541,
+        new Pose2d(3.64292, 5.96233, Rotation2d.fromRadians(-1.5708)),
+        new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722))
+    );
     public static final ChoreoTraj Bump_To_NeutralSweep = new ChoreoTraj(
         "Bump_To_NeutralSweep",
         OptionalInt.empty(),
@@ -55,22 +62,15 @@ public record ChoreoTraj(
     public static final ChoreoTraj Shoot_To_HubSweep = new ChoreoTraj(
         "Shoot_To_HubSweep",
         OptionalInt.empty(),
-        6.35815,
+        6.42626,
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722)),
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722))
     );
     public static final ChoreoTraj Shoot_To_Neutral = new ChoreoTraj(
         "Shoot_To_Neutral",
         OptionalInt.empty(),
-        5.25449,
+        5.3121,
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722)),
-        new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722))
-    );
-    public static final ChoreoTraj Bump_To_NeutralSend = new ChoreoTraj(
-        "Bump_To_NeutralSend",
-        OptionalInt.empty(),
-        5.18541,
-        new Pose2d(3.64292, 5.96233, Rotation2d.fromRadians(-1.5708)),
         new Pose2d(3.102, 5.575, Rotation2d.fromRadians(2.30722))
     );
 
@@ -80,12 +80,12 @@ public record ChoreoTraj(
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
         Map.entry("Bump_To_Neutral", Bump_To_Neutral),
+        Map.entry("Bump_To_NeutralSend", Bump_To_NeutralSend),
         Map.entry("Bump_To_NeutralSweep", Bump_To_NeutralSweep),
         Map.entry("Hub_To_Depot", Hub_To_Depot),
         Map.entry("NeutralShoot_SendToNeutral", NeutralShoot_SendToNeutral),
         Map.entry("Shoot_To_HubSweep", Shoot_To_HubSweep),
-        Map.entry("Shoot_To_Neutral", Shoot_To_Neutral),
-        Map.entry("Bump_To_NeutralSend", Bump_To_NeutralSend)
+        Map.entry("Shoot_To_Neutral", Shoot_To_Neutral)
     );
 
     /**

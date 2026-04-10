@@ -15,6 +15,7 @@ public final class ChoreoVars {
     public static final LinearVelocity BumpPassVel = Units.MetersPerSecond.of(2.75);
     public static final Distance FieldHeight = Units.Meters.of(8.069326);
     public static final LinearVelocity IntakeVelocity = Units.MetersPerSecond.of(1.2);
+    public static final LinearVelocity SecondBumpPassVel = Units.MetersPerSecond.of(2.5);
 
     public static final class Poses {
         public static final Pose2d DepotIntake = new Pose2d(0.75, 5.0020819, Rotation2d.fromRadians(2.2340214));
