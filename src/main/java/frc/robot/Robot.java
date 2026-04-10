@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		NetworkTableInstance.getDefault().getTable(VisionConstants.Limelight4Name).getEntry("throttle_set")
-				.setNumber(100);
+				.setNumber(200);
 		CommandScheduler.getInstance().schedule(
 				Commands.runOnce(() -> {
 					if (!DriverStation.isFMSAttached()) {
