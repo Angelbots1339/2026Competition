@@ -12,6 +12,7 @@ import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Importance;
 import edu.wpi.first.epilogue.logging.FileBackend;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.lib.util.FieldUtil;
 import frc.lib.util.Leds;
 import frc.lib.util.tuning.TuningManager;
+import frc.robot.Constants.VisionConstants;
 
 @Logged(importance = Importance.CRITICAL)
 public class Robot extends TimedRobot {
@@ -85,6 +87,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledInit() {
+		NetworkTableInstance.getDefault().getTable(VisionConstants.Limelight4Name).getEntry("throttle_set")
+				.setNumber(100);
 		CommandScheduler.getInstance().schedule(
 				Commands.runOnce(() -> {
 					if (!DriverStation.isFMSAttached()) {
@@ -101,6 +105,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledExit() {
+		NetworkTableInstance.getDefault().getTable(VisionConstants.Limelight4Name).getEntry("throttle_set")
+				.setNumber(0);
 	}
 
 	@Override
