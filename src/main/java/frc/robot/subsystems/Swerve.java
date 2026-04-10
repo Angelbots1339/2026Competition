@@ -207,7 +207,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void setYaw(Rotation2d yaw) {
-		updateLimelightConfigs(VisionConstants.Limelight4Name, yaw, true);
+		updateLimelightConfigs(VisionConstants.Limelight4Name, yaw, false);
 		updateLimelightConfigs(VisionConstants.Limelight3Name, yaw, false);
 		getPigeon2().setYaw(yaw.getDegrees());
 		resetRotation(yaw);
@@ -257,7 +257,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	}
 
 	public void resetPose(Pose2d pose) {
-		updateLimelightConfigs(VisionConstants.Limelight4Name, pose.getRotation(), true);
+		updateLimelightConfigs(VisionConstants.Limelight4Name, pose.getRotation(), false);
 		updateLimelightConfigs(VisionConstants.Limelight3Name, pose.getRotation(), false);
 		super.resetPose(pose);
 		setYaw(pose.getRotation());
@@ -364,7 +364,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 	@Override
 	public void periodic() {
-		updateVision(VisionConstants.Limelight4Name, true);
+		updateVision(VisionConstants.Limelight4Name, false);
 		updateVision(VisionConstants.Limelight3Name, false);
 
 		if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
