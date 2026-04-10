@@ -31,6 +31,13 @@
      "exp":"1.2 m / s",
      "val":1.2
     }
+   },
+   "SecondBumpPassVel":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2.5 m / s",
+     "val":2.5
+    }
    }
   },
   "poses":{
