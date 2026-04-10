@@ -14,8 +14,8 @@
    "BumpPassVel":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2.5 m / s",
-     "val":2.5
+     "exp":"2.75 m / s",
+     "val":2.75
     }
    },
    "FieldHeight":{
