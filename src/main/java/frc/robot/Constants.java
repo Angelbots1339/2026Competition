@@ -142,7 +142,7 @@ public class Constants {
 
 		public static TalonFXConfiguration ShooterConfig = new TalonFXConfiguration()
 				.withCurrentLimits(new CurrentLimitsConfigs()
-						.withStatorCurrentLimit(Amps.of(100))
+						.withStatorCurrentLimit(Amps.of(70))
 						.withSupplyCurrentLimitEnable(false)
 						.withStatorCurrentLimitEnable(true))
 				.withMotorOutput(new MotorOutputConfigs()
