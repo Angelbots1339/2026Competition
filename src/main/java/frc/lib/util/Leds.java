@@ -72,15 +72,15 @@ public class Leds extends SubsystemBase {
 	private Leds() {
 		System.out.println("[Init] Creating LEDs");
 		leds = new AddressableLED(8);
-		buf = new AddressableLEDBuffer(stripLength);
-		leds.setLength(stripLength);
-		leds.setData(buf);
-		leds.start();
+		// buf = new AddressableLEDBuffer(stripLength);
+		// leds.setLength(stripLength);
+		// leds.setData(buf);
+		// leds.start();
 	}
 
 	@Override
 	public void periodic() {
-		globalTimer = Timer.getFPGATimestamp();
+		// globalTimer = Timer.getFPGATimestamp();
 		// if (DriverStation.isFMSAttached() || DriverStation.isDSAttached()) {
 		// driverStation_attached = true;
 		// } else {
@@ -90,14 +90,16 @@ public class Leds extends SubsystemBase {
 		// alliance = DriverStation.getAlliance().get();
 		// }
 
-		isHubActive = FieldUtil.isHubActive();
-
-		if (FieldUtil.getShiftTimeLeft() <= hubAlertOffset.in(Seconds) && DriverStation.isTeleop()
-				&& DriverStation.getMatchTime() > FieldUtil.HubShiftTime.ENDGAME_START.time) {
-			hubStateChangeAlert = true;
-		} else {
-			hubStateChangeAlert = false;
-		}
+		// isHubActive = FieldUtil.isHubActive();
+		//
+		// if (FieldUtil.getShiftTimeLeft() <= hubAlertOffset.in(Seconds) &&
+		// DriverStation.isTeleop()
+		// && DriverStation.getMatchTime() > FieldUtil.HubShiftTime.ENDGAME_START.time)
+		// {
+		// hubStateChangeAlert = true;
+		// } else {
+		// hubStateChangeAlert = false;
+		// }
 
 		// wave(Section.TOP, defaultColor, Color.kBlack, waveSlowCycleLength,
 		// waveSlowPeriod);
@@ -132,7 +134,7 @@ public class Leds extends SubsystemBase {
 		// }
 		// }
 		// } else {
-		solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
+		// solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
 		// }
 
 		// if (shooting) {
@@ -146,11 +148,11 @@ public class Leds extends SubsystemBase {
 		// solid(Section.TOP, isHubActive ? Color.kGreen : Color.kRed);
 		// }
 
-		if (hubStateChangeAlert) {
-			strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
-		}
+		// if (hubStateChangeAlert) {
+		// strobe(Section.TOP, isHubActive ? Color.kGreen : Color.kRed, hubAlertFreq);
+		// }
 
-		leds.setData(buf);
+		// leds.setData(buf);
 	}
 
 	public void solid(Color color) {
