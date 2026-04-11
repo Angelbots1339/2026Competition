@@ -61,6 +61,8 @@ public class TunerConstants {
 	private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration()
 			.withCurrentLimits(
 					new CurrentLimitsConfigs()
+							.withSupplyCurrentLimit(Amps.of(60))
+							.withSupplyCurrentLimitEnable(true)
 							.withStatorCurrentLimit(Amps.of(85))
 							.withStatorCurrentLimitEnable(true));
 	private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
@@ -269,7 +271,7 @@ public class TunerConstants {
 		 * @param odometryStandardDeviation The standard deviation for odometry
 		 *                                  calculation
 		 *                                  in the form [x, y, theta]áµ€, with units in
-		 *                                  
+		 * 
 		 * 
 		 * 
 		 * 
@@ -279,7 +281,7 @@ public class TunerConstants {
 		 * @param visionStandardDeviation   The standard deviation for vision
 		 *                                  calculation
 		 *                                  in the form [x, y, theta]áµ€, with units in
-		 *                                  
+		 * 
 		 * 
 		 * 
 		 * 
