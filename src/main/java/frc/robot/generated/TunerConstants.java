@@ -52,7 +52,7 @@ public class TunerConstants {
 
 	// The stator current at which the wheels start to slip;
 	// This needs to be tuned to your individual robot
-	private static final Current kSlipCurrent = Amps.of(95);
+	private static final Current kSlipCurrent = Amps.of(85);
 
 	// Initial configs for the drive and steer motors and the azimuth encoder; these
 	// cannot be null.
@@ -61,7 +61,7 @@ public class TunerConstants {
 	private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration()
 			.withCurrentLimits(
 					new CurrentLimitsConfigs()
-							.withStatorCurrentLimit(Amps.of(95))
+							.withStatorCurrentLimit(Amps.of(85))
 							.withStatorCurrentLimitEnable(true));
 	private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
 			.withCurrentLimits(
@@ -273,12 +273,14 @@ public class TunerConstants {
 		 * 
 		 * 
 		 * 
+		 * 
 		 *                                  meters
 		 *                                  and radians
 		 * @param visionStandardDeviation   The standard deviation for vision
 		 *                                  calculation
 		 *                                  in the form [x, y, theta]áµ€, with units in
 		 *                                  
+		 * 
 		 * 
 		 * 
 		 * 
