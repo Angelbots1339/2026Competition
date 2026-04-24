@@ -59,6 +59,8 @@ public class Autos {
 
 	public AutoRoutine rightNeutralNeutral() {
 		final var routine = factory.newRoutine("Right Neutral Neutral");
+		// Choreo can automatically create ChoreoTraj and ChoreoVars which we 
+		// can use to ensure we have the right path names
 		final var bumpToNeutral = routine
 				.trajectory(
 						flipTrajectoryX(routine.trajectory(ChoreoTraj.Bump_To_NeutralSweep.name()).getRawTrajectory()));
