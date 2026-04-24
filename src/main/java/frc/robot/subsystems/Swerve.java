@@ -343,6 +343,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 				yaw.getDegrees(), 0, 0, 0, 0, 0);
 		LimelightHelpers.SetFiducialIDFiltersOverride(llName,
 				new int[0]);
+		// what this will do is that it will get all tags detected by a limelight
+		// and filter out any tags that are too far away (~3-4m depending on the limelight)
 		LimelightHelpers.RawFiducial[] fiducals = LimelightHelpers.getRawFiducials(llName);
 		int fiducalLength = fiducals.length;
 		int[] ids = new int[fiducalLength];
@@ -373,7 +375,14 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 
 		double xyStdDev2 = VisionConstants.calcStdDev(mt2.avgTagDist);
 
+		// we are throwing out the rotation measurement from the vision because the
+		// gyro is much much more accurate
+		//
+		// we basically reduce the amount we are trusting the data from the
+		// limelight the farther away it is from the camera (high std values = lower trust)
 		setVisionMeasurementStdDevs(VecBuilder.fill(xyStdDev2, xyStdDev2, 9999999));
+		// we must timestamp our pose measurements correctly to accuratly supplement
+		// our pose with vision
 		addVisionMeasurement(mt2.pose, Utils.fpgaToCurrentTime(mt2.timestampSeconds));
 	}
 
