@@ -36,6 +36,22 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 import frc.lib.util.Leds;
 
+// this is robotcontainer, which contains all of our subsystems, commands, 
+// controller bindings, etc
+//
+// using @Logged, we are telling Epilogue to recursively log everything in this 
+// class that 1. has a value, and 2. isn't static, 3. has a method of logging
+// defined.  
+// all primatives automatically log as the value itself with a key in NT as the 
+// variable name unless overridden with the name = "...".
+// all measures (Angle, Length, etc) are logged with the default unit (radians, 
+// meters, etc).
+//
+// without a @Logged annotation, any defined classes will not log anything
+// in addition, if the logging level is too low, the class will also not be logged
+// any class with the @Logged must be connected to Robot.java in some way to be
+// logged.  For example, Swerve.java is logged through its connection to RobotContainer
+// which is connected to Robot.java
 @Logged
 public class RobotContainer {
 	@Logged(name = "Driver Controller")
@@ -72,6 +88,13 @@ public class RobotContainer {
 
 	private Trigger toggleIntakeDeploy = new Trigger(() -> driver.getLeftBumperButton());
 
+	// this applies a deadband to joystick values so that only values above 0.1 are returned.
+	// in addition, we square the joystick values such that the speed of the robot follows a more understandble
+	// value (full sticking in anydirection now runs the robot in any direction
+	// with the same speed, otherwise fullsticking on the x and y axis would drive the robot faster 
+	// than fullsticking at an angle)
+	//
+	// we are also reducing the speed to 60% when the intake button is held
 	private Supplier<Double> leftY = () -> DriverConstants.joystickDeadband(-driver.getLeftY(), true)
 			* (runIntake.getAsBoolean() ? RobotConstants.maxSpeed.in(MetersPerSecond) * 0.6
 					: RobotConstants.maxSpeed.in(MetersPerSecond));
@@ -84,6 +107,8 @@ public class RobotContainer {
 
 	// private Trigger reverse = new Trigger(() -> operater.getXButton());
 
+	// This is Choreo' sprovided auto selecter which lazy loads autos when an auto
+	// is selected (meaning we only load an auto when we reference it)
 	@Logged(name = "Current Auto")
 	private AutoChooser autoChooser = new AutoChooser();
 	private Autos autos = new Autos(swerve, shooter, intake, indexer);
@@ -139,6 +164,8 @@ public class RobotContainer {
 		runIntake.whileTrue(intake.runIntake());
 		// .alongWith(indexer.run(() ->
 		// indexer.runVoltage(IndexerConstants.IntakeIndexerVoltage))));
+		// a toggle on true will toggle a command (run it) every other time a
+		// trigger is activated and cancel it the other times
 		toggleIntakeDeploy.toggleOnTrue(intake.retract());
 		trenchShot.whileTrue(new Shoot(shooter, indexer, intake, () -> 40.0, () -> 8.4, () -> true));
 
@@ -190,6 +217,9 @@ public class RobotContainer {
 			TuningManager.init(swerve, shooter, intake, indexer);
 	}
 
+	// was initially used to log match data to drivers using epilogue
+	// but is kind of unseccary and could be avoding calling FieldUtil directly
+	// in robot.java (still didn't though, oops)
 	@Logged(importance = Importance.CRITICAL, name = "Is Hub Active")
 	public String isHubActive() {
 		return FieldUtil.getHubState();
