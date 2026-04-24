@@ -37,15 +37,23 @@ public class Shooter extends SubsystemBase {
 
 	/** Creates a new Shooter. */
 	public Shooter() {
+		// for all of our motors, we set the configuration for each motor for
+		// current limits, polarity, encoder settings, closed loop gains, etc
 		leader.getConfigurator().apply(ShooterConstants.ShooterConfig);
 		follower.getConfigurator().apply(ShooterConstants.ShooterConfig);
 		follower2.getConfigurator().apply(ShooterConstants.ShooterConfig);
 		spinner.getConfigurator().apply(ShooterConstants.SpinnerConfig);
 		kicker.getConfigurator().apply(ShooterConstants.KickerConfig);
 
+		// the robot has a 3 motor setup for the main flywheel, and they all
+		// drive the same axel.  we can use followers so that we only control
+		// the output of one motor, which automatically forwards the commanded
+		// output, with some changes in polarity.
 		follower.setControl(new Follower(ShooterConstants.Shooter1Port, MotorAlignmentValue.Opposed));
 		follower2.setControl(new Follower(ShooterConstants.Shooter1Port, MotorAlignmentValue.Opposed));
 
+		// we set the update frequency of the getVelocity call so that we can get
+		// / log the data at a faster rate
 		leader.getVelocity().setUpdateFrequency(Hertz.of(100));
 		spinner.getVelocity().setUpdateFrequency(Hertz.of(100));
 	}
@@ -58,6 +66,8 @@ public class Shooter extends SubsystemBase {
 	public void setRPS(double shooterRPS, double spinnerRPS) {
 		targetShooterRPS = shooterRPS;
 		targetSpinnerRPS = spinnerRPS;
+		// the reason for the custum velocitytorquecontrol function is to set
+		// specific configurations, namely the update frequency
 		leader.setControl(ShooterConstants.velocityTorqueControl.withVelocity(targetShooterRPS));
 		spinner.setControl(new VelocityTorqueCurrentFOC(targetSpinnerRPS));
 	}
@@ -78,6 +88,9 @@ public class Shooter extends SubsystemBase {
 		return spinner.getVelocity().getValue().in(RotationsPerSecond);
 	}
 
+	// NEVER USE the getClosedLoopError provided by ctre as this value is delayed
+	// and can be temporarily at the wrong value even after commanding it to a
+	// different setpoint
 	public double getShooterError() {
 		return Math.abs(leader.getVelocity().getValueAsDouble() - targetShooterRPS);
 	}
@@ -108,6 +121,8 @@ public class Shooter extends SubsystemBase {
 		}).withTimeout(2);
 	}
 
+	// this is so that we can access the motor pid configuration in our test
+	// modes to tune PID
 	public void logPID() {
 		TuningManager.createPID("Shooter/leader", leader, ShooterConstants.ShooterConfig);
 		TuningManager.createPID("Shooter/spinner", spinner, ShooterConstants.SpinnerConfig);
