@@ -60,6 +60,11 @@ public class RegressionShoot extends Shoot {
 				swerve::atRotation);
 		// }
 
+
+		// when we are initially aligned with the hub, we stop actively trying 
+		// PID to our angle and instead lock the wheels in an X formation, reducing 
+		// the effect of defense in destabilizing / changing our robot angle/position
+
 		if (aligned == false) {
 			Leds.getInstance().shooterMisaligned = true;
 			swerve.angularDriveRequest(x, y, () -> params.angle(), () -> true);

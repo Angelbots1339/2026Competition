@@ -52,6 +52,8 @@ public class Shoot extends Command {
 		Leds.getInstance().shooting = true;
 	}
 
+	// I split out the shooting / intake retraction from the shoot command such
+	// htat different types of shots could be made, such as those that align, etc
 	public void runShoot(double shooterRPS, double spinnerRPS, Supplier<Boolean> runKicker) {
 		shooter.setRPS(shooterRPS, spinnerRPS);
 
@@ -63,6 +65,9 @@ public class Shoot extends Command {
 			if (!cycleTimer.isRunning())
 				cycleTimer.restart();
 
+			// this basically interpolates between our full range of motion
+			// with an offset to the start of motion and the period for the time
+			// it takes to completely retract back
 			intake.setIntakeAngle(Degrees.of(
 					MathUtil.interpolate(IntakeConstants.DeployedAngle.in(Degrees),
 							IntakeConstants.RetractedAngle.in(Degrees),

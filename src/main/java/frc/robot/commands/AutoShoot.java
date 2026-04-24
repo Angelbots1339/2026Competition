@@ -10,6 +10,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
+// this is basically just RegressionShoot but without the X locking mechanism
 public class AutoShoot extends Shoot {
 	private Swerve swerve;
 
