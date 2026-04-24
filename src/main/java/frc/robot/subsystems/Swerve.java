@@ -75,6 +75,7 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	@Logged(name = "Has Applied Operator Perspective")
 	private boolean m_hasAppliedOperatorPerspective = false;
 
+	// pid controller for the angle control of the robot used for auto align
 	private PIDController angularDrivePID = new PIDController(AlignConstants.angularDriveKP,
 			AlignConstants.angularDriveKI, AlignConstants.angularDriveKD);
 	private SimpleMotorFeedforward angularDriveFF = new SimpleMotorFeedforward(AlignConstants.angularDriveKS,
@@ -88,7 +89,10 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 	public Swerve(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... moduleConstants) {
 		super(TalonFX::new, TalonFX::new, CANcoder::new, drivetrainConstants, moduleConstants);
 
+		
 		angularDrivePID.setTolerance(AlignConstants.angularDriveTolerance.in(Radians));
+		// make it so that we don't have to rotate almost a full rotation if its
+		// closer to turn the other direction.
 		angularDrivePID.enableContinuousInput(-Math.PI, Math.PI);
 		pidToPoseXController.setTolerance(AlignConstants.pidToPoseTolerance.in(Meters));
 		pidToPoseYController.setTolerance(AlignConstants.pidToPoseTolerance.in(Meters));
@@ -173,7 +177,11 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 				Radians.of(angularDrivePID.getErrorTolerance()));
 	}
 
+	// this is the main function called for any swerve movement 
+	// takes a robot relative chassis speeds (vx, vy, omega)
 	public void driveRobotRelative(ChassisSpeeds speeds) {
+		// discretizing speeds tries its best to account for any drift causing 
+		// by rotating the robot and translating at the same time
 		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(ChassisSpeeds.discretize(speeds, 0.02))
 				.withDriveRequestType(DriveRequestType.Velocity));
 	}
@@ -267,8 +275,13 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		return getState().Speeds;
 	}
 
+	// this is the function run when following paths created by choreo
+	// it basically applies the speeds at each point in a path + a pid loop on
+	// the error
 	@SuppressWarnings("resource")
 	public Consumer<SwerveSample> followChoreoPath() {
+		// these PID loops are run to account for driftign off teh path and apply
+		// an addition output to the chasis speeds to get back on path
 		final PIDController xController = new PIDController(5, 0.0, 0.0);
 		final PIDController yController = new PIDController(5, 0.0, 0.0);
 		final PIDController headingController = new PIDController(2.5, 0.0, 0.0);
@@ -288,6 +301,8 @@ public class Swerve extends SwerveDrivetrain<TalonFX, TalonFX, CANcoder> impleme
 		};
 	}
 
+	// this is unused but is used to config pathplanner if we were going to use
+	// it for autos, pathfinding, etc.
 	public void configPathPlanner() {
 		RobotConfig config = null;
 		try {
