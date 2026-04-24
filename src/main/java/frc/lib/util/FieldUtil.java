@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.RobotConstants;
 
+// this is a field helper class which specifices teh location of field elements,
+// the field itself, and match gamedata such as hub status and alliance color
 public class FieldUtil {
 	public static Distance FieldWidth = Inches.of(651.22);
 	public static Distance FieldHeight = Inches.of(317.69);
