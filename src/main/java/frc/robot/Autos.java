@@ -21,6 +21,9 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
+// this is where we call all and create our autos
+// we are using choreo to create time-optimized trajectories and calling 
+// commands at certain points in the path
 public class Autos {
 	private AutoFactory factory;
 
@@ -39,12 +42,18 @@ public class Autos {
 
 		shoot = () -> new AutoShoot(swerve, shooter, indexer, intake, () -> 0.0, () -> 0.0);
 
+		// this binds a command to run when the timer in a trajectory overlaps an event
+		// this is global and can not be overwritten
 		factory.bind("RevUpShooter", shooter.run(() -> {
 			ShooterParams params = ShooterRegression.getShotParams(swerve);
 			shooter.setRPS(params.shooterRPS(), params.spinnerRPS());
 		}));
 		factory.bind("IntakeStart", intake.runIntake());
 		factory.bind("IntakeStop", intake.stopIntake());
+		// when java runs classes, it has to initially load in classes, which could take a lot of time, especially
+		// at startup (auto start)
+		// as such, try to run through the autofactory classes to cache these
+		// and save time on startup
 		CommandScheduler.getInstance().schedule(factory.trajectoryCmd("").ignoringDisable(true));
 	}
 
@@ -168,6 +177,9 @@ public class Autos {
 		return routine;
 	}
 
+	// thin function flips all trajectories across the horizontol center line
+	// its done by flipping the y value across the horizontal center line,
+	// flipping rotation, omega, and velocity y, and module direction y components
 	private Trajectory<SwerveSample> flipTrajectoryX(Trajectory<SwerveSample> traj) {
 		SwerveSample[] new_samples = new SwerveSample[traj.samples().size()];
 		int i = 0;
