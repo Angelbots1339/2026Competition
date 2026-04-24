@@ -39,6 +39,7 @@ public class SwerveTuning {
 
 		characterizeSwerveRadius.whileTrue(characterizeWheelRadius());
 
+		// binding to tune the rotation pid and ff valuse of the swerve rotation
 		testRotation.whileTrue(Commands.run(() -> swerve.angularDriveRequest(() -> 0.0, () -> 0.0,
 				() -> targetAngle,
 				() -> true),
@@ -46,6 +47,11 @@ public class SwerveTuning {
 	}
 
 	/* yoinked from mechanical advantage */
+	// this basically rotates the robot around and measures the change in gyro
+	// angle as well as the average amount the swerve modules rotated
+	//
+	// assuming the gyro is completely correct, we can easily check how to change
+	// the radius of the swerve modules to tune the modules-based odometry
 	public static Command characterizeWheelRadius() {
 		SlewRateLimiter limiter = new SlewRateLimiter(Math.PI / 4);
 		WheelRadiusCharacterizationState state = new WheelRadiusCharacterizationState();

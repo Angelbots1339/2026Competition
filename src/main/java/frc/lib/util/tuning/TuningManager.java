@@ -12,6 +12,9 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
+// this class manages the switching between tuning modes through a smartdashboard
+// sendable chooser, enabling and disabling controller bindings for different
+// subsystems / tuning modes
 public class TuningManager {
 	public static TuningMode tuningMode = TuningMode.Shooter;
 
@@ -38,7 +41,14 @@ public class TuningManager {
 		}
 	}
 
+	// this is a function used to create tunable values for the PID of motors
+	// that way, we can easily tweak pid valuse without redeploying code or using
+	// phoenix tuner
 	public static void createPID(String key, TalonFX motor, TalonFXConfiguration config) {
+		// DogLog tunables are values sent to NT which are listened to for changes
+		// and perform a callback with the value of changes
+		// in this case, everytime a value changes, we change the pid valuse
+		// with the value returned from NT
 		DogLog.tunable(key + "/kP", config.Slot0.kP,
 				newP -> motor.getConfigurator().apply(config.Slot0.withKP(newP)));
 		DogLog.tunable(key + "/kI", config.Slot0.kI,

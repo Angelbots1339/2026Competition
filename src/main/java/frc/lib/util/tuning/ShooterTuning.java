@@ -24,6 +24,7 @@ public class ShooterTuning {
 
 	private static XboxController tester = new XboxController(DriverConstants.TesterPort);
 
+	// this base trigger makes it so unless we are in the correct tuning mode, no commands will run a motor
 	private static Trigger baseTrigger = new Trigger(
 			() -> DriverStation.isTestEnabled() && TuningManager.tuningMode == TuningMode.Shooter);
 	private static Trigger runShooter = baseTrigger.and(() -> tester.getXButton());
@@ -80,6 +81,9 @@ public class ShooterTuning {
 			regressionData.clear();
 		}));
 
+		// this was used before we had the shooter on the robot but basically
+		// we are able to adjust the shooter regression data on the fly so we
+		// could test out the regression without redeploying
 		addData.onTrue(Commands.runOnce(() -> {
 			double[] data = { distance.in(Meters), shooterTargetRPS, spinnerTargetRPS };
 			regressionData.add(data);
