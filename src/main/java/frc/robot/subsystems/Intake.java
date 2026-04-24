@@ -59,6 +59,9 @@ public class Intake extends SubsystemBase {
 
 	public void setIntakeAngle(Angle angle) {
 		targetAngle = angle;
+		// we are increasing the update frequency of the deploy motor so that
+		// we are able to detect disruptions in the intake due to balls
+		// as quickly ass possible and to account for it as quickly as possible
 		deployMotor.setControl(new MotionMagicVoltage(angle).withUpdateFreqHz(Hertz.of(1000)));
 	}
 
