@@ -64,6 +64,10 @@ public class RobotContainer {
 	private Intake intake = new Intake();
 	private Shooter shooter = new Shooter();
 
+	// a trigger is the command-based way of executing actions based on conditions
+	// it basically tells the CommandScheduler to listen to an event and execute
+	// depending on the state of the event (false, true, turned false, 
+	// has been true for some time, etc)
 	@Logged(name = "Reset Gyro")
 	private Trigger resetGyro = new Trigger(() -> driver.getStartButton());
 
