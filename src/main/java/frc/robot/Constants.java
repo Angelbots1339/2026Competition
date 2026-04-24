@@ -95,6 +95,9 @@ public class Constants {
 		public static final String Limelight4Name = "limelight-back";
 		public static final double maxUsableLL3Range = 4.3;
 		public static final double maxUsableLL4Range = 4.6; // TODO: find a value for this
+															//
+		// find these location values by selecting the center of the CAMERA LENS
+		// to the center of the robot on the ground (z axis = 0)
 
 		// limelight 4 (back limelight) location
 		// forward = -0.081m
